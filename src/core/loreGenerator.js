@@ -35,91 +35,32 @@ const MAX_LORE_HISTORY = 10;
 
 /**
  * Generates lore for the dish.
- * @param {Ingredient[]} allSelectedIngredients
- * @param {string[]} nationDisplayNames
- * @param {NationKey[]} finalNationKeys
- * @param {Theme} themeVal
- * @param {DishType} dishType
- * @param {string} generatedName
+ * @param {string[]} nations
+ * @param {Ingredient[]} ingredients
  * @returns {string} The generated dish lore.
  */
-export function generateDishLore(
-  allSelectedIngredients,
-  nationDisplayNames,
-  finalNationKeys,
-  themeVal,
-  dishType,
-  generatedName
-) {
-  const LORE_TEMPLATES = DISH_LORE_TEMPLATES || {
-    byIngredientHint: {},
-    byTheme: {},
-    byNation: {},
-    generic: [],
-    _placeholders: {},
-  };
-  /** @type {{text: string, priority: number}[]} */
-  let loreCandidates = [];
-  const placeholders = LORE_TEMPLATES._placeholders;
-  const primaryNationForLore =
-    nationDisplayNames && nationDisplayNames.length > 0
-      ? nationDisplayNames[0]
-      : 'an unknown land';
+export function generateLore(name, nations, ingredients) {
+  const loreTemplates = DISH_LORE_TEMPLATES || { byIngredientHint: {}, generic: [] };
+  const primaryNation = nations.length > 0 ? nations[0] : 'an unknown land';
 
-  allSelectedIngredients
-    .filter((i) => i && !getIngredientTags(i).includes('placeholder'))
-    .forEach((ing) => {
-      const ingNameStripped = getIngredientName(ing, true);
-      const hints = getIngredientLoreHints(ing);
-      if (LORE_TEMPLATES.byIngredientHint[ingNameStripped]) {
-        loreCandidates.push({
-          text: getRandomElement(
-            LORE_TEMPLATES.byIngredientHint[ingNameStripped]
-          ),
-          priority: 0.5,
-        });
-      }
-      hints.forEach((hintKey) => {
-        if (LORE_TEMPLATES.byIngredientHint[hintKey]) {
-          loreCandidates.push({
-            text: getRandomElement(LORE_TEMPLATES.byIngredientHint[hintKey]),
-            priority: 1,
-          });
-        }
-      });
-    });
+  // Find a lore-worthy ingredient
+  const notableIngredient = ingredients.find(
+    (ing) =>
+      ing &&
+      ing.loreHints &&
+      ing.loreHints.some((hint) => loreTemplates.byIngredientHint[hint])
+  );
 
-  // Add more lore candidates based on theme, nation, etc.
-  // ... (This would be a simplified version of the blob logic)
+  let template = getRandomElement(loreTemplates.generic) || 'A dish with a long and storied history...';
 
-  if (LORE_TEMPLATES.generic) {
-    loreCandidates.push({
-      text: getRandomElement(LORE_TEMPLATES.generic),
-      priority: 3,
-    });
+  if (notableIngredient) {
+    const hint = notableIngredient.loreHints.find(
+      (h) => loreTemplates.byIngredientHint[h]
+    );
+    if (hint) {
+      template = getRandomElement(loreTemplates.byIngredientHint[hint]);
+    }
   }
 
-  if (loreCandidates.length === 0)
-    return 'The history of this dish is shrouded in delicious mystery.';
-
-  loreCandidates.sort((a, b) => a.priority - b.priority);
-  let chosenLore = loreCandidates[0].text;
-
-  /** @type {Record<string, string>} */
-  let loreData = {
-    nation_name: primaryNationForLore,
-    Dish_Name: generatedName,
-    Dish_Type: dishType.toLowerCase(),
-    ...Object.keys(placeholders).reduce((acc, key) => {
-      if (placeholders[key] && Array.isArray(placeholders[key])) {
-        acc[key] = getRandomElement(placeholders[key]);
-      }
-      return acc;
-    }, {}),
-  };
-
-  return chosenLore.replace(
-    /\{(\w+)\}/g,
-    (match, key) => loreData[key] || match
-  );
+  return template.replace(/\{nation_name\}/g, primaryNation).replace(/\{Dish_Name\}/g, name);
 }
