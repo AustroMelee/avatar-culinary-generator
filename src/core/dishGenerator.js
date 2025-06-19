@@ -33,6 +33,15 @@ import {
 import { generateName } from './nameGenerator.js';
 import { generateDescription } from './descriptionGenerator.js';
 import { generateLore } from './loreGenerator.js';
+import {
+  getIngredients,
+  selectPrimaryIngredient,
+  selectSecondaryIngredient,
+  selectTertiaryIngredient,
+  selectBaseIngredient,
+  selectSeasoningIngredient,
+  selectGarnishIngredient,
+} from './ingredientManager.js';
 
 /**
  * @param {Ingredient} ing
@@ -183,13 +192,16 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     generatedName
   );
 
-  return {
+  const result = {
     name: generatedName,
     concept: concept,
     ingredients: allSelectedIngredients,
     notes: notes,
     lore: generatedLore,
   };
+
+  console.log('Generated Ingredients:', result.ingredients);
+  return result;
 }
 
 /**
@@ -209,7 +221,7 @@ export function generateDefaultDish() {
   return {
     name: 'Sky Temple Aero-Melon Salad',
     concept: 'A refreshing main course that embodies the light and spiritual nature of the Air Nomads, focusing on fresh, vegetarian ingredients.',
-    ingredients: defaultIngredients.map(formatIngredient),
+    ingredients: defaultIngredients,
     notes: 'The Aero-Melon is lightly tossed with a Sky Bison Yoghurt dressing infused with crushed Lavender Buds. Tender Sky Sprouts add a crisp texture, while delicate Whisperwind Petals provide a beautiful and fragrant garnish. The dish is served chilled in a simple, hand-carved wooden bowl.',
     lore: 'A meditative dish often prepared by young acolytes to practice mindfulness. It is said that the subtle hum of the Aero-Melon can only be heard when one\'s mind is truly at peace, making its preparation a spiritual exercise.',
   };

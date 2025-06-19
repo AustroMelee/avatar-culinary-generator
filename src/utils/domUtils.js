@@ -1,5 +1,7 @@
 // src/utils/domUtils.js
 
+import { formatIngredient } from '@core/ingredientManager.js';
+
 /**
  * @typedef {import('../types.js').DishResult} DishResult
  * @typedef {import('../types.js').Ingredient} Ingredient
@@ -102,11 +104,11 @@ export function displayResults(dishResult) {
   ingredientListEl.innerHTML = '';
   ingredients.forEach((ingObj) => {
     const li = document.createElement('li');
-    const rarityText =
-      ingObj.rarity && ingObj.rarity !== 'common'
-        ? `; Rarity: ${ingObj.rarity}`
-        : '';
-    li.textContent = `${ingObj.name} (Role: ${ingObj.role || 'unknown'}; Type: ${ingObj.type}; Source: ${ingObj.sourceNation || 'Unknown'})${rarityText}`;
+    if (ingObj && ingObj.name) {
+      li.textContent = formatIngredient(ingObj);
+    } else {
+      li.textContent = 'Invalid ingredient data';
+    }
     ingredientListEl.appendChild(li);
   });
 

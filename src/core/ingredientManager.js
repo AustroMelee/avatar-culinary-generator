@@ -329,3 +329,19 @@ export function formatIngredient(ingredient) {
 
   return parts.join(' ');
 }
+
+/**
+ * Selects a primary ingredient from a list of candidates.
+ * @param {Ingredient[]} candidates The list of ingredient candidates.
+ * @returns {Ingredient | undefined} The selected ingredient or undefined if none found.
+ */
+function selectIngredientByRole(ingredients, role) {
+  const candidates = ingredients.filter(
+    (ing) => ing.role === role && ing.name && ing.type && ing.source
+  );
+  if (candidates.length === 0) {
+    console.warn(`No valid ingredients found for role: ${role}`);
+    return undefined;
+  }
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
