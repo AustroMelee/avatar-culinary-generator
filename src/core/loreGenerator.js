@@ -3,7 +3,6 @@
 import { getRandomElement } from '../utils/random.js';
 import { DISH_LORE_TEMPLATES } from './data/index.js';
 import { lore as allLore } from './data/index.js';
-import { getPrimaryIngredient } from './utils.js';
 import { validateStringAndLog } from '../utils/textUtils.js';
 
 /**
@@ -37,37 +36,36 @@ let globalLoreHistory = new Set();
 const MAX_LORE_HISTORY = 10;
 
 /**
- * Generates lore for the dish.
- * @param {string[]} nations
- * @param {Ingredient[]} ingredients
- * @returns {string} The generated dish lore.
+ * Generates a lore snippet for a given dish.
+ * @param {string} name The name of the dish.
+ * @param {string[]} nations The nations associated with the dish.
+ * @param {import('../types.js').Ingredient[]} ingredients The ingredients in the dish.
+ * @returns {string | null} A lore snippet, or null if none could be generated.
  */
 export function generateLore(name, nations, ingredients) {
-  const loreTemplates = DISH_LORE_TEMPLATES || { byIngredientHint: {}, generic: [] };
-  const primaryNation = nations.length > 0 ? nations[0] : 'an unknown land';
-
-  // Find a lore-worthy ingredient
-  const notableIngredient = ingredients.find(
-    (ing) =>
-      ing &&
-      ing.loreHints &&
-      ing.loreHints.some((hint) => loreTemplates.byIngredientHint[hint])
-  );
-
-  let template = getRandomElement(loreTemplates.generic) || 'A dish with a long and storied history...';
-
-  if (notableIngredient) {
-    const hint = notableIngredient.loreHints.find(
-      (h) => loreTemplates.byIngredientHint[h]
-    );
-    if (hint) {
-      template = getRandomElement(loreTemplates.byIngredientHint[hint]);
-    }
+  if (!nations || nations.length === 0) {
+    return null;
+  }
+  const primaryNation = nations[0];
+  const primaryIngredient = ingredients.find((ing) => ing.role === 'primary');
+  
+  if (!DISH_LORE_TEMPLATES || DISH_LORE_TEMPLATES.length === 0) {
+    return null;
+  }
+  
+  const template = getRandomElement(DISH_LORE_TEMPLATES);
+  
+  if (!template) {
+    return null;
+  }
+  
+  let generatedLore = template
+    .replace(/\{nation_name\}/g, primaryNation)
+    .replace(/\{Dish_Name\}/g, name);
+    
+  if (primaryIngredient) {
+    generatedLore = generatedLore.replace(/\{mainIngredient\}/gi, primaryIngredient.name);
   }
 
-  const generatedLore = template.replace(/\{nation_name\}/g, primaryNation).replace(/\{Dish_Name\}/g, name);
-
-  const finalLore = generatedLore.replace(/{mainIngredient}/gi, getPrimaryIngredient(ingredients).name);
-
-  return validateStringAndLog(finalLore, 'Dish Lore');
+  return validateStringAndLog(generatedLore, 'Dish Lore');
 }

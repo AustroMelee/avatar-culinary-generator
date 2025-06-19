@@ -6,7 +6,6 @@ import {
   themes as allThemes,
 } from './data/index.js';
 import { getRandomElement } from '../utils/random.js';
-import { getPrimaryIngredient, getSecondaryIngredient } from './utils.js';
 import { validateStringAndLog } from '../utils/textUtils.js';
 
 /**
@@ -18,27 +17,6 @@ import { validateStringAndLog } from '../utils/textUtils.js';
  * @typedef {import('../types.js').NationTag} NationTag
  * @typedef {import('../types.js').NameFormat} NameFormat
  */
-
-/** @param {Ingredient} ing @param {boolean} [base=false] @returns {string} */
-const getIngredientName = (ing, base = false) =>
-  ing && ing.name
-    ? base
-      ? ing.name.split(' (')[0]
-      : ing.name
-    : 'Unknown Ingredient';
-/** @param {Ingredient} ing @returns {NationTag[]} */
-const getIngredientTags = (ing) =>
-  ing && Array.isArray(ing.tags) ? ing.tags : [];
-/** @param {Ingredient} ing @returns {string[]} */
-const getIngredientType = (ing) =>
-  ing && Array.isArray(ing.type)
-    ? ing.type
-    : typeof ing.type === 'string'
-      ? [ing.type]
-      : [];
-/** @param {Ingredient} ing @returns {string[]} */
-const getIngredientFlavorNotes = (ing) =>
-  ing && Array.isArray(ing.flavorNotes) ? ing.flavorNotes : [];
 
 /**
  * Replaces placeholders in a template string with values from a data object.
@@ -57,7 +35,7 @@ function interpolateTemplate(templateString, dataObject) {
     if (dataObject.hasOwnProperty(trimmedKey)) {
       let value = dataObject[trimmedKey];
       if (typeof value === 'object' && value !== null && value.name) {
-        value = getIngredientName(value, true);
+        value = value.name.split(' (')[0];
       }
       return String(value);
     }
