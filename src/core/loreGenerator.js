@@ -64,3 +64,16 @@ export function getLoreTemplate(ingredients) {
   
   return getRandomElement(potentialLore) || LORE_LIBRARY.default[0];
 }
+
+/**
+ * Checks if a set of ingredients contains a special combination for unique lore.
+ * @param {Set<string>} ingredientNames - A set of the ingredient names in the dish.
+ * @returns {string|null} The key for the special lore if a combination is found, otherwise null.
+ */
+export function hasSpecialLore(ingredientNames) {
+  if (ingredientNames.has('Moon Peach') && ingredientNames.has('Summit Ginseng')) {
+    return 'ECLIPSE_DISH';
+  }
+  // Add other special combinations here in the future
+  return null;
+}
