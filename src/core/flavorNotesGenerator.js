@@ -6,13 +6,19 @@ import { validateStringAndLog } from '../utils/textUtils.js';
  */
 
 const FLAVOR_TEMPLATES = [
-  'Delicate aromas of {notes} mingle, creating a harmonious tasting experience.',
-  'A complex profile of {notes}, balanced with a subtle finish.',
-  'This dish features notes of {notes}, evoking the essence of its homeland.',
-  'Expect a delightful journey through flavors of {notes}.',
-  'Tangy {note1} and earthy {note2} are balanced by hints of sweet {note3} and floral {note4}.',
-  'Cool {note1} and fresh {note2} give way to a warm, {note3} finish.',
+  'A delicate balance of {note1} and {note2}, with a surprising finish of {note3}.',
+  'Opens with a wave of {note1}, followed by gentle notes of {note2} and a whisper of {note3}.',
+  'The profile is led by {note1}, complemented by an undercurrent of {note2} and a hint of {note3}.',
+  'Earthy {note1} and bright {note2} mingle, grounded by a touch of {note3}.',
+  'Aromatic {note1} gives way to a complex palate of {note2}, finishing with a clean {note3} note.',
 ];
+
+/**
+ * Capitalizes the first letter of a string.
+ * @param {string} s
+ * @returns {string}
+ */
+const capitalize = (s) => (s && s[0].toUpperCase() + s.slice(1)) || '';
 
 /**
  * Generates a descriptive flavor notes string for the dish.
@@ -20,32 +26,23 @@ const FLAVOR_TEMPLATES = [
  * @returns {string} The generated flavor notes.
  */
 export function generateFlavorNotes(ingredients) {
-  const allNotes = ingredients.flatMap(ing => ing.flavorNotes || []);
-  if (allNotes.length === 0) {
-    return 'A dish with a mysterious flavor profile.';
+  const allNotes = ingredients.flatMap((ing) => ing.flavorNotes || []);
+  if (allNotes.length < 3) {
+    return 'A dish with a simple, harmonious flavor profile.';
   }
 
   const uniqueNotes = shuffleArray([...new Set(allNotes)]);
+  
+  const note1 = uniqueNotes[0] || 'subtlety';
+  const note2 = uniqueNotes[1] || 'complexity';
+  const note3 = uniqueNotes[2] || 'character';
+
   const template = getRandomElement(FLAVOR_TEMPLATES);
 
-  let noteString;
-  if (template.includes('{note1}')) {
-    // Handle specific note templates
-    noteString = template
-      .replace('{note1}', uniqueNotes[0] || 'subtlety')
-      .replace('{note2}', uniqueNotes[1] || 'complexity')
-      .replace('{note3}', uniqueNotes[2] || 'character')
-      .replace('{note4}', uniqueNotes[3] || 'freshness');
-  } else {
-    // Handle generic list template
-    const selectedNotes = uniqueNotes.slice(0, Math.min(uniqueNotes.length, 4));
-    if (selectedNotes.length > 1) {
-      const lastNote = selectedNotes.pop();
-      noteString = template.replace('{notes}', `${selectedNotes.join(', ')}, and ${lastNote}`);
-    } else {
-      noteString = template.replace('{notes}', selectedNotes[0] || 'a unique taste');
-    }
-  }
+  const noteString = template
+    .replace('{note1}', note1)
+    .replace('{note2}', note2)
+    .replace('{note3}', note3);
 
-  return validateStringAndLog(noteString, 'Flavor Notes');
+  return validateStringAndLog(capitalize(noteString), 'Flavor Notes');
 } 

@@ -214,7 +214,7 @@ export function setupNationCheckboxes(nations) {
 /**
  * Creates a styled section for the dish output.
  * @param {string} title - The title of the section.
- * @param {string} content - The text content of the section.
+ * @param {string | HTMLElement} content - The text content or HTML element for the section.
  * @param {string} [icon=''] - An optional icon to display before the title.
  * @returns {HTMLElement} The created section element.
  */
@@ -226,9 +226,13 @@ function createSection(title, content, icon = '') {
   titleEl.innerHTML = `${icon} ${title}`;
   section.appendChild(titleEl);
 
-  const contentEl = document.createElement('p');
-  contentEl.innerHTML = content; // Using innerHTML to allow for bolding or other simple tags
-  section.appendChild(contentEl);
+  if (typeof content === 'string') {
+    const contentEl = document.createElement('p');
+    contentEl.innerHTML = content; // Using innerHTML to allow for bolding or other simple tags
+    section.appendChild(contentEl);
+  } else {
+    section.appendChild(content);
+  }
 
   return section;
 }
@@ -274,25 +278,20 @@ export function displayRichDish(dishResult) {
 
   // 4. Key Ingredients
   if (ingredients && ingredients.length > 0) {
-    const section = document.createElement('div');
-    section.className = 'dish-section';
-    const titleEl = document.createElement('h3');
-    titleEl.innerHTML = '🌱 Key Ingredients & Roles';
-    section.appendChild(titleEl);
     const listEl = document.createElement('ul');
     listEl.id = 'ingredientList';
     ingredients.forEach(ing => {
       const li = document.createElement('li');
+      // Add rarity class for styling
       li.classList.add(`rarity-${ing.rarity || 'common'}`);
       
       const roleAndType = `(${ing.role}, ${ing.type})`;
       const shortDesc = ing.shortDescription ? `— <em>${ing.shortDescription}</em>` : '';
       
-      li.innerHTML = `<strong>${ing.name}</strong> ${roleAndType} ${shortDesc}`;
+      li.innerHTML = `<strong>${ing.name}</strong> <span class="ingredient-meta">${roleAndType}</span> ${shortDesc}`;
       listEl.appendChild(li);
     });
-    section.appendChild(listEl);
-    resultContainer.appendChild(section);
+    resultContainer.appendChild(createSection('Key Ingredients & Roles', listEl, '🌱'));
   }
   
   // 5. Preparation & Ritual

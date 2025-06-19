@@ -60,6 +60,17 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   // @ts-ignore
   const primaryNationData = allData[primaryNation.toLowerCase().replace(' ', '')];
 
+  // Define nation icons
+  const NATION_ICONS = {
+    'Air Nomads': '🍃',
+    'Water Tribes': '🌊',
+    'Earth Kingdom': '🪨',
+    'Fire Nation': '🔥',
+    'United Republic': '🏙️',
+    'Spirit World': '🌌',
+  };
+  const nationIcon = NATION_ICONS[primaryNation] || '🍲';
+
   // 1. Gather all possible ingredients from the selected nations.
   const availableIngredientObjects = getIngredients({
     nations: finalNations,
@@ -125,13 +136,13 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   );
   const flavorNotes = generateFlavorNotes(selectedIngredients);
   const preparationAndRitual = generatePreparation(selectedIngredients, finalNations);
-  const lore = generateLore(name, finalNations, selectedIngredients);
-  const servingTradition = getRandomElement(primaryNationData?.servingTraditions || []);
-  const chefTip = getRandomElement(primaryNationData?.chefTips || []);
+  const lore = generateLore(name, finalNations, selectedIngredients) || 'A dish with a history yet to be written.';
+  const servingTradition = getRandomElement(primaryNationData?.servingTraditions || ['Served with humble grace.']);
+  const chefTip = getRandomElement(primaryNationData?.chefTips || ['Best enjoyed with an open heart.']);
 
   // 4. Assemble and validate the final result.
   const result = {
-    name,
+    name: `${nationIcon} ${name}`,
     concept,
     flavorNotes,
     ingredients: selectedIngredients,
@@ -243,7 +254,7 @@ export function generateDefaultDish() {
   return {
     name: '🍃 Sky Temple Moon Peach Salad',
     concept: 'A serene, cloudlike dish cherished by wandering acolytes. This main course weaves together airy textures and pure flavors, evoking the peace of a mountain sunrise.',
-    flavorNotes: 'Tangy yoghurt, fresh grassiness, mellow barley, hints of wild lavender, delicate floral finish.',
+    flavorNotes: 'Opens with a wave of honeyed sweetness, followed by gentle notes of velvety texture and a whisper of calm.',
     ingredients: defaultIngredients,
     preparationAndRitual: 'Barley tsampa is steamed while a novice chants the morning prayer. Yoghurt is whisked until frothy, then folded with the sprouts and petals. Served in hand-thrown bowls, diners are encouraged to eat in silence, honoring air and ancestry.',
     servingTradition: 'Offered at the Western Air Temple during the Festival of Winds; said to bring clarity and lightness to the soul.',

@@ -28,11 +28,11 @@ export const airNomads = {
           flavorNotes: [
             'creamy',
             'tangy',
-            'mildly_sweet',
+            'mildly sweet',
             'refreshing',
             'silken',
-            'yogurt-tang',
-            'cool-touch',
+            'cool yogurt tang',
+            'calm',
           ],
           shortDescription:
             'A creamy, tangy staple cherished by young nomads, believed to promote spiritual clarity.',
@@ -65,10 +65,10 @@ export const airNomads = {
           rarity: 'uncommon',
           flavorNotes: [
             'floral',
-            'sweet_herbaceous',
-            'calming_aroma',
-            'gentle-perfume',
-            'airy-fragrance',
+            'sweetly herbaceous',
+            'calming aroma',
+            'gentle perfume',
+            'airy fragrance',
           ],
           shortDescription:
             'Delicate purple buds used in calming teas and for garnishing desserts.',
@@ -86,9 +86,9 @@ export const airNomads = {
           tags: ['air_nomad', 'floral', 'delicate'],
           rarity: 'uncommon',
           flavorNotes: [
-            'subtle_floral',
-            'airy_fragrance',
-            'perfume-like_sweetness',
+            'subtle floral',
+            'airy fragrance',
+            'perfume-like sweetness',
           ],
           shortDescription:
             'Gossamer-thin petals that dissolve on the tongue, leaving a hint of sweetness.',
@@ -124,9 +124,9 @@ export const airNomads = {
           ],
           rarity: 'common',
           flavorNotes: [
-            'honeyed_sweet',
-            'floral_aroma',
-            'velvety_texture',
+            'honeyed sweetness',
+            'floral aroma',
+            'velvety texture',
             'dream-like',
             'succulent',
             'luscious',
@@ -146,7 +146,7 @@ export const airNomads = {
           rawCompatible: true,
           tags: ['air_nomad', 'fresh', 'crisp', 'peppery'],
           rarity: 'common',
-          flavorNotes: ['crisp_snap', 'fresh_green', 'subtly_peppery'],
+          flavorNotes: ['crisp snap', 'fresh green', 'subtly peppery'],
           shortDescription:
             'Crunchy and cool, a favorite snack for young airbenders during flying lessons.',
           culturalSignificance:
@@ -162,7 +162,7 @@ export const airNomads = {
           rawCompatible: true,
           tags: ['air_nomad', 'fruit', 'light', 'refreshing'],
           rarity: 'uncommon',
-          flavorNotes: ['light_sweetness', 'fluffy_texture', 'watery'],
+          flavorNotes: ['light sweetness', 'fluffy texture', 'watery essence'],
           shortDescription:
             'A fruit with a light, almost fluffy texture, said to taste like a cloud.',
           culturalSignificance:
@@ -179,14 +179,14 @@ export const airNomads = {
           tags: ['air_nomad', 'restorative', 'bitter', 'sweet'],
           rarity: 'rare',
           flavorNotes: [
-            'complex_bitter-sweet',
-            'warming_sensation',
-            'earthy_aroma',
+            'complex bitter-sweetness',
+            'warming sensation',
+            'earthy aroma',
           ],
           shortDescription:
             'A rare root found only on the highest, most inaccessible mountain peaks.',
           culturalSignificance:
-            'Used in potent healing teas and elixirs. Finding it is considered a test of an airbender’s connection to the mountain and the sky.',
+            'Used in potent healing teas and elixirs. Finding it is considered a test of an airbender\'s connection to the mountain and the sky.',
           loreHints: ['mountain_hermit'],
         },
       ],
@@ -214,7 +214,7 @@ export const airNomads = {
           flavorNotes: [
             'nutty',
             'toasted',
-            'earthy_sweet',
+            'earthy sweetness',
             'wholesome',
             'robust',
             'sustaining',

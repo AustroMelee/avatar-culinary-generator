@@ -180,27 +180,46 @@ button[type='submit']:active {
   padding: 8px;
   border-radius: 4px;
   background-color: #f7fafc;
+  border-left: 3px solid transparent;
 }
 
+.ingredient-meta {
+  font-size: 0.9em;
+  color: #718096; /* gray-600 */
+}
+
+#ingredientList .rarity-uncommon {
+  border-left-color: #63b3ed; /* blue-400 */
+}
 #ingredientList .rarity-uncommon strong {
-  color: #2b6cb0; /* Blue */
+  color: #2b6cb0; /* blue-700 */
 }
 
+#ingredientList .rarity-rare {
+  border-left-color: #b794f4; /* purple-400 */
+}
 #ingredientList .rarity-rare strong {
-  color: #97266d; /* Purple */
+  color: #805ad5; /* purple-600 */
 }
 
+#ingredientList .rarity-legendary {
+  border-left-color: #f6ad55; /* orange-400 */
+  background-color: #fffaf0; /* orange-100 */
+}
 #ingredientList .rarity-legendary strong {
-  color: #b7791f; /* Orange/Gold */
+  color: #dd6b20; /* orange-600 */
   font-weight: bold;
-  text-transform: uppercase;
 }
 
 .chef-tip {
-  background-color: #f0fff4;
-  border-left-color: #48bb78;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  background-color: #f0fff4; /* green-100 */
+  border-left-color: #68d391; /* green-400 */
+  padding: 1em 1.5em;
+  border-radius: 4px;
+}
+
+.chef-tip h3 {
+  color: #2f855a; /* green-700 */
 }
 
 .result p {
