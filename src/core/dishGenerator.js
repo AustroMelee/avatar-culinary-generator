@@ -65,36 +65,31 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   // This is a simplified selection strategy. A more robust implementation could
   // add more complex rules, weights, and variety.
   const selectedIngredients = [];
+  const usedIngredients = new Set();
+
+  const selectAndUse = (selectionFn, role, fallback = true) => {
+    // Filter out already used ingredients
+    const available = availableIngredientObjects.filter(
+      (ing) => !usedIngredients.has(ing.name)
+    );
+
+    let selected = selectionFn(available, dishType);
+
+    if (!selected && fallback) {
+      selected = getRandomElement(available);
+    }
+    
+    if (selected) {
+      selectedIngredients.push({ ...selected, role });
+      usedIngredients.add(selected.name);
+    }
+  };
   
-  const primaryIngredient =
-    selectPrimaryIngredient(availableIngredientObjects, dishType) ||
-    getRandomElement(availableIngredientObjects);
-  if (primaryIngredient) selectedIngredients.push({ ...primaryIngredient, role: 'primary' });
-
-  const secondaryIngredient =
-    selectSecondaryIngredient(
-      availableIngredientObjects,
-      dishType,
-      primaryIngredient
-    ) || getRandomElement(availableIngredientObjects);
-  if (secondaryIngredient) selectedIngredients.push({ ...secondaryIngredient, role: 'accent' });
-
-  const baseIngredient =
-    selectBaseIngredient(
-      availableIngredientObjects,
-      dishType
-    ) || primaryIngredient;
-  if (baseIngredient) selectedIngredients.push({ ...baseIngredient, role: 'base' });
-
-  const seasoningIngredient =
-    selectSeasoningIngredient(availableIngredientObjects, dishType) ||
-    getRandomElement(availableIngredientObjects);
-  if(seasoningIngredient) selectedIngredients.push({ ...seasoningIngredient, role: 'seasoning' });
-
-  const garnishIngredient =
-    selectGarnishIngredient(availableIngredientObjects, dishType) ||
-    getRandomElement(availableIngredientObjects);
-  if(garnishIngredient) selectedIngredients.push({ ...garnishIngredient, role: 'garnish' });
+  selectAndUse(selectPrimaryIngredient, 'primary');
+  selectAndUse(selectSecondaryIngredient, 'accent');
+  selectAndUse(selectBaseIngredient, 'base', false); // Base is often primary, so fallback is tricky
+  selectAndUse(selectSeasoningIngredient, 'seasoning');
+  selectAndUse(selectGarnishIngredient, 'garnish');
 
   // 3. Generate the textual components of the dish.
   const name = generateStructuredName(
