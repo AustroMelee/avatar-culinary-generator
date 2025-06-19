@@ -15,6 +15,7 @@ import {
   collectAndFilterAvailableIngredients,
   selectIngredientByRoleFromCandidates,
   isValidIngredientForDishType,
+  formatIngredient,
 } from '@core/ingredientManager.js';
 import { generateStructuredName } from '@core/nameGenerator.js';
 import { generateDishLore } from '@core/loreGenerator.js';
@@ -29,6 +30,9 @@ import {
   unitedRepublic,
   spiritWorld,
 } from '@data/index.js';
+import { generateName } from './nameGenerator.js';
+import { generateDescription } from './descriptionGenerator.js';
+import { generateLore } from './loreGenerator.js';
 
 /**
  * @param {Ingredient} ing
@@ -185,5 +189,28 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     ingredients: allSelectedIngredients,
     notes: notes,
     lore: generatedLore,
+  };
+}
+
+/**
+ * Generates a static, default dish for demonstration purposes.
+ * This provides a consistent, well-structured example of the generator's output.
+ * @returns {DishResult} A pre-defined Air Nomad main course.
+ */
+export function generateDefaultDish() {
+  const defaultIngredients = [
+    { name: 'Sky Bison Yoghurt', role: 'base', type: 'dairy', source: 'Air Nomads' },
+    { name: 'Aero-Melon', role: 'primary', type: 'Fruit', source: 'Air Nomads', rarity: 'uncommon' },
+    { name: 'Lavender Buds', role: 'seasoning', type: 'herb', source: 'Air Nomads', rarity: 'uncommon' },
+    { name: 'Sky Sprouts', role: 'accent', type: 'Vegetable', source: 'Air Nomads' },
+    { name: 'Whisperwind Petals', role: 'garnish', type: 'Edible Flower', source: 'Air Nomads', rarity: 'uncommon' },
+  ];
+
+  return {
+    name: 'Sky Temple Aero-Melon Salad',
+    concept: 'A refreshing main course that embodies the light and spiritual nature of the Air Nomads, focusing on fresh, vegetarian ingredients.',
+    ingredients: defaultIngredients.map(formatIngredient),
+    notes: 'The Aero-Melon is lightly tossed with a Sky Bison Yoghurt dressing infused with crushed Lavender Buds. Tender Sky Sprouts add a crisp texture, while delicate Whisperwind Petals provide a beautiful and fragrant garnish. The dish is served chilled in a simple, hand-carved wooden bowl.',
+    lore: 'A meditative dish often prepared by young acolytes to practice mindfulness. It is said that the subtle hum of the Aero-Melon can only be heard when one\'s mind is truly at peace, making its preparation a spiritual exercise.',
   };
 }

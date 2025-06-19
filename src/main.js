@@ -3,7 +3,7 @@ import '../styles/style.css';
 
 // WHY: These imports bring in the core logic and UI utility functions from their separate modules.
 // This keeps the entry point file clean and focused on event handling and workflow.
-import { generateDish } from '@core/dishGenerator.js';
+import { generateDish, generateDefaultDish } from '@core/dishGenerator.js';
 import { NATIONS } from '@core/constants.js';
 import {
   updateUIForLoading,
@@ -18,8 +18,11 @@ import { initializeRNG } from '@utils/random.js';
  * before they exist on the page, which would cause errors.
  */
 document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isDemoMode = urlParams.get('demo') === 'true';
+
   // Initialize the RNG at startup, checking for a URL parameter.
-  const seed = new URLSearchParams(window.location.search).get('seed');
+  const seed = urlParams.get('seed');
   initializeRNG(seed);
 
   // Since we removed the `setupControls` function, we must ensure the form exists.
@@ -32,6 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
       "CRITICAL ERROR: The button with id 'generate-btn' was not found. Script cannot execute."
     );
     return;
+  }
+
+  // If in demo mode, generate and display the default dish immediately.
+  if (isDemoMode) {
+    const defaultDish = generateDefaultDish();
+    displayResults(defaultDish);
   }
 
   // Attach the click event listener to the button.

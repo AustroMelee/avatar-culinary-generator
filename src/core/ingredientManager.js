@@ -308,3 +308,24 @@ export function selectIngredientByRoleFromCandidates(
 
   return itemToAdd;
 }
+
+/**
+ * Formats a single ingredient object into a user-friendly string.
+ * @param {Ingredient} ingredient - The ingredient object to format.
+ * @returns {string} A formatted string describing the ingredient.
+ */
+export function formatIngredient(ingredient) {
+  const parts = [ingredient.name];
+  const details = [];
+
+  if (ingredient.role) details.push(`Role: ${ingredient.role}`);
+  if (ingredient.type) details.push(`Type: ${ingredient.type}`);
+  if (ingredient.source) details.push(`Source: ${ingredient.source}`);
+  if (ingredient.rarity) details.push(`Rarity: ${ingredient.rarity}`);
+
+  if (details.length > 0) {
+    parts.push(`(${details.join('; ')})`);
+  }
+
+  return parts.join(' ');
+}

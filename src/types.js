@@ -80,13 +80,13 @@
  */
 
 /**
- * Defines the final output structure of a generated dish.
+ * Represents the final, structured output of a generated dish.
  * @typedef {object} DishResult
- * @property {string} name - The final generated name of the dish.
- * @property {string} concept - The high-level conceptual description.
- * @property {Ingredient[]} ingredients - The list of ingredients used in the dish.
- * @property {string} notes - The detailed description of preparation and flavor.
- * @property {string} lore - The historical or cultural backstory of the dish.
+ * @property {string} name - The final, generated name of the dish.
+ * @property {string} concept - A brief description of the dish's concept and cultural origins.
+ * @property {string[]} ingredients - A list of formatted strings, each describing a key ingredient and its role.
+ * @property {string} notes - A paragraph detailing the preparation, presentation, and flavor profile.
+ * @property {string | null} lore - An optional snippet of historical or cultural lore related to the dish.
  */
 
 // This export is just to satisfy the module system; the file's main purpose is for type definitions.
