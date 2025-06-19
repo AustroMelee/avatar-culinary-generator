@@ -200,8 +200,39 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     lore: generatedLore,
   };
 
+  validateDishResult(result);
   console.log('Generated Ingredients:', result.ingredients);
   return result;
+}
+
+/**
+ * Validates the final dish result object to ensure all keys exist and are of the correct type.
+ * Logs warnings for any validation failures.
+ * @param {DishResult} dishResult - The dish result object to validate.
+ * @returns {boolean} True if the dish result is valid, false otherwise.
+ */
+function validateDishResult(dishResult) {
+  let isValid = true;
+  const requiredKeys = ['name', 'concept', 'ingredients', 'notes'];
+
+  for (const key of requiredKeys) {
+    if (!dishResult.hasOwnProperty(key)) {
+      console.warn(`[Validation] DishResult is missing required key: "${key}"`);
+      isValid = false;
+    }
+  }
+
+  if (dishResult.hasOwnProperty('ingredients')) {
+    if (!Array.isArray(dishResult.ingredients)) {
+      console.warn(`[Validation] DishResult "ingredients" is not an array.`);
+      isValid = false;
+    } else if (dishResult.ingredients.length === 0) {
+      console.warn(`[Validation] DishResult "ingredients" array is empty.`);
+      // This might be a valid state, so not setting isValid to false, just warning.
+    }
+  }
+
+  return isValid;
 }
 
 /**

@@ -310,27 +310,6 @@ export function selectIngredientByRoleFromCandidates(
 }
 
 /**
- * Formats a single ingredient object into a user-friendly string.
- * @param {Ingredient} ingredient - The ingredient object to format.
- * @returns {string} A formatted string describing the ingredient.
- */
-export function formatIngredient(ingredient) {
-  const parts = [ingredient.name];
-  const details = [];
-
-  if (ingredient.role) details.push(`Role: ${ingredient.role}`);
-  if (ingredient.type) details.push(`Type: ${ingredient.type}`);
-  if (ingredient.source) details.push(`Source: ${ingredient.source}`);
-  if (ingredient.rarity) details.push(`Rarity: ${ingredient.rarity}`);
-
-  if (details.length > 0) {
-    parts.push(`(${details.join('; ')})`);
-  }
-
-  return parts.join(' ');
-}
-
-/**
  * Selects a primary ingredient from a list of candidates.
  * @param {Ingredient[]} candidates The list of ingredient candidates.
  * @returns {Ingredient | undefined} The selected ingredient or undefined if none found.
@@ -344,4 +323,48 @@ function selectIngredientByRole(ingredients, role) {
     return undefined;
   }
   return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+/**
+ * Validates a single ingredient entry to ensure it has all required fields.
+ * @param {Ingredient} ingredient - The ingredient object to validate.
+ * @param {number} index - The index of the ingredient in the source array, for logging.
+ * @returns {boolean} True if the ingredient is valid, false otherwise.
+ */
+export function validateIngredientEntry(ingredient, index) {
+  const requiredFields = ['name', 'type', 'role', 'source'];
+  const missingFields = requiredFields.filter((field) => !ingredient[field]);
+
+  if (missingFields.length > 0) {
+    console.warn(
+      `[Validation] Ingredient at index ${index} is missing required fields: ${missingFields.join(
+        ', '
+      )}`,
+      ingredient
+    );
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Formats a single ingredient object into a user-friendly string with fallbacks.
+ * @param {Ingredient} ingredient - The ingredient object to format.
+ * @returns {string} A formatted string describing the ingredient.
+ */
+export function formatIngredient(ingredient) {
+  const name = ingredient.name || 'Unknown Ingredient';
+  const parts = [name];
+  const details = [];
+
+  details.push(`Role: ${ingredient.role || 'unknown'}`);
+  details.push(`Type: ${ingredient.type || 'unknown'}`);
+  details.push(`Source: ${ingredient.source || 'Unknown'}`);
+  if (ingredient.rarity) details.push(`Rarity: ${ingredient.rarity}`);
+
+  if (details.length > 0) {
+    parts.push(`(${details.join('; ')})`);
+  }
+
+  return parts.join(' ');
 }
