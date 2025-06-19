@@ -10,37 +10,54 @@
   change the entire look and feel of the site by modifying just these values. It promotes consistency and reduces repetition.
 */
 :root {
-  --color-background: #2c2823; /* Earthy brown */
-  --color-text: #f0e6d2; /* Parchment */
-  --color-primary: #ffd369; /* Gold accent */
-  --color-secondary: #b08d57; /* Muted gold */
-  --color-surface: #3e3830; /* Slightly lighter than body */
-  --color-border: #5a4a3b; /* Darker border */
-  --color-text-strong: #f4c588; /* Lighter gold for emphasis */
-  --color-lore: #c9b38b; /* Muted parchment for lore */
-  --font-heading: 'Cinzel', 'Luminari', 'Fantasy', serif;
-  --font-body: 'Lora', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  /* Dark Theme Color Palette */
+  --color-background: #1a202c; /* Very Dark Blue-Gray */
+  --color-surface: #2d3748;    /* Dark Blue-Gray */
+  --color-border: #4a5568;     /* Muted Blue-Gray */
+  
+  --color-text-primary: #e2e8f0;    /* Light Gray */
+  --color-text-secondary: #a0aec0; /* Medium Gray */
+  --color-text-meta: #718096;      /* Dim Gray */
+
+  --color-accent: #f6ad55; /* Gold/Orange for buttons and highlights */
+
+  /* Rarity & Status Colors (adjusted for dark theme) */
+  --rarity-uncommon-text: #63b3ed; /* Bright Blue */
+  --rarity-uncommon-bg: #2a4365;   /* Dark Blue */
+  --rarity-rare-text: #b794f4;   /* Bright Purple */
+  --rarity-rare-bg: #44337a;   /* Dark Purple */
+  --rarity-legendary-text: #f6e05e; /* Bright Gold */
+  --rarity-legendary-bg: #684f1d;  /* Dark Gold */
+
+  --tip-bg: #2d5749; /* Dark Green */
+  --tip-text: #9ae6b4; /* Light Green */
+  --tip-border: #68d391;
+
+  --font-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-heading: 'Georgia', 'Times New Roman', Times, serif;
 }
 
 body {
   font-family: var(--font-body);
   background-color: var(--color-background);
-  color: var(--color-text);
-  padding: 1rem 2rem 3rem;
-  line-height: 1.7; /* WHY: A generous line height improves readability for long blocks of text. */
+  color: var(--color-text-primary);
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* WHY: Using flexbox to center the main container on the page. */
+  padding: 20px;
+  line-height: 1.6;
 }
 
 .container {
-  width: 100%;
-  max-width: 900px; /* WHY: A max-width prevents text lines from becoming too long on wide screens, which aids readability. */
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
-  color: var(--color-primary);
+  color: var(--color-accent);
   text-align: center;
   font-family: var(--font-heading);
   font-size: 2.5em;
@@ -63,7 +80,7 @@ fieldset {
 
 legend {
   font-family: var(--font-heading);
-  color: var(--color-secondary);
+  color: var(--color-accent);
   font-size: 1.5em;
   font-weight: bold;
   padding: 0 0.5em;
@@ -79,7 +96,7 @@ button {
   font-size: 1.1em;
 }
 label {
-  color: var(--color-text-strong);
+  color: var(--color-text-primary);
   margin-bottom: 0.5rem; /* WHY: Less margin than other form elements to visually tie it to the input below it. */
 }
 
@@ -90,7 +107,7 @@ input[type='text'] {
   border-radius: 6px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  color: var(--color-text);
+  color: var(--color-text-primary);
   box-sizing: border-box; /* WHY: Ensures padding and border are included in the element's total width, preventing overflow. */
   font-family: var(--font-body);
   transition:
@@ -99,7 +116,7 @@ input[type='text'] {
 }
 select:focus,
 input[type='text']:focus {
-  border-color: var(--color-primary);
+  border-color: var(--color-accent);
   box-shadow: 0 0 0 2px rgba(255, 211, 105, 0.5); /* WHY: A custom focus style that's more thematic and accessible than the default outline. */
   outline: none; /* WHY: Removes the default browser outline to use our custom box-shadow instead. */
 }
@@ -107,7 +124,7 @@ input[type='text']:focus {
 button[type='submit'] {
   width: auto;
   padding: 0.8rem 2rem;
-  background: var(--color-secondary);
+  background: var(--color-accent);
   color: var(--color-background);
   cursor: pointer;
   font-weight: bold;
@@ -123,7 +140,7 @@ button[type='submit'] {
   margin: 1.5rem auto 0; /* WHY: Centers the button horizontally within its parent. */
 }
 button[type='submit']:hover {
-  background: var(--color-primary);
+  background: var(--color-accent);
   transform: translateY(
     -2px
   ); /* WHY: Creates a subtle "lift" effect on hover for better user feedback. */
@@ -135,18 +152,18 @@ button[type='submit']:active {
 }
 
 .result {
-  background-color: #fff;
+  background-color: var(--color-background);
   border-radius: 8px;
   padding: 20px;
   margin-top: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-border);
 }
 
 .result h2 {
-  color: #2d3748;
+  color: var(--color-accent);
   margin-top: 0;
-  border-bottom: 2px solid #a0aec0;
+  border-bottom: 2px solid var(--color-border);
   padding-bottom: 10px;
   margin-bottom: 20px;
 }
@@ -155,12 +172,12 @@ button[type='submit']:active {
 .dish-section {
   margin-bottom: 1.5em;
   padding-left: 1em;
-  border-left: 3px solid #cbd5e0;
+  border-left: 3px solid var(--color-border);
 }
 
 .dish-section h3 {
   margin-bottom: 0.5em;
-  color: #4a5568;
+  color: var(--color-text-secondary);
   font-size: 1.1em;
   font-weight: 600;
 }
@@ -179,47 +196,53 @@ button[type='submit']:active {
   margin-bottom: 0.5em;
   padding: 8px;
   border-radius: 4px;
-  background-color: #f7fafc;
+  background-color: var(--color-surface);
   border-left: 3px solid transparent;
 }
 
 .ingredient-meta {
   font-size: 0.9em;
-  color: #718096; /* gray-600 */
+  color: var(--color-text-meta);
 }
 
 #ingredientList .rarity-uncommon {
-  border-left-color: #63b3ed; /* blue-400 */
+  border-left-color: var(--rarity-uncommon-text);
+  background-color: var(--rarity-uncommon-bg);
 }
 #ingredientList .rarity-uncommon strong {
-  color: #2b6cb0; /* blue-700 */
+  color: var(--rarity-uncommon-text);
 }
 
 #ingredientList .rarity-rare {
-  border-left-color: #b794f4; /* purple-400 */
+  border-left-color: var(--rarity-rare-text);
+  background-color: var(--rarity-rare-bg);
 }
 #ingredientList .rarity-rare strong {
-  color: #805ad5; /* purple-600 */
+  color: var(--rarity-rare-text);
 }
 
 #ingredientList .rarity-legendary {
-  border-left-color: #f6ad55; /* orange-400 */
-  background-color: #fffaf0; /* orange-100 */
+  border-left-color: var(--rarity-legendary-text);
+  background-color: var(--rarity-legendary-bg);
 }
 #ingredientList .rarity-legendary strong {
-  color: #dd6b20; /* orange-600 */
+  color: var(--rarity-legendary-text);
   font-weight: bold;
 }
 
 .chef-tip {
-  background-color: #f0fff4; /* green-100 */
-  border-left-color: #68d391; /* green-400 */
+  background-color: var(--tip-bg);
+  border-left-color: var(--tip-border);
   padding: 1em 1.5em;
   border-radius: 4px;
 }
 
 .chef-tip h3 {
-  color: #2f855a; /* green-700 */
+  color: var(--tip-text);
+}
+
+.chef-tip p {
+  color: var(--color-text-secondary);
 }
 
 .result p {
@@ -234,16 +257,16 @@ button[type='submit']:active {
   padding: 0.5rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 4px;
-  border-left: 3px solid var(--color-secondary); /* WHY: Adds a colored accent bar to each list item for visual interest. */
+  border-left: 3px solid var(--color-accent); /* WHY: Adds a colored accent bar to each list item for visual interest. */
 }
 .result ul li::before {
   content: '❖ '; /* WHY: A custom, thematic bullet point using the ::before pseudo-element. */
-  color: var(--color-secondary);
+  color: var(--color-accent);
   margin-right: 0.5em;
 }
 .dish-lore {
   font-style: italic;
-  color: var(--color-lore);
+  color: var(--color-text-meta);
   padding: 1rem;
   margin-top: 1.5rem;
   border-top: 1px dashed var(--color-border);
@@ -252,7 +275,7 @@ button[type='submit']:active {
 }
 .dish-lore strong {
   font-family: var(--font-heading);
-  color: var(--color-secondary);
+  color: var(--color-accent);
   font-weight: normal; /* WHY: The font 'Cinzel' is bold by default, so we reset it to normal and let the font itself provide the emphasis. */
 }
 
@@ -279,7 +302,7 @@ button[type='submit']:active {
   display: flex; /* WHY: To align the checkbox and the text nicely. */
   align-items: center;
   font-size: 1em;
-  color: var(--color-text);
+  color: var(--color-text-primary);
 }
 .multiselect input[type='checkbox'] {
   margin-right: 0.5em;
@@ -287,16 +310,16 @@ button[type='submit']:active {
     1.2
   ); /* WHY: Makes the default checkbox slightly larger and easier to click. */
   accent-color: var(
-    --color-secondary
+    --color-accent
   ); /* WHY: Styles the checkmark color to match the theme. */
 }
 .multiselect label:hover {
   background-color: var(--color-border);
-  color: var(--color-primary);
+  color: var(--color-accent);
 }
 
 strong {
-  color: var(--color-text-strong);
+  color: var(--color-text-primary);
   font-weight: bold;
 }
 
@@ -382,4 +405,11 @@ strong {
 
 #dev-tools button:hover {
   background-color: #896d0a;
+}
+
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--color-text-meta);
+  font-size: 0.9em;
 }
