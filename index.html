@@ -142,10 +142,19 @@
       </div>
     </div>
 
-    <!-- 
-  The script now points to a .js file, but `type="module"` is still essential 
-  for enabling `import`/`export` syntax.
--->
+    <footer>
+      <p>
+        Avatar: The Last Airbender and all related content are the property of
+        Paramount and Nickelodeon.
+      </p>
+    </footer>
+
+    <div id="dev-tools" class="hidden">
+      <button id="run-test-suite-btn">Run 20 Test Generations</button>
+    </div>
+
+    <div id="role-warning-container" class="warning-container" aria-live="assertive"></div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

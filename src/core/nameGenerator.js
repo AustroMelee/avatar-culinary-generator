@@ -6,6 +6,8 @@ import {
   themes as allThemes,
 } from './data/index.js';
 import { getRandomElement } from '../utils/random.js';
+import { getPrimaryIngredient, getSecondaryIngredient } from './utils.js';
+import { validateStringAndLog } from '../utils/textUtils.js';
 
 /**
  * @typedef {import('../types.js').Ingredient} Ingredient
@@ -93,7 +95,17 @@ export function generateStructuredName(
   // A simple, default name pattern. More complex patterns could be chosen from data files.
   const nameTemplate = `{nationAdj} {mainIngredient} {format}`;
 
-  return interpolateTemplate(nameTemplate, nameData)
+  const generatedName = interpolateTemplate(nameTemplate, nameData)
     .replace(/\s+/g, ' ')
     .trim() || 'Unnamed Culinary Creation';
+
+  const finalName = generatedName.replace(/\s+/g, ' ').trim();
+  return validateStringAndLog(finalName, 'Dish Name');
+}
+
+/**
+ * Finds the most suitable adjective for the dish based on nation and theme.
+ */
+function findMostSuitableAdjective(dishName) {
+  // Implementation of findMostSuitableAdjective function
 }

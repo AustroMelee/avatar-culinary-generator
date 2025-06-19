@@ -2,6 +2,12 @@
 
 import { themes as allThemes } from './data/index.js';
 import { getRandomElement } from '../utils/random.js';
+import {
+  getPrimaryIngredient,
+  getSecondaryIngredient,
+  getBaseIngredient,
+} from './utils.js';
+import { validateStringAndLog } from '../utils/textUtils.js';
 
 /**
  * @typedef {import('../types.js').Ingredient} Ingredient
@@ -52,7 +58,7 @@ export function generateDescription(name, ingredients, nations) {
   const generatedNotes = notesParts.join(' ');
 
   return {
-    concept: generatedConcept,
-    notes: generatedNotes,
+    concept: validateStringAndLog(generatedConcept, 'Dish Concept'),
+    notes: validateStringAndLog(generatedNotes, 'Preparation Notes'),
   };
 }

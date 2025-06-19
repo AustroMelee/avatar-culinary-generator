@@ -88,3 +88,139 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 50);
   });
 });
+
+async function generateAndDisplayDish() {
+  const resultContainer = document.getElementById('dish-result-container');
+  const loadingIndicator = document.getElementById('loading-indicator');
+
+  try {
+    // Show loading indicator and hide previous result
+    resultContainer.classList.add('hidden');
+    loadingIndicator.classList.remove('hidden');
+
+    // Simulate a short delay to make the loading feel more substantial
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const selectedNations = getSelectedNations();
+    const dishType = document.getElementById('dish-type-select').value;
+    const dish = generateDish(dishType, selectedNations);
+
+    displayDish(dish);
+  } catch (error) {
+    console.error('[Critical Generation Failure]', 'An unexpected error occurred during dish generation.', error);
+    displayDish(null); // Display a generic failure message to the user
+  } finally {
+    // Always hide the loading indicator
+    loadingIndicator.classList.add('hidden');
+  }
+}
+
+/**
+ * Runs a single generation-and-validation cycle for testing purposes.
+ * @returns {{dishName: string, errors: string[]}} The result of the test run.
+ */
+function runSingleTestGeneration() {
+  const errors = [];
+  const dish = generateDish('Main Course', ['Air Nomads']);
+
+  if (!dish || !dish.name) {
+    errors.push('Dish generation failed completely, returned null or no name.');
+    return { dishName: 'GENERATION FAILED', errors };
+  }
+
+  // 1. Check for missing roles
+  if (dish.missingRoles && dish.missingRoles.length > 0) {
+    errors.push(`Missing Roles: ${dish.missingRoles.join(', ')}`);
+  }
+
+  // 2. Check for empty ingredients
+  if (!dish.ingredients || dish.ingredients.length === 0) {
+    errors.push('Ingredients array is empty.');
+  }
+
+  // 3. Check for duplicate ingredients
+  const ingredientNames = new Set();
+  dish.ingredients.forEach((ing) => {
+    if (ingredientNames.has(ing.name)) {
+      errors.push(`Duplicate Ingredient: ${ing.name}`);
+    }
+    ingredientNames.add(ing.name);
+  });
+
+  // 4. Check for leftover placeholders
+  const textFields = {
+    Name: dish.name,
+    Concept: dish.concept,
+    Notes: dish.notes,
+    Lore: dish.lore,
+  };
+  for (const [field, text] of Object.entries(textFields)) {
+    if (text && /\{[^{}]+\}/.test(text)) {
+      errors.push(`Unprocessed placeholder in ${field}: ${text}`);
+    }
+  }
+
+  return { dishName: dish.name, errors };
+}
+
+/**
+ * Runs a suite of 20 test generations and logs results to the console.
+ */
+async function runTestSuite() {
+  console.clear();
+  console.log('--- 🧪 Starting Test Suite: 20 Air Nomad Main Courses 🧪 ---');
+  const loadingIndicator = document.getElementById('loading-indicator');
+  loadingIndicator.classList.remove('hidden');
+
+  await new Promise((resolve) => setTimeout(resolve, 100)); // Brief delay for UI update
+
+  for (let i = 1; i <= 20; i++) {
+    const result = runSingleTestGeneration();
+    if (result.errors.length === 0) {
+      console.log(
+        `%cPASS (%c${i}/20%c) - ${result.dishName}`,
+        'color: #22c55e; font-weight: bold;',
+        'color: #a3a3a3; font-weight: normal;',
+        'color: #f0f0f0; font-weight: normal;'
+      );
+    } else {
+      console.log(
+        `%cFAIL (%c${i}/20%c) - ${result.dishName}`,
+        'color: #ef4444; font-weight: bold;',
+        'color: #a3a3a3; font-weight: normal;',
+        'color: #f0f0f0; font-weight: normal;'
+      );
+      result.errors.forEach((err) => console.log(`  %c↳ ${err}`, 'color: #fca5a5;'));
+    }
+  }
+
+  loadingIndicator.classList.add('hidden');
+  console.log('--- ✅ Test Suite Complete ---');
+}
+
+/**
+ * Initializes the application, sets up event listeners, and performs initial setup.
+ */
+function initializeApp() {
+  // Check for Dev Mode via hostname or URL parameter (?dev=true)
+  const urlParams = new URLSearchParams(window.location.search);
+  const isDevHost =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1';
+  const isDevParam = urlParams.get('dev') === 'true';
+
+  if (isDevHost || isDevParam) {
+    const devTools = document.getElementById('dev-tools');
+    if (devTools) {
+      devTools.classList.remove('hidden');
+      document
+        .getElementById('run-test-suite-btn')
+        .addEventListener('click', runTestSuite);
+    }
+  }
+
+  const generateBtn = document.getElementById('generate-btn');
+  const nationCheckboxes = document.querySelectorAll('.nation-checkbox');
+
+  // ... existing code ...
+}

@@ -24,25 +24,52 @@ const NATION_DATA_MAP = {
 };
 
 /**
- * Validates a single ingredient entry to ensure it has all required fields.
- * @param {Ingredient} ingredient - The ingredient object to validate.
- * @param {number} index - The index of the ingredient in the source array, for logging.
+ * Validates a single ingredient entry to ensure it has all required fields and correct types.
+ * This is the primary gatekeeper for data quality from the source files.
+ * @param {object} ingredient - The ingredient object to validate.
+ * @param {string} id - A unique identifier for the ingredient (e.g., 'fireNation-spices-0') for logging.
  * @returns {boolean} True if the ingredient is valid, false otherwise.
  */
-export function validateIngredientEntry(ingredient, index) {
-  const requiredFields = ['name', 'type', 'rolePreference', 'source'];
-  const missingFields = requiredFields.filter((field) => !ingredient[field]);
-
-  if (missingFields.length > 0) {
-    console.warn(
-      `[Validation] Ingredient at index ${index} is missing required fields: ${missingFields.join(
-        ', '
-      )}`,
-      ingredient
+export function validateIngredientEntry(ingredient, id) {
+  let isValid = true;
+  const logError = (field, message) => {
+    console.error(
+      `[Ingredient Validation Error] Ingredient "${
+        ingredient.name || 'UNKNOWN'
+      }" (id: ${id}): Field "${field}" ${message}.`
     );
-    return false;
-  }
-  return true;
+    isValid = false;
+  };
+
+  // Check for required string fields
+  ['name', 'type', 'source'].forEach((field) => {
+    if (typeof ingredient[field] !== 'string' || ingredient[field].length === 0) {
+      logError(field, 'is missing, not a string, or empty');
+    }
+  });
+
+  // Check for required boolean fields
+  ['canBeBase', 'rawCompatible'].forEach((field) => {
+    if (typeof ingredient[field] !== 'boolean') {
+      logError(field, 'is missing or not a boolean');
+    }
+  });
+
+  // Check for required array-of-strings fields
+  ['rolePreference', 'tags', 'flavorNotes'].forEach((field) => {
+    if (
+      !Array.isArray(ingredient[field]) ||
+      ingredient[field].length === 0 ||
+      !ingredient[field].every((item) => typeof item === 'string')
+    ) {
+      logError(
+        field,
+        'is missing, not an array, empty, or contains non-string values'
+      );
+    }
+  });
+
+  return isValid;
 }
 
 /**
@@ -58,7 +85,14 @@ export function formatIngredient(ingredient) {
 
   details.push(`Role: ${ingredient.role || 'unknown'}`);
   details.push(`Type: ${ingredient.type || 'unknown'}`);
-  details.push(`Source: ${ingredient.source || 'Unknown'}`);
+
+  if (!ingredient.source) {
+    console.error('[Formatting Error] Ingredient is missing a source:', ingredient);
+    details.push(`Source: Unknown`);
+  } else {
+    details.push(`Source: ${ingredient.source}`);
+  }
+
   if (ingredient.rarity && ingredient.rarity !== 'common') {
     details.push(`Rarity: ${ingredient.rarity}`);
   }

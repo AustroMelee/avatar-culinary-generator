@@ -84,9 +84,10 @@
  * @typedef {object} DishResult
  * @property {string} name - The final, generated name of the dish.
  * @property {string} concept - A brief description of the dish's concept and cultural origins.
- * @property {string[]} ingredients - A list of formatted strings, each describing a key ingredient and its role.
+ * @property {Ingredient[]} ingredients - An array of the ingredient objects used in the dish.
  * @property {string} notes - A paragraph detailing the preparation, presentation, and flavor profile.
  * @property {string | null} lore - An optional snippet of historical or cultural lore related to the dish.
+ * @property {string[]} [missingRoles] - An optional array of roles that could not be filled.
  */
 
 // This export is just to satisfy the module system; the file's main purpose is for type definitions.

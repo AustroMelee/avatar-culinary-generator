@@ -45,3 +45,49 @@ export const NATION_KEYS = Object.freeze(
     Object.entries(NATIONS).map(([key, value]) => [value, key])
   )
 );
+
+export const DISH_TYPES = Object.freeze([
+  'Appetizer',
+  'Main Course',
+  'Dessert',
+  'Beverage',
+  'Soup/Stew',
+  'Salad',
+]);
+
+export const INGREDIENT_ROLES = Object.freeze([
+  'primary',
+  'liquid',
+  'base',
+  'accent',
+  'garnish',
+  'seasoning',
+  'snack',
+  'binder',
+]);
+
+export const INGREDIENT_TYPES = Object.freeze([
+  'dairy',
+  'herb',
+  'edible flower',
+  'fruit',
+  'vegetable',
+  'root vegetable',
+  'grain',
+  'fungus',
+  'liquid',
+  'crystal',
+  'meat',
+  'spice',
+  'legume / protein',
+  'noodle',
+  'salt',
+  'protein',
+  'seafood (roe)',
+  'seafood (crustacean)',
+  'seaweed / vegetable',
+  'fermented',
+  'spice blend',
+  'condiment / paste',
+  'sweetener / snack',
+]);

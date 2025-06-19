@@ -141,3 +141,72 @@ export function displayError(error) {
   document.getElementById('dishLore').style.display = 'none';
   document.getElementById('dishResult').style.display = 'block';
 }
+
+/**
+ * Displays the generated dish details in the UI.
+ * @param {DishResult | null} dishResult - The dish object to display, or null if generation failed.
+ */
+export function displayDish(dishResult) {
+  const nameEl = document.getElementById('dish-name');
+  const conceptEl = document.getElementById('dish-concept');
+  const ingredientsListEl = document.getElementById('ingredients-list');
+  const notesEl = document.getElementById('dish-notes');
+  const loreEl = document.getElementById('dish-lore');
+  const resultContainer = document.getElementById('dish-result-container');
+  const warningContainer = document.getElementById('role-warning-container');
+
+  // Always clear previous warnings
+  if (warningContainer) warningContainer.innerHTML = '';
+  if (ingredientsListEl) ingredientsListEl.innerHTML = '';
+
+  if (!dishResult) {
+    if (nameEl) nameEl.textContent = 'Could not generate a dish. Please try again!';
+    if (conceptEl) conceptEl.textContent = '';
+    if (notesEl) notesEl.textContent = '';
+    if (loreEl) loreEl.textContent = '';
+    if (resultContainer) resultContainer.classList.add('hidden');
+    return;
+  }
+
+  // Display role warnings if any roles were not filled
+  if (
+    warningContainer &&
+    dishResult.missingRoles &&
+    dishResult.missingRoles.length > 0
+  ) {
+    const roles = dishResult.missingRoles.join(', ');
+    warningContainer.textContent = `Warning: Could not find a suitable ingredient for the following roles: ${roles}. The generated dish may be incomplete.`;
+  }
+
+  if (nameEl) nameEl.textContent = dishResult.name;
+  if (conceptEl) conceptEl.textContent = dishResult.concept;
+  if (notesEl) notesEl.textContent = dishResult.notes;
+
+  if (ingredientsListEl && dishResult.ingredients?.length > 0) {
+    dishResult.ingredients.forEach((ingredient) => {
+      const li = document.createElement('li');
+      li.textContent = formatIngredient(ingredient);
+      ingredientsListEl.appendChild(li);
+    });
+  }
+
+  if (loreEl) {
+    if (dishResult.lore) {
+      loreEl.textContent = dishResult.lore;
+      loreEl.parentElement.classList.remove('hidden');
+    } else {
+      loreEl.textContent = '';
+      loreEl.parentElement.classList.add('hidden');
+    }
+  }
+
+  if (resultContainer) resultContainer.classList.remove('hidden');
+}
+
+/**
+ * Sets up the nation selection checkboxes, loading from constants.
+ * @param {string[]} nations - An array of nation names.
+ */
+export function setupNationCheckboxes(nations) {
+  // Implementation of setupNationCheckboxes function
+}

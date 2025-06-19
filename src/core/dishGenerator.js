@@ -24,7 +24,7 @@ import {
 import { generateStructuredName } from './nameGenerator.js';
 import { generateDescription } from './descriptionGenerator.js';
 import { generateLore } from './loreGenerator.js';
-import { NATIONS } from './constants.js';
+import { NATIONS, INGREDIENT_ROLES, INGREDIENT_TYPES } from './constants.js';
 import * as allData from './data/index.js';
 import { getRandomElement, rollSeed } from '../utils/random.js';
 
@@ -62,10 +62,10 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   });
 
   // 2. Select a set of ingredients for the dish based on roles.
-  // This is a simplified selection strategy. A more robust implementation could
-  // add more complex rules, weights, and variety.
   const selectedIngredients = [];
   const usedIngredients = new Set();
+  const requiredRoles = ['primary', 'base', 'seasoning', 'accent', 'garnish'];
+  const filledRoles = new Set();
 
   const selectAndUse = (selectionFn, role, fallback = true) => {
     // Filter out already used ingredients
@@ -78,18 +78,31 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     if (!selected && fallback) {
       selected = getRandomElement(available);
     }
-    
+
     if (selected) {
       selectedIngredients.push({ ...selected, role });
       usedIngredients.add(selected.name);
+      filledRoles.add(role);
+    } else {
+      console.warn(
+        `[Generator] Could not find a suitable unique ingredient for role: "${role}"`
+      );
     }
   };
-  
+
   selectAndUse(selectPrimaryIngredient, 'primary');
   selectAndUse(selectSecondaryIngredient, 'accent');
   selectAndUse(selectBaseIngredient, 'base', false); // Base is often primary, so fallback is tricky
   selectAndUse(selectSeasoningIngredient, 'seasoning');
   selectAndUse(selectGarnishIngredient, 'garnish');
+
+  const missingRoles = requiredRoles.filter((role) => !filledRoles.has(role));
+
+  // Final guarantee: ensure no duplicates made it through.
+  assertNoDuplicates(selectedIngredients);
+
+  // Validate the selected ingredients against standardized lists.
+  validateSelectedIngredients(selectedIngredients);
 
   // 3. Generate the textual components of the dish.
   const name = generateStructuredName(
@@ -112,6 +125,7 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     ingredients: selectedIngredients,
     notes: description.notes,
     lore,
+    missingRoles,
   };
 
   validateDishResult(result);
@@ -127,26 +141,73 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
  */
 function validateDishResult(dishResult) {
   let isValid = true;
-  const requiredKeys = ['name', 'concept', 'ingredients', 'notes'];
+  const TEXT_KEYS = ['name', 'concept', 'notes'];
 
-  for (const key of requiredKeys) {
-    if (!dishResult.hasOwnProperty(key)) {
-      console.warn(`[Validation] DishResult is missing required key: "${key}"`);
+  // Validate presence and type of required text fields
+  TEXT_KEYS.forEach((key) => {
+    if (typeof dishResult[key] !== 'string' || dishResult[key].length === 0) {
+      console.error(
+        `[Result Validation Error] DishResult key "${key}" is missing, not a string, or empty.`
+      );
       isValid = false;
     }
-  }
+  });
 
-  if (dishResult.hasOwnProperty('ingredients')) {
-    if (!Array.isArray(dishResult.ingredients)) {
-      console.warn(`[Validation] DishResult "ingredients" is not an array.`);
-      isValid = false;
-    } else if (dishResult.ingredients.length === 0) {
-      console.warn(`[Validation] DishResult "ingredients" array is empty.`);
-      // This might be a valid state, so not setting isValid to false, just warning.
-    }
+  // Validate ingredients array
+  if (!Array.isArray(dishResult.ingredients)) {
+    console.error('[Result Validation Error] DishResult.ingredients is not an array.');
+    isValid = false;
+  } else if (dishResult.ingredients.length === 0) {
+    // This is a critical failure, as a dish must have ingredients.
+    console.error('[Result Validation Error] DishResult.ingredients is empty.');
+    isValid = false;
+  } else if (dishResult.ingredients.some((ing) => !ing)) {
+    console.error(
+      '[Result Validation Error] DishResult.ingredients contains null or undefined entries.'
+    );
+    isValid = false;
   }
 
   return isValid;
+}
+
+/**
+ * Throws an error if any ingredient names are duplicated in the final array.
+ * This is a safeguard against logic errors in the selection process.
+ * @param {Ingredient[]} ingredients
+ */
+function assertNoDuplicates(ingredients) {
+  const names = new Set();
+  for (const ing of ingredients) {
+    if (names.has(ing.name)) {
+      console.error(
+        `[Critical] Duplicate ingredient found in final dish: "${ing.name}". This indicates a selection logic failure.`
+      );
+    }
+    names.add(ing.name);
+  }
+}
+
+/**
+ * Validates selected ingredients have standardized roles and types.
+ * @param {Ingredient[]} ingredients
+ */
+function validateSelectedIngredients(ingredients) {
+  ingredients.forEach((ing) => {
+    // Validate Role
+    if (ing.role && !INGREDIENT_ROLES.includes(ing.role)) {
+      console.warn(
+        `[Validation] Ingredient "${ing.name}" has non-standard role: "${ing.role}"`
+      );
+    }
+
+    // Validate Type (case-insensitive)
+    if (ing.type && !INGREDIENT_TYPES.includes(ing.type.toLowerCase())) {
+      console.warn(
+        `[Validation] Ingredient "${ing.name}" has non-standard type: "${ing.type}"`
+      );
+    }
+  });
 }
 
 /**

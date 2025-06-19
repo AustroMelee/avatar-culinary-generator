@@ -2,6 +2,9 @@
 
 import { getRandomElement } from '../utils/random.js';
 import { DISH_LORE_TEMPLATES } from './data/index.js';
+import { lore as allLore } from './data/index.js';
+import { getPrimaryIngredient } from './utils.js';
+import { validateStringAndLog } from '../utils/textUtils.js';
 
 /**
  * @typedef {import('../types.js').Ingredient} Ingredient
@@ -62,5 +65,9 @@ export function generateLore(name, nations, ingredients) {
     }
   }
 
-  return template.replace(/\{nation_name\}/g, primaryNation).replace(/\{Dish_Name\}/g, name);
+  const generatedLore = template.replace(/\{nation_name\}/g, primaryNation).replace(/\{Dish_Name\}/g, name);
+
+  const finalLore = generatedLore.replace(/{mainIngredient}/gi, getPrimaryIngredient(ingredients).name);
+
+  return validateStringAndLog(finalLore, 'Dish Lore');
 }
