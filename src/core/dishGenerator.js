@@ -64,35 +64,37 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   // 2. Select a set of ingredients for the dish based on roles.
   // This is a simplified selection strategy. A more robust implementation could
   // add more complex rules, weights, and variety.
+  const selectedIngredients = [];
+  
   const primaryIngredient =
     selectPrimaryIngredient(availableIngredientObjects, dishType) ||
     getRandomElement(availableIngredientObjects);
+  if (primaryIngredient) selectedIngredients.push({ ...primaryIngredient, role: 'primary' });
+
   const secondaryIngredient =
     selectSecondaryIngredient(
       availableIngredientObjects,
       dishType,
       primaryIngredient
     ) || getRandomElement(availableIngredientObjects);
+  if (secondaryIngredient) selectedIngredients.push({ ...secondaryIngredient, role: 'accent' });
+
   const baseIngredient =
     selectBaseIngredient(
       availableIngredientObjects,
-      dishType,
-      primaryIngredient
+      dishType
     ) || primaryIngredient;
+  if (baseIngredient) selectedIngredients.push({ ...baseIngredient, role: 'base' });
+
   const seasoningIngredient =
     selectSeasoningIngredient(availableIngredientObjects, dishType) ||
     getRandomElement(availableIngredientObjects);
+  if(seasoningIngredient) selectedIngredients.push({ ...seasoningIngredient, role: 'seasoning' });
+
   const garnishIngredient =
     selectGarnishIngredient(availableIngredientObjects, dishType) ||
     getRandomElement(availableIngredientObjects);
-
-  const selectedIngredients = [
-    primaryIngredient,
-    secondaryIngredient,
-    baseIngredient,
-    seasoningIngredient,
-    garnishIngredient,
-  ].filter(Boolean); // Using .filter(Boolean) is a concise way to remove any null/undefined entries.
+  if(garnishIngredient) selectedIngredients.push({ ...garnishIngredient, role: 'garnish' });
 
   // 3. Generate the textual components of the dish.
   const name = generateStructuredName(
