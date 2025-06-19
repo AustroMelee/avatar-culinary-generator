@@ -55,3 +55,60 @@ The project is a modern, front-end application built with vanilla JavaScript (ES
 ## 5. How to Contribute
 
 Please refer to the `.cursorcontext` file in the project root. It contains detailed guidelines for contributing, including step-by-step instructions for adding new ingredients and a summary of the architectural patterns to follow.
+
+## Project Context: Avatar Food Generator
+
+This file provides essential context for working on the Avatar Food Generator project. Understanding these guidelines will help you make changes that are consistent with the existing architecture.
+
+### Core Architecture & Validation
+
+The project is built using modern JavaScript (ES Modules) and managed with Vite. The architecture is designed to be **data-driven and highly resilient**. To ensure stability and prevent common errors, a multi-layered validation system is enforced.
+
+1.  **Relative Paths Only**: For maximum compatibility with the production build environment (Netlify), all module imports **must** use relative paths (e.g., `./`, `../`). Do not use path aliases.
+
+2.  **Strict Data Validation**:
+    -   **Ingredient-Level**: Before any ingredient is added to the pool, `validateIngredientEntry` in `ingredientManager.js` performs a rigorous check on all required fields, validating not just their presence but also their **data types** (e.g., `name` must be a non-empty string, `canBeBase` must be a boolean).
+    -   **Output-Level**: Before a dish is returned, `validateDishResult` in `dishGenerator.js` audits the final object, ensuring all text fields are non-empty and the `ingredients` array is correctly populated.
+    -   **Text-Level**: All user-facing text (name, concept, notes, lore) is validated to ensure it contains **no unprocessed template placeholders** (e.g., `{nationAdj}`).
+
+3.  **Data-Driven Design & Constants**: All "magic strings" are stored as constants.
+    -   **Constants File**: Before using recurring strings like nation names, dish types, or ingredient roles, check `src/core/constants.js`. If the value doesn't exist, add it there first. This is especially true for `INGREDIENT_ROLES` and `INGREDIENT_TYPES`.
+
+### How to Add a New Ingredient
+
+Adding new ingredients is a core part of expanding this project. Follow these steps carefully:
+
+1.  **Locate the Correct File**: Ingredient data is separated by nation. Open the relevant file in `src/core/data/`, for example `src/core/data/fireNation.js`.
+2.  **Find the Nation Object**: The file contains a single exported object (e.g., `export const fireNation = { ... };`).
+3.  **Find the Category**: Inside the `ingredients` property of the nation object, find the correct category array (e.g., `vegetables`, `proteins`, `spices`).
+4.  **Add the Ingredient Object**: Add a new JavaScript object to the array for your ingredient. It **must** have the following structure. Pay close attention to the data types.
+
+    ```javascript
+    {
+      name: 'Your Ingredient Name', // (string) Must be unique across all nations!
+      type: 'vegetable', // (string) Must be a value from INGREDIENT_TYPES in constants.js
+      rolePreference: ['primary', 'accent'], // (string[]) Must be values from INGREDIENT_ROLES
+      canBeBase: false, // (boolean)
+      weight: 'medium', // (string) 'light', 'medium', or 'heavy'
+      rawCompatible: true, // (boolean)
+      tags: ['spicy', 'common'], // (string[]) Descriptive tags for logic hooks
+      rarity: 'common', // (string) 'common', 'uncommon', 'rare', 'legendary'
+      flavorNotes: ['smoky', 'fiery'], // (string[]) Primary flavor descriptors
+      loreHints: ['ash_yam_origin'] // (string[]) (Optional) Keys for the lore generator
+    }
+    ```
+5.  **Validate Your Changes**: After adding your ingredient(s), open the `scripts/validateData.html` file in your browser to check for basic errors. Then, run the application in **Dev Mode** (by loading on localhost or adding `?dev=true` to the URL) and use the **"Run 20 Test Generations"** button. Check the developer console for any red "FAIL" messages, which will pinpoint errors in your new data. **Do not skip this step.**
+
+### How the Generation Works (High-Level)
+1.  **Error Boundary**: The entire process is wrapped in a `try...catch` block in `main.js`. Any critical failure will be caught and will display a clean error message to the user while logging the full error details in the console.
+2.  **Collection & Validation**: It collects all ingredients from the selected nations, validating each one with `validateIngredientEntry`.
+3.  **Selection**: It selects ingredients for required roles (`primary`, `base`, `accent`, `seasoning`, `garnish`). It logs warnings if roles cannot be filled and guarantees no duplicate ingredients in the final dish.
+4.  **Text Generation & Validation**: It passes the selected ingredients to the `nameGenerator`, `loreGenerator`, and `descriptionGenerator`. The output of each is validated for leftover placeholders.
+5.  **Final Audit**: The complete `DishResult` object is validated one last time before being sent to the UI.
+6.  **Display**: The result is displayed by `src/utils/domUtils.js`. If any roles were missing, a user-facing warning is shown.
+
+By following these guidelines, you can help keep the project clean, consistent, and easy to maintain.
+
+## GOLDEN MODULE RULE
+
+No module may exceed 12KB. REFACTOR AT ONCE IF IT OCCURS!

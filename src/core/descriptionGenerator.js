@@ -2,11 +2,6 @@
 
 import { themes as allThemes } from './data/index.js';
 import { getRandomElement } from '../utils/random.js';
-import {
-  getPrimaryIngredient,
-  getSecondaryIngredient,
-  getBaseIngredient,
-} from './utils.js';
 import { validateStringAndLog } from '../utils/textUtils.js';
 
 /**
@@ -16,14 +11,6 @@ import { validateStringAndLog } from '../utils/textUtils.js';
  * @typedef {import('../types.js').DishType} DishType
  * @typedef {import('../types.js').Theme} Theme
  */
-
-/** @param {Ingredient} ing @param {boolean} [base=false] @returns {string} */
-const getIngredientName = (ing, base = false) =>
-  ing && ing.name
-    ? base
-      ? ing.name.split(' (')[0]
-      : ing.name
-    : 'Unknown Ingredient';
 
 /**
  * Generates the concept and notes for the dish.
