@@ -4,17 +4,17 @@ import {
   genericAdjectives,
   genericDishNouns,
   themes as allThemes,
-} from '@data/index.js';
-import { getRandomElement } from '@utils/random.js';
+} from './data/index.js';
+import { getRandomElement } from '../utils/random.js';
 
 /**
- * @typedef {import('@src/types.js').Ingredient} Ingredient
- * @typedef {import('@src/types.js').NationData} NationData
- * @typedef {import('@src/types.js').NationKey} NationKey
- * @typedef {import('@src/types.js').DishType} DishType
- * @typedef {import('@src/types.js').Theme} Theme
- * @typedef {import('@src/types.js').NationTag} NationTag
- * @typedef {import('@src/types.js').NameFormat} NameFormat
+ * @typedef {import('../types.js').Ingredient} Ingredient
+ * @typedef {import('../types.js').NationData} NationData
+ * @typedef {import('../types.js').NationKey} NationKey
+ * @typedef {import('../types.js').DishType} DishType
+ * @typedef {import('../types.js').Theme} Theme
+ * @typedef {import('../types.js').NationTag} NationTag
+ * @typedef {import('../types.js').NameFormat} NameFormat
  */
 
 /** @param {Ingredient} ing @param {boolean} [base=false] @returns {string} */
