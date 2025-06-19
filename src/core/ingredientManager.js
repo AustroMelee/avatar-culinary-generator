@@ -7,7 +7,8 @@ import {
   fireNation,
   unitedRepublic,
   spiritWorld,
-} from './data/index.js';
+  generic,
+} from '@data';
 import { getRandomElement } from '@utils/random.js';
 import { NATIONS } from '@core/constants.js';
 
@@ -367,4 +368,43 @@ export function formatIngredient(ingredient) {
   }
 
   return parts.join(' ');
+}
+
+const NATION_DATA_MAP = {
+  'Air Nomads': airNomads,
+  'Water Tribes': waterTribes,
+  'Earth Kingdom': earthKingdom,
+  'Fire Nation': fireNation,
+  'United Republic': unitedRepublic,
+  'Spirit World': spiritWorld,
+};
+
+/**
+ * @returns {Ingredient[]} A filtered array of ingredients.
+ */
+export function getIngredients(options) {
+  const { nations = [], theme = '' } = options;
+  const allIngredients = [];
+
+  // 1. Add generic ingredients first
+  for (const category in generic.ingredients) {
+    generic.ingredients[category].forEach((ing) => {
+      allIngredients.push({ ...ing, source: 'Generic' });
+    });
+  }
+
+  // 2. Add ingredients from selected nations, tagging them with their source
+  nations.forEach((nation) => {
+    const nationData = NATION_DATA_MAP[nation];
+    if (nationData && nationData.ingredients) {
+      for (const category in nationData.ingredients) {
+        nationData.ingredients[category].forEach((ing) => {
+          allIngredients.push({ ...ing, source: nation });
+        });
+      }
+    }
+  });
+
+  // TODO: Add filtering logic based on dishType, theme, etc.
+  return allIngredients;
 }
