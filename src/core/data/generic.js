@@ -29,4 +29,9 @@ export const genericChefTips = [
   'The sound of the ingredients is a key part of the cooking process; listen closely.',
   'Present this dish with pride, but a humble heart.',
   'True flavor comes from the spirit in which the food is made.',
+  'If you start floating, it is probably the Aero-Melon. Do not be alarmed.',
+  'Consider the color of the bowl. It matters more than you think.',
+  'This dish tastes best when shared with a former enemy.',
+  'Do not forget to thank the spirits of the ingredients.',
+  'A moment of silence before eating enhances the first bite by 20%. This is a known fact.',
 ];

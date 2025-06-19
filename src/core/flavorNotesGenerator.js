@@ -12,9 +12,9 @@ const STANDARD_TEMPLATES = [
 ];
 
 const RARE_FLAVOR_TEMPLATES = [
-  'The experience begins with {note1} and {note2}, but is defined by the rare, lingering sensation of {rare_note}.',
-  'While notes of {note1} are present, the true character comes from {rare_note}, finishing with a touch of {note2}.',
-  'A complex journey of flavor, starting with {note1} and culminating in the extraordinary taste of {rare_note}.',
+  'The experience begins with {note1} and {note2}, but is ultimately defined by {rare_note}.',
+  'While notes of {note1} are present, the true character is found in {rare_note}, which lingers well after a touch of {note2}.',
+  'A complex journey of flavor, beginning with {note1}, passing through {note2}, and culminating in {rare_note}.',
 ];
 
 /**

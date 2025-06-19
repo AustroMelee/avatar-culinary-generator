@@ -113,15 +113,36 @@ export function displayDish(dishResult) {
   if (notesEl) notesEl.textContent = dishResult.notes;
 
   if (ingredientsListEl && dishResult.ingredients?.length > 0) {
+    // Clear previous ingredients
+    ingredientsListEl.innerHTML = '';
+
     const ingredientItems = dishResult.ingredients.map((ingredient) => {
       const li = document.createElement('li');
-      li.innerHTML = formatIngredient(ingredient); // Use innerHTML to allow for styling tags
-      
+
+      // Main text content
+      const primaryText = `<strong>${ingredient.name}</strong> (${
+        ingredient.role
+      }, ${ingredient.type.toLowerCase()})`;
+      const description = ingredient.shortDescription
+        ? ` — <span class="ingredient-meta">${ingredient.shortDescription}</span>`
+        : '';
+      li.innerHTML = `${primaryText}${description}`;
+
       // Add rarity class for special styling
       if (ingredient.rarity) {
         li.classList.add(`rarity-${ingredient.rarity}`);
       }
-      
+
+      // Add tooltip for rare ingredients with cultural significance
+      if (
+        (ingredient.rarity === 'rare' ||
+          ingredient.rarity === 'epic' ||
+          ingredient.rarity === 'legendary') &&
+        ingredient.culturalSignificance
+      ) {
+        li.title = `Cultural Significance: ${ingredient.culturalSignificance}`;
+      }
+
       return li;
     });
     ingredientsListEl.append(...ingredientItems);
