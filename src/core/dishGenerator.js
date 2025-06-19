@@ -12,28 +12,6 @@
 // It delegates specific tasks (managing ingredients, generating names) to specialized modules.
 // Using `.js` in the import path is often necessary for browser-based ES modules.
 import {
-  collectAndFilterAvailableIngredients,
-  selectIngredientByRoleFromCandidates,
-  isValidIngredientForDishType,
-  formatIngredient,
-} from '@core/ingredientManager.js';
-import { generateStructuredName } from '@core/nameGenerator.js';
-import { generateDishLore } from '@core/loreGenerator.js';
-import { generateConceptAndNotes } from '@core/descriptionGenerator.js';
-import { getRandomInt, getRandomElement } from '@utils/random.js';
-import { DISH_CATEGORIES } from '@core/constants.js';
-import {
-  airNomads,
-  waterTribes,
-  earthKingdom,
-  fireNation,
-  unitedRepublic,
-  spiritWorld,
-} from '@data/index.js';
-import { generateName } from './nameGenerator.js';
-import { generateDescription } from './descriptionGenerator.js';
-import { generateLore } from './loreGenerator.js';
-import {
   getIngredients,
   selectPrimaryIngredient,
   selectSecondaryIngredient,
@@ -41,7 +19,14 @@ import {
   selectBaseIngredient,
   selectSeasoningIngredient,
   selectGarnishIngredient,
+  formatIngredient,
 } from './ingredientManager.js';
+import { generateStructuredName } from './nameGenerator.js';
+import { generateDescription } from './descriptionGenerator.js';
+import { generateLore } from './loreGenerator.js';
+import { NATIONS } from './constants.js';
+import * as allData from './data/index.js';
+import { getRandomElement, rollSeed } from '../utils/random.js';
 
 /**
  * @param {Ingredient} ing
@@ -66,12 +51,12 @@ const getIngredientName = (ing, base = false) =>
 export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   /** @type {Record<NationKey, NationData>} */
   const allNationsData = {
-    airNomads,
-    waterTribes,
-    earthKingdom,
-    fireNation,
-    unitedRepublic,
-    spiritWorld,
+    airNomads: allData.airNomads,
+    waterTribes: allData.waterTribes,
+    earthKingdom: allData.earthKingdom,
+    fireNation: allData.fireNation,
+    unitedRepublic: allData.unitedRepublic,
+    spiritWorld: allData.spiritWorld,
   };
 
   const {

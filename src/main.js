@@ -4,14 +4,14 @@ import bannerSrc from './assets/banner.webp';
 
 // WHY: These imports bring in the core logic and UI utility functions from their separate modules.
 // This keeps the entry point file clean and focused on event handling and workflow.
-import { generateDish, generateDefaultDish } from '@core/dishGenerator.js';
-import { NATIONS } from '@core/constants.js';
+import { generateDish, generateDefaultDish } from './core/dishGenerator.js';
+import { NATIONS } from './core/constants.js';
 import {
   updateUIForLoading,
   displayResults,
   displayError,
-} from '@utils/domUtils.js';
-import { initializeRNG } from '@utils/random.js';
+} from './utils/domUtils.js';
+import { initializeRNG } from './utils/random.js';
 
 /**
  * Attaches the main event listener once the document is fully loaded.

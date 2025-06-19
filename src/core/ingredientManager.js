@@ -9,8 +9,8 @@ import {
   spiritWorld,
   generic,
 } from './data/index.js';
-import { getRandomElement } from '@utils/random.js';
-import { NATIONS } from '@core/constants.js';
+import { getRandomElement } from '../utils/random.js';
+import { NATIONS } from './constants.js';
 
 /** @typedef {import('@src/types.js').Ingredient} Ingredient */
 /** @typedef {import('@src/types.js').NationData} NationData */

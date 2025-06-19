@@ -1,6 +1,6 @@
 // src/utils/domUtils.js
 
-import { formatIngredient } from '@core/ingredientManager.js';
+import { formatIngredient } from '../core/ingredientManager.js';
 
 /**
  * @typedef {import('../types.js').DishResult} DishResult
