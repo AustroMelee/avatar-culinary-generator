@@ -6,15 +6,15 @@ import { validateStringAndLog } from '../utils/textUtils.js';
  */
 
 const STANDARD_TEMPLATES = [
-  'A delicate balance of {note1} and {note2}, with a surprising finish of {note3}.',
-  'Opens with a wave of {note1}, followed by gentle notes of {note2} and a whisper of {note3}.',
-  'The profile is led by {note1}, complemented by an undercurrent of {note2} and a hint of {note3}.',
+  '{note1} and {note2} are balanced by a surprising finish of {note3}.',
+  '{note1} opens the palate, followed by {note2} and a whisper of {note3}.',
+  '{note1} leads the profile, complemented by an undercurrent of {note2} and a hint of {note3}.',
 ];
 
 const RARE_FLAVOR_TEMPLATES = [
-  'The experience begins with {note1} and {note2}, but is ultimately defined by {rare_note}.',
-  'While notes of {note1} are present, the true character is found in {rare_note}, which lingers well after a touch of {note2}.',
-  'A complex journey of flavor, beginning with {note1}, passing through {note2}, and culminating in {rare_note}.',
+  '{note1} mingles with {rare_note}, lingering long after a final touch of {note2}.',
+  '{rare_note} defines the experience, weaving through threads of {note1} and {note2}.',
+  '{note1} provides a base for the extraordinary taste of {rare_note}, which is lifted by {note2}.',
 ];
 
 /**
@@ -23,6 +23,13 @@ const RARE_FLAVOR_TEMPLATES = [
  * @returns {string}
  */
 const capitalize = (s) => (s && s[0].toUpperCase() + s.slice(1)) || '';
+
+/**
+ * Decapitalizes the first letter of a string.
+ * @param {string} s
+ * @returns {string}
+ */
+const decapitalize = (s) => (s && s[0].toLowerCase() + s.slice(1)) || '';
 
 /**
  * Generates a descriptive flavor notes string for the dish.
@@ -56,15 +63,15 @@ export function generateFlavorNotes(ingredients) {
     const commonNotes = shuffledNotes.filter(n => n !== rareNote);
 
     noteString = template
-      .replace('{rare_note}', rareNote)
-      .replace('{note1}', commonNotes[0] || 'subtlety')
-      .replace('{note2}', commonNotes[1] || 'complexity');
+      .replace('{rare_note}', decapitalize(rareNote))
+      .replace('{note1}', decapitalize(commonNotes[0] || 'subtlety'))
+      .replace('{note2}', decapitalize(commonNotes[1] || 'complexity'));
   } else {
     template = getRandomElement(STANDARD_TEMPLATES);
     noteString = template
-      .replace('{note1}', shuffledNotes[0] || 'subtlety')
-      .replace('{note2}', shuffledNotes[1] || 'complexity')
-      .replace('{note3}', shuffledNotes[2] || 'character');
+      .replace('{note1}', decapitalize(shuffledNotes[0] || 'subtlety'))
+      .replace('{note2}', decapitalize(shuffledNotes[1] || 'complexity'))
+      .replace('{note3}', decapitalize(shuffledNotes[2] || 'character'));
   }
 
   return validateStringAndLog(capitalize(noteString), 'Flavor Notes');
