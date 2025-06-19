@@ -1,6 +1,6 @@
 // src/main.js
 import '../styles/style.css';
-import bannerSrc from './assets/wrvl1ozyu6.webp';
+import bannerSrc from './assets/banner.webp';
 
 // WHY: These imports bring in the core logic and UI utility functions from their separate modules.
 // This keeps the entry point file clean and focused on event handling and workflow.
