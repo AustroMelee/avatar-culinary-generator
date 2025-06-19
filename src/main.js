@@ -1,5 +1,6 @@
 // src/main.js
 import '../styles/style.css';
+import bannerSrc from './assets/wrvl1ozyu6.webp';
 
 // WHY: These imports bring in the core logic and UI utility functions from their separate modules.
 // This keeps the entry point file clean and focused on event handling and workflow.
@@ -18,6 +19,7 @@ import { initializeRNG } from '@utils/random.js';
  * before they exist on the page, which would cause errors.
  */
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('banner-image').src = bannerSrc;
   const urlParams = new URLSearchParams(window.location.search);
   const isDemoMode = urlParams.get('demo') === 'true';
 

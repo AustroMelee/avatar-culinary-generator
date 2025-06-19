@@ -251,3 +251,12 @@ strong {
     grid-template-columns: 1fr; /* WHY: Stacks checkboxes into a single column on small screens for better readability and usability. */
   }
 }
+
+.banner {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
