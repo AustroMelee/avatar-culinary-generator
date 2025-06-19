@@ -29,6 +29,29 @@ import { generateFlavorNotes } from './flavorNotesGenerator.js';
 import { NATIONS, INGREDIENT_ROLES, INGREDIENT_TYPES } from './constants.js';
 import * as allData from './data/index.js';
 import { getRandomElement, rollSeed } from '../utils/random.js';
+import { getLoreTemplate } from './loreGenerator.js';
+import {
+  LORE_LIBRARY,
+  LORE_PLACEHOLDERS,
+  SPECIAL_LORE_EXTRAS,
+} from './data/index.js';
+import {
+  updateUIForLoading,
+  displayResults,
+} from '../utils/ui.js';
+
+/**
+ * Fills placeholders in a lore template with specific names from the lore library.
+ * @param {string} template The lore template string.
+ * @returns {string} The processed lore string.
+ */
+function populateLoreTemplate(template) {
+  if (!template) return '';
+  return template
+    .replace(/\{monk_name\}/g, getRandomElement(LORE_PLACEHOLDERS.monks))
+    .replace(/\{temple_name\}/g, getRandomElement(LORE_PLACEHOLDERS.temples))
+    .replace(/\{bison_name\}/g, getRandomElement(LORE_PLACEHOLDERS.bison));
+}
 
 /**
  * @param {Ingredient} ing
@@ -136,9 +159,31 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   );
   const flavorNotes = generateFlavorNotes(selectedIngredients);
   const preparationAndRitual = generatePreparation(selectedIngredients, finalNations);
-  const lore = generateLore(name, finalNations, selectedIngredients) || 'A dish with a history yet to be written.';
-  const servingTradition = getRandomElement(primaryNationData?.servingTraditions || ['Served with humble grace.']);
-  const chefTip = getRandomElement(primaryNationData?.chefTips || ['Best enjoyed with an open heart.']);
+
+  // Check for special combinations to drive lore, traditions, and tips
+  const ingredientNames = new Set(selectedIngredients.map(ing => ing.name));
+  let lore, servingTradition, chefTip;
+
+  if (ingredientNames.has('Moon Peach') && ingredientNames.has('Summit Ginseng')) {
+    lore = getRandomElement(LORE_LIBRARY.ECLIPSE_DISH);
+    servingTradition = SPECIAL_LORE_EXTRAS.ECLIPSE_DISH.servingTradition;
+    chefTip = SPECIAL_LORE_EXTRAS.ECLIPSE_DISH.chefTip;
+  } else {
+    // Default path if no special combo is found
+    lore = getLoreTemplate(selectedIngredients);
+    servingTradition = getRandomElement(primaryNationData?.servingTraditions);
+    chefTip = getRandomElement(primaryNationData?.chefTips);
+  }
+  
+  // Final validation and population of template
+  lore = lore || getRandomElement(LORE_LIBRARY.default);
+  lore = populateLoreTemplate(lore)
+    .replace(/\{nation_name\}/g, primaryNation)
+    .replace(/\{Dish_Name\}/g, name);
+  const primaryIngredient = selectedIngredients.find(ing => ing.role === 'primary');
+  if (primaryIngredient) {
+    lore = lore.replace(/\{mainIngredient\}/gi, primaryIngredient.name);
+  }
 
   // 4. Assemble and validate the final result.
   const result = {
@@ -147,9 +192,9 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     flavorNotes,
     ingredients: selectedIngredients,
     preparationAndRitual,
-    servingTradition,
-    lore,
-    chefTip,
+    servingTradition: servingTradition || 'Served with humble grace.',
+    lore: validateStringAndLog(lore, 'Dish Lore'),
+    chefTip: chefTip || 'Best enjoyed with an open heart.',
     // Keep this for now for compatibility, but it's deprecated.
     notes: preparationAndRitual,
     missingRoles,

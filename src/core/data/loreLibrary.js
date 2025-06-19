@@ -37,6 +37,20 @@ export const LORE_LIBRARY = {
   ],
 };
 
+/**
+ * Specific traditions, tips, etc., for special lore events.
+ */
+export const SPECIAL_LORE_EXTRAS = {
+  ECLIPSE_DISH: {
+    servingTradition: 'Served at dawn immediately following the eclipse, when the air is still and the spirit world is said to be listening.',
+    chefTip: 'Eat this dish in complete silence, focusing on the flavors. You may receive a vision.',
+  },
+  LAGHIMA_FEAST: {
+    servingTradition: 'Presented on a simple, unadorned clay plate, to represent Guru Laghima\'s detachment from earthly possessions.',
+    chefTip: 'Before eating, meditate for a moment on the concept of letting go of your earthly tethers.',
+  }
+};
+
 // Data for populating lore templates
 export const LORE_PLACEHOLDERS = {
   monks: ['Monk Gyatso', 'Yangchen', 'Tenzin'],

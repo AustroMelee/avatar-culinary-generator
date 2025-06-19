@@ -1,8 +1,7 @@
 // src/core/loreGenerator.js
 
 import { getRandomElement } from '../utils/random.js';
-import { LORE_LIBRARY, LORE_PLACEHOLDERS } from './data/index.js';
-import { validateStringAndLog } from '../utils/textUtils.js';
+import { LORE_LIBRARY } from './data/index.js';
 
 /**
  * @typedef {import('../types.js').Ingredient} Ingredient
@@ -35,31 +34,17 @@ let globalLoreHistory = new Set();
 const MAX_LORE_HISTORY = 10;
 
 /**
- * Fills placeholders in a lore template with specific names from the lore library.
- * @param {string} template The lore template string.
- * @returns {string} The processed lore string.
- */
-function populateLoreTemplate(template) {
-  return template
-    .replace(/\{monk_name\}/g, getRandomElement(LORE_PLACEHOLDERS.monks))
-    .replace(/\{temple_name\}/g, getRandomElement(LORE_PLACEHOLDERS.temples))
-    .replace(/\{bison_name\}/g, getRandomElement(LORE_PLACEHOLDERS.bison));
-}
-
-/**
- * Generates a lore snippet for a given dish, prioritizing ingredient-specific lore.
- * @param {string} name The name of the dish.
- * @param {string[]} nations The nations associated with the dish.
+ * Selects a lore template based on the ingredients provided.
  * @param {Ingredient[]} ingredients The ingredients in the dish.
- * @returns {string | null} A lore snippet, or null if none could be generated.
+ * @returns {string} A lore template string.
  */
-export function generateLore(name, nations, ingredients) {
+export function getLoreTemplate(ingredients) {
   let potentialLore = [];
 
   // 1. Check for special, rare combinations
   const ingredientNames = new Set(ingredients.map(ing => ing.name));
   if (ingredientNames.has('Moon Peach') && ingredientNames.has('Summit Ginseng')) {
-    potentialLore.push(...LORE_LIBRARY.ECLIPSE_DISH);
+    return getRandomElement(LORE_LIBRARY.ECLIPSE_DISH);
   }
 
   // 2. Gather lore from ingredient hints
@@ -77,20 +62,5 @@ export function generateLore(name, nations, ingredients) {
     potentialLore.push(...LORE_LIBRARY.default);
   }
   
-  // 4. Select a template and populate it
-  const template = getRandomElement(potentialLore);
-  if (!template) {
-    return null; // Should be rare
-  }
-
-  let generatedLore = populateLoreTemplate(template)
-    .replace(/\{nation_name\}/g, nations[0] || 'the Four Nations')
-    .replace(/\{Dish_Name\}/g, name);
-    
-  const primaryIngredient = ingredients.find(ing => ing.role === 'primary');
-  if (primaryIngredient) {
-    generatedLore = generatedLore.replace(/\{mainIngredient\}/gi, primaryIngredient.name);
-  }
-
-  return validateStringAndLog(generatedLore, 'Dish Lore');
+  return getRandomElement(potentialLore) || LORE_LIBRARY.default[0];
 }

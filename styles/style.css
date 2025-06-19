@@ -187,6 +187,10 @@ button[type='submit']:active {
   line-height: 1.6;
 }
 
+#flavorNotes-section p {
+  font-style: italic;
+}
+
 #ingredientList {
   list-style-type: none;
   padding-left: 0;

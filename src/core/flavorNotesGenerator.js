@@ -31,11 +31,18 @@ export function generateFlavorNotes(ingredients) {
     return 'A dish with a simple, harmonious flavor profile.';
   }
 
-  const uniqueNotes = shuffleArray([...new Set(allNotes)]);
+  const uniqueNotes = [...new Set(allNotes)];
+
+  // Filter out notes that are substrings of other notes to avoid repetition
+  const filteredNotes = uniqueNotes.filter(note => 
+    !uniqueNotes.some(otherNote => note !== otherNote && otherNote.includes(note))
+  );
+
+  const shuffledNotes = shuffleArray(filteredNotes);
   
-  const note1 = uniqueNotes[0] || 'subtlety';
-  const note2 = uniqueNotes[1] || 'complexity';
-  const note3 = uniqueNotes[2] || 'character';
+  const note1 = shuffledNotes[0] || 'subtlety';
+  const note2 = shuffledNotes[1] || 'complexity';
+  const note3 = shuffledNotes[2] || 'character';
 
   const template = getRandomElement(FLAVOR_TEMPLATES);
 

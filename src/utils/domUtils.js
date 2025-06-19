@@ -273,7 +273,9 @@ export function displayRichDish(dishResult) {
 
   // 3. Flavor Notes
   if (flavorNotes) {
-    resultContainer.appendChild(createSection('Flavor Notes', flavorNotes, '-'));
+    const section = createSection('Flavor Notes', flavorNotes, '-');
+    section.id = 'flavorNotes-section';
+    resultContainer.appendChild(section);
   }
 
   // 4. Key Ingredients
