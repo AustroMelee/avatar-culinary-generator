@@ -1,0 +1,7 @@
+{
+  "projectName": "Avatar: The Last Airbender Food Generator",
+  "description": "A web-based creative tool for generating fictional dish concepts inspired by the world of 'Avatar: The Last Airbender' and 'The Legend of Korra.'",
+  "liveUrl": "https://your-live-url-here.com",
+  "repositoryUrl": "https://github.com/your-repo/food-generator",
+  "contributing": "This project is open to contributions. If you have ideas for new ingredients, themes, or features, please feel free to open an issue or submit a pull request. The data is designed to be easily extensible—new ingredients can be added by simply editing the files in the `src/core/data/` directory."
+}

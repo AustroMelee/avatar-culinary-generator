@@ -10,6 +10,24 @@
  */
 
 /**
+ * @typedef {'airNomads' | 'waterTribes' | 'earthKingdom' | 'fireNation' | 'unitedRepublic' | 'spiritWorld'} NationKey
+ */
+
+/**
+ * @typedef {'Main Course' | 'Dessert' | 'Soup/Stew' | 'Beverage' | 'Nectar' | 'Appetizer' | 'Salad' | 'Sauce/Condiment'} DishType
+ */
+
+/**
+ * @typedef {'Spiritual' | 'Royal'} Theme
+ */
+
+/**
+ * @typedef {string} NationTag - A generic string representing any tag.
+ * This is a placeholder for what could be a very large union type of all possible tags
+ * in the system (e.g., 'creamy', 'spicy', 'air_nomad', 'staple', etc.).
+ */
+
+/**
  * @typedef {'light' | 'medium' | 'heavy'} IngredientWeight
  */
 
@@ -57,7 +75,7 @@
  * @property {string[]} adjectives - Adjectives that capture the nation's feel.
  * @property {NameFormat[]} nameFormats - Templates for generating dish names.
  * @property {string[]} platingNotes - Descriptions of presentation styles.
- * @property {Record<string, { allowedTags: string[], disallowedTags: string[] }>} nationDishTypeProfiles - Rules for ingredient compatibility with dish types.
+ * @property {Record<string, { allowedTags: NationTag[], disallowedTags: NationTag[] }>} nationDishTypeProfiles - Rules for ingredient compatibility with dish types.
  * @property {string[]} [famousMonks] - Optional list of famous figures.
  */
 

@@ -1,0 +1,211 @@
+@import 'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap';
+:root {
+  --color-background: #2c2823;
+  --color-text: #f0e6d2;
+  --color-primary: #ffd369;
+  --color-secondary: #b08d57;
+  --color-surface: #3e3830;
+  --color-border: #5a4a3b;
+  --color-text-strong: #f4c588;
+  --color-lore: #c9b38b;
+  --font-heading: 'Cinzel', 'Luminari', 'Fantasy', serif;
+  --font-body: 'Lora', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+}
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  padding: 1rem 2rem 3rem;
+  line-height: 1.7;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.container {
+  width: 100%;
+  max-width: 900px;
+}
+h1 {
+  color: var(--color-primary);
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 2.5em;
+  margin-bottom: 1.5rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+fieldset {
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background-color: #0000001a;
+}
+legend {
+  font-family: var(--font-heading);
+  color: var(--color-secondary);
+  font-size: 1.5em;
+  font-weight: 700;
+  padding: 0 0.5em;
+  margin-left: 1em;
+}
+label,
+select,
+input,
+button {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 1.1em;
+}
+label {
+  color: var(--color-text-strong);
+  margin-bottom: 0.5rem;
+}
+select,
+input[type='text'] {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-sizing: border-box;
+  font-family: var(--font-body);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+select:focus,
+input[type='text']:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px #ffd36980;
+  outline: none;
+}
+button[type='submit'] {
+  width: auto;
+  padding: 0.8rem 2rem;
+  background: var(--color-secondary);
+  color: var(--color-background);
+  cursor: pointer;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: 1.2em;
+  border: none;
+  border-radius: 6px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.1s ease;
+  box-shadow: 0 2px 4px #0000004d;
+  display: block;
+  margin: 1.5rem auto 0;
+}
+button[type='submit']:hover {
+  background: var(--color-primary);
+  transform: translateY(-2px);
+}
+button[type='submit']:active {
+  transform: translateY(0);
+}
+.result {
+  margin-top: 2rem;
+  padding: 2rem;
+  border: 3px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px #0006;
+}
+.result h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 2em;
+  border-bottom: 2px solid var(--color-secondary);
+  padding-bottom: 0.75rem;
+  text-align: center;
+}
+.result p {
+  margin-bottom: 1rem;
+}
+.result ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+.result ul li {
+  background-color: #0000001a;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  border-left: 3px solid var(--color-secondary);
+}
+.result ul li:before {
+  content: '❖ ';
+  color: var(--color-secondary);
+  margin-right: 0.5em;
+}
+.dish-lore {
+  font-style: italic;
+  color: var(--color-lore);
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px dashed var(--color-border);
+  border-bottom: 1px dashed var(--color-border);
+  background-color: #0000000d;
+}
+.dish-lore strong {
+  font-family: var(--font-heading);
+  color: var(--color-secondary);
+  font-weight: 400;
+}
+.multiselect {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  background: #0000000d;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+.multiselect label {
+  margin: 0;
+  cursor: pointer;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  display: flex;
+  align-items: center;
+  font-size: 1em;
+  color: var(--color-text);
+}
+.multiselect input[type='checkbox'] {
+  margin-right: 0.5em;
+  transform: scale(1.2);
+  accent-color: var(--color-secondary);
+}
+.multiselect label:hover {
+  background-color: var(--color-border);
+  color: var(--color-primary);
+}
+strong {
+  color: var(--color-text-strong);
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+  h1 {
+    font-size: 2em;
+  }
+  .result h2 {
+    font-size: 1.75em;
+  }
+  legend {
+    font-size: 1.3em;
+  }
+  .multiselect {
+    grid-template-columns: 1fr;
+  }
+}

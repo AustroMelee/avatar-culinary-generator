@@ -1,0 +1,56 @@
+## Project Context: Avatar Food Generator
+
+This file provides essential context for working on the Avatar Food Generator project. Understanding these guidelines will help you make changes that are consistent with the existing architecture.
+
+### Core Architecture
+
+The project is built using modern JavaScript (ES Modules) and managed with Vite. Key architectural decisions include:
+
+1.  **Path Aliases**: We use Vite to manage path aliases for cleaner imports. Always use these aliases instead of relative paths:
+    -   `@src/`: for the root `src` directory (e.g., `@src/types.js`)
+    -   `@core/`: for core logic (`src/core/`)
+    -   `@data/`: for all data files (`src/core/data/`)
+    -   `@utils/`: for utility functions (`src/utils/`)
+
+2.  **Data-Driven Design**: All "magic strings" (like nation names or dish types) are stored as constants.
+    -   **Constants File**: Before using any recurring string like "Fire Nation" or "Dessert", check if it exists in `@core/constants.js`. If it doesn't, add it there first. This prevents typos and makes future updates easier.
+
+3.  **Code Style**: We use Prettier to enforce a consistent code style. Before committing, always run `npm run format` to format your changes.
+
+### How to Add a New Ingredient
+
+Adding new ingredients is a core part of expanding this project. Follow these steps carefully:
+
+1.  **Locate the Correct File**: All ingredient data is located in `@data/nations.js`. Open this file.
+2.  **Find the Nation**: Scroll to the nation object you want to add an ingredient to (e.g., `export const fireNation = { ... };`).
+3.  **Find the Category**: Inside the `ingredients` property of the nation, find the correct category array (e.g., `vegetables`, `proteins`, `spices`).
+4.  **Add the Ingredient Object**: Add a new JavaScript object to the array for your ingredient. It **must** have the following structure:
+    ```javascript
+    {
+      name: 'Your Ingredient Name', // Must be unique across all nations!
+      type: 'vegetable', // The category it belongs to
+      rolePreference: ['primary', 'accent'], // e.g., 'base', 'primary', 'secondary', 'seasoning', 'accent', 'garnish'
+      canBeBase: false, // `true` if it can be the foundational element of a dish
+      weight: 'medium', // 'light', 'medium', or 'heavy'
+      rawCompatible: true, // `true` if it can be used raw
+      tags: ['spicy', 'common'], // Descriptive tags for logic hooks
+      rarity: 'common', // 'common', 'uncommon', 'rare', 'legendary'
+      flavorNotes: ['smoky', 'fiery'], // Primary flavor descriptors
+      loreHints: ['ash_yam_origin'] // (Optional) Keys for the lore generator
+    }
+    ```
+5.  **Validate Your Changes**: After adding your ingredient(s), open the `scripts/validateData.html` file in your browser. Open the developer console (F12) and check for any errors. This will catch missing fields or duplicate names. **Do not skip this step.**
+
+### How the Generation Works
+
+The core generation logic is orchestrated in `@core/dishGenerator.js`. It follows these general steps:
+1.  It collects all available ingredients from the selected nations.
+2.  It selects a "base" ingredient, a "primary" ingredient, and several other ingredients based on roles (`seasoning`, `garnish`, etc.).
+3.  It passes the selected ingredients to the `nameGenerator`, `loreGenerator`, and `descriptionGenerator` to create the final text.
+4.  The result is then displayed on the page by `domUtils.js`.
+
+By following these guidelines, you can help keep the project clean, consistent, and easy to maintain. 
+
+## GOLDEN MODULE RULE
+
+No module may exceed 12KB. REFACTOR AT ONCE IF IT OCCURS!
