@@ -49,140 +49,65 @@ const getIngredientName = (ing, base = false) =>
  * @returns {DishResult} The generated dish object.
  */
 export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
-  /** @type {Record<NationKey, NationData>} */
-  const allNationsData = {
-    airNomads: allData.airNomads,
-    waterTribes: allData.waterTribes,
-    earthKingdom: allData.earthKingdom,
-    fireNation: allData.fireNation,
-    unitedRepublic: allData.unitedRepublic,
-    spiritWorld: allData.spiritWorld,
-  };
+  const finalNations = nationNamesInput.length > 0 ? nationNamesInput : NATIONS;
 
-  const {
-    availableIngredientObjects,
-    selectedNationsData,
-    finalNationKeys,
-    nationDisplayNames,
-  } = collectAndFilterAvailableIngredients(
-    nationNamesInput,
+  const availableIngredientObjects = getIngredients({
+    nations: finalNations,
+    theme: themeVal,
+    dishType: dishType,
+  });
+
+  // Simplified ingredient selection - this is a placeholder for a more robust
+  // selection strategy that should be implemented later.
+  const primaryIngredient =
+    selectPrimaryIngredient(availableIngredientObjects, dishType) ||
+    getRandomElement(availableIngredientObjects);
+  const secondaryIngredient =
+    selectSecondaryIngredient(
+      availableIngredientObjects,
+      dishType,
+      primaryIngredient
+    ) || getRandomElement(availableIngredientObjects);
+  const baseIngredient =
+    selectBaseIngredient(
+      availableIngredientObjects,
+      dishType,
+      primaryIngredient
+    ) || primaryIngredient;
+  const seasoningIngredient =
+    selectSeasoningIngredient(availableIngredientObjects, dishType) ||
+    getRandomElement(availableIngredientObjects);
+  const garnishIngredient =
+    selectGarnishIngredient(availableIngredientObjects, dishType) ||
+    getRandomElement(availableIngredientObjects);
+
+  const selectedIngredients = [
+    primaryIngredient,
+    secondaryIngredient,
+    baseIngredient,
+    seasoningIngredient,
+    garnishIngredient,
+  ].filter(Boolean); // Filter out any undefined ingredients
+
+  const name = generateStructuredName(
+    finalNations,
+    selectedIngredients,
     dishType,
-    themeVal
+    baseFormat
   );
-
-  /** @type {Ingredient[]} */
-  let allSelectedIngredients = [];
-  /** @type {Set<string>} */
-  let currentDishIngredientsTracker = new Set();
-  /** @type {Record<NationKey, number>} */
-  let nationContribution = {};
-  finalNationKeys.forEach((key) => (nationContribution[key] = 0));
-
-  const MINIMUM_REQUIRED_ROLES_COUNT = {
-    base: 1,
-    primary: 1,
-    seasoning: 1,
-    accent: 1,
-    garnish: 1,
-  };
-  const rolesToFillCounts = { ...MINIMUM_REQUIRED_ROLES_COUNT };
-
-  // Adjust role counts based on dish type, using constants
-  if (
-    [
-      DISH_CATEGORIES.BEVERAGE,
-      DISH_CATEGORIES.NECTAR,
-      DISH_CATEGORIES.SAUCE_CONDIMENT,
-    ].includes(dishType)
-  ) {
-    rolesToFillCounts.primary = getRandomInt(0, 1);
-    rolesToFillCounts.garnish = 0;
-  }
-
-  // Main ingredient selection loop
-  for (const role in rolesToFillCounts) {
-    let needed = rolesToFillCounts[role];
-    while (needed > 0) {
-      let candidates = availableIngredientObjects.filter((ing) => {
-        if (
-          !isValidIngredientForDishType(
-            ing,
-            role,
-            dishType,
-            finalNationKeys,
-            allNationsData
-          )
-        )
-          return false;
-        // Simplified role check
-        return (
-          (ing.rolePreference && ing.rolePreference.includes(role)) ||
-          (role === 'base' && ing.canBeBase)
-        );
-      });
-
-      let itemToAdd = selectIngredientByRoleFromCandidates(
-        role,
-        candidates,
-        currentDishIngredientsTracker,
-        finalNationKeys,
-        nationContribution
-      );
-
-      if (!itemToAdd && candidates.length > 0) {
-        itemToAdd = getRandomElement(
-          candidates.filter(
-            (c) => !currentDishIngredientsTracker.has(getIngredientName(c))
-          )
-        );
-      }
-
-      if (itemToAdd) {
-        itemToAdd.role = role;
-        allSelectedIngredients.push(itemToAdd);
-        currentDishIngredientsTracker.add(getIngredientName(itemToAdd));
-        if (finalNationKeys.includes(itemToAdd.sourceNationKey)) {
-          nationContribution[itemToAdd.sourceNationKey]++;
-        }
-      }
-      needed--;
-    }
-  }
-
-  const generatedName = generateStructuredName(
-    selectedNationsData,
-    allSelectedIngredients,
-    dishType,
-    baseFormat,
-    themeVal,
-    finalNationKeys,
-    nationDisplayNames
+  const description = generateDescription(
+    name,
+    selectedIngredients,
+    finalNations
   );
-  const { concept, notes } = generateConceptAndNotes(
-    generatedName,
-    allSelectedIngredients,
-    dishType,
-    baseFormat,
-    themeVal,
-    finalNationKeys,
-    nationDisplayNames,
-    allNationsData
-  );
-  const generatedLore = generateDishLore(
-    allSelectedIngredients,
-    nationDisplayNames,
-    finalNationKeys,
-    themeVal,
-    dishType,
-    generatedName
-  );
+  const lore = generateLore(name, finalNations, selectedIngredients);
 
   const result = {
-    name: generatedName,
-    concept: concept,
-    ingredients: allSelectedIngredients,
-    notes: notes,
-    lore: generatedLore,
+    name,
+    concept: description.concept,
+    ingredients: selectedIngredients,
+    notes: description.notes,
+    lore,
   };
 
   validateDishResult(result);
