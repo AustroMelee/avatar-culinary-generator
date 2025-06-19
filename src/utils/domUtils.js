@@ -285,10 +285,14 @@ export function displayRichDish(dishResult) {
       // Add rarity class for styling
       li.classList.add(`rarity-${ing.rarity || 'common'}`);
       
+      let namePrefix = '';
+      if (ing.rarity === 'rare') namePrefix = '💎 ';
+      if (ing.rarity === 'legendary') namePrefix = '✨ ';
+
       const roleAndType = `(${ing.role}, ${ing.type})`;
       const shortDesc = ing.shortDescription ? `— <em>${ing.shortDescription}</em>` : '';
       
-      li.innerHTML = `<strong>${ing.name}</strong> <span class="ingredient-meta">${roleAndType}</span> ${shortDesc}`;
+      li.innerHTML = `${namePrefix}<strong>${ing.name}</strong> <span class="ingredient-meta">${roleAndType}</span> ${shortDesc}`;
       listEl.appendChild(li);
     });
     resultContainer.appendChild(createSection('Key Ingredients & Roles', listEl, '🌱'));
