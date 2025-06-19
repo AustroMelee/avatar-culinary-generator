@@ -6,14 +6,10 @@ This file provides essential context for working on the Avatar Food Generator pr
 
 The project is built using modern JavaScript (ES Modules) and managed with Vite. Key architectural decisions include:
 
-1.  **Path Aliases**: We use Vite to manage path aliases for cleaner imports. Always use these aliases instead of relative paths:
-    -   `@src/`: for the root `src` directory (e.g., `@src/types.js`)
-    -   `@core/`: for core logic (`src/core/`)
-    -   `@data/`: for all data files (`src/core/data/`)
-    -   `@utils/`: for utility functions (`src/utils/`)
+1.  **Relative Paths Only**: For maximum compatibility with the production build environment (Netlify), all module imports **must** use relative paths (e.g., `./`, `../`). Do not use path aliases, as they have been removed to prevent build failures.
 
 2.  **Data-Driven Design**: All "magic strings" (like nation names or dish types) are stored as constants.
-    -   **Constants File**: Before using any recurring string like "Fire Nation" or "Dessert", check if it exists in `@core/constants.js`. If it doesn't, add it there first. This prevents typos and makes future updates easier.
+    -   **Constants File**: Before using any recurring string like "Fire Nation" or "Dessert", check if it exists in `src/core/constants.js`. If it doesn't, add it there first. This prevents typos and makes future updates easier.
 
 3.  **Code Style**: We use Prettier to enforce a consistent code style. Before committing, always run `npm run format` to format your changes.
 
@@ -21,9 +17,9 @@ The project is built using modern JavaScript (ES Modules) and managed with Vite.
 
 Adding new ingredients is a core part of expanding this project. Follow these steps carefully:
 
-1.  **Locate the Correct File**: All ingredient data is located in `@data/nations.js`. Open this file.
-2.  **Find the Nation**: Scroll to the nation object you want to add an ingredient to (e.g., `export const fireNation = { ... };`).
-3.  **Find the Category**: Inside the `ingredients` property of the nation, find the correct category array (e.g., `vegetables`, `proteins`, `spices`).
+1.  **Locate the Correct File**: Ingredient data is separated by nation. Open the relevant file in `src/core/data/`, for example `src/core/data/fireNation.js`.
+2.  **Find the Nation Object**: The file contains a single exported object (e.g., `export const fireNation = { ... };`).
+3.  **Find the Category**: Inside the `ingredients` property of the nation object, find the correct category array (e.g., `vegetables`, `proteins`, `spices`).
 4.  **Add the Ingredient Object**: Add a new JavaScript object to the array for your ingredient. It **must** have the following structure:
     ```javascript
     {
@@ -43,11 +39,11 @@ Adding new ingredients is a core part of expanding this project. Follow these st
 
 ### How the Generation Works
 
-The core generation logic is orchestrated in `@core/dishGenerator.js`. It follows these general steps:
-1.  It collects all available ingredients from the selected nations.
+The core generation logic is orchestrated in `src/core/dishGenerator.js`. It follows these general steps:
+1.  It collects all available ingredients from the selected nations via `src/core/ingredientManager.js`.
 2.  It selects a "base" ingredient, a "primary" ingredient, and several other ingredients based on roles (`seasoning`, `garnish`, etc.).
 3.  It passes the selected ingredients to the `nameGenerator`, `loreGenerator`, and `descriptionGenerator` to create the final text.
-4.  The result is then displayed on the page by `domUtils.js`.
+4.  The result is then displayed on the page by `src/utils/domUtils.js`.
 
 By following these guidelines, you can help keep the project clean, consistent, and easy to maintain. 
 

@@ -27,8 +27,9 @@ The project is a modern, front-end application built with vanilla JavaScript (ES
   - `src/core/data/`: Houses all the raw data for the generator. Nation-specific data (ingredients, etc.) is broken down into individual files (e.g., `fireNation.js`), while generic data (themes, lore) resides in its own modules.
   - `src/utils/`: Contains helper functions for DOM manipulation (`domUtils.js`) and randomization (`random.js`).
   - `src/`: The root source directory, containing the main entry point (`main.js`) and type definitions (`types.js`).
-- **Path Aliases**: To simplify imports, the project is configured with path aliases (e.g., `@core/`, `@data/`) managed by Vite.
-- **Data-Driven Design**: The generator's logic is heavily reliant on the structured data in `src/core/data/`. The creative output comes from combining these data points in novel ways, rather than hardcoded logic. All nation data is exported via a single barrel file (`@data/index.js`) for easy consumption by the core logic.
+  - `src/assets`: Contains static assets like images.
+- **Module Imports**: For maximum build stability, the project exclusively uses relative paths for all ES module imports (e.g., `../utils/random.js`). Path aliases are not used.
+- **Data-Driven Design**: The generator's logic is heavily reliant on the structured data in `src/core/data/`. The creative output comes from combining these data points in novel ways, rather than hardcoded logic. All nation data is exported via a single barrel file (`src/core/data/index.js`) for easy consumption by the core logic.
 - **Code Style & Formatting**: Code consistency is enforced by **Prettier**, with rules defined in `.prettierrc.json`. An `.editorconfig` file ensures consistent editor settings.
 
 ## 4. How to Run the Project

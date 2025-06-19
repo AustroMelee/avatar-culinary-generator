@@ -1,12 +1,12 @@
 // src/core/dishGenerator.js
 
 // WHY: Importing types allows for strong type-checking within this module.
-/** @typedef {import('@src/types.js').DishResult} DishResult */
-/** @typedef {import('@src/types.js').Ingredient} Ingredient */
-/** @typedef {import('@src/types.js').NationData} NationData */
-/** @typedef {import('@src/types.js').DishType} DishType */
-/** @typedef {import('@src/types.js').Theme} Theme */
-/** @typedef {import('@src/types.js').NationKey} NationKey */
+/** @typedef {import('../types.js').DishResult} DishResult */
+/** @typedef {import('../types.js').Ingredient} Ingredient */
+/** @typedef {import('../types.js').NationData} NationData */
+/** @typedef {import('../types.js').DishType} DishType */
+/** @typedef {import('../types.js').Theme} Theme */
+/** @typedef {import('../types.js').NationKey} NationKey */
 
 // WHY: Importing functions from other modules keeps this file focused on orchestration.
 // It delegates specific tasks (managing ingredients, generating names) to specialized modules.
@@ -41,24 +41,29 @@ const getIngredientName = (ing, base = false) =>
     : 'Unknown Ingredient';
 
 /**
- * Main function to generate a complete dish.
- * @param {DishType} dishType The type of dish (e.g., "Main Course", "Dessert").
- * @param {string[]} nationNamesInput An array of selected nation display names.
- * @param {string} baseFormat The base format of the dish.
- * @param {Theme} themeVal The selected theme.
- * @returns {DishResult} The generated dish object.
+ * Orchestrates the generation of a complete, detailed dish.
+ * This function acts as the central hub, calling specialized modules to gather
+ * ingredients, construct a name, and generate descriptive text and lore.
+ * @param {DishType} dishType The user-selected type of dish (e.g., "Main Course").
+ * @param {string[]} nationNamesInput An array of nation names to influence the dish.
+ * @param {string} baseFormat The primary format of the dish (e.g., "Noodles", "Stew").
+ * @param {Theme} themeVal The special theme to apply (e.g., "Royal", "Ancient").
+ * @returns {DishResult} The fully constructed dish object, ready for display.
  */
 export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
+  // If no nations are selected, default to all of them for variety.
   const finalNations = nationNamesInput.length > 0 ? nationNamesInput : NATIONS;
 
+  // 1. Gather all possible ingredients from the selected nations.
   const availableIngredientObjects = getIngredients({
     nations: finalNations,
     theme: themeVal,
     dishType: dishType,
   });
 
-  // Simplified ingredient selection - this is a placeholder for a more robust
-  // selection strategy that should be implemented later.
+  // 2. Select a set of ingredients for the dish based on roles.
+  // This is a simplified selection strategy. A more robust implementation could
+  // add more complex rules, weights, and variety.
   const primaryIngredient =
     selectPrimaryIngredient(availableIngredientObjects, dishType) ||
     getRandomElement(availableIngredientObjects);
@@ -87,8 +92,9 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     baseIngredient,
     seasoningIngredient,
     garnishIngredient,
-  ].filter(Boolean); // Filter out any undefined ingredients
+  ].filter(Boolean); // Using .filter(Boolean) is a concise way to remove any null/undefined entries.
 
+  // 3. Generate the textual components of the dish.
   const name = generateStructuredName(
     finalNations,
     selectedIngredients,
@@ -102,6 +108,7 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   );
   const lore = generateLore(name, finalNations, selectedIngredients);
 
+  // 4. Assemble and validate the final result.
   const result = {
     name,
     concept: description.concept,
@@ -111,7 +118,7 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   };
 
   validateDishResult(result);
-  console.log('Generated Ingredients:', result.ingredients);
+  // console.log('Generated Ingredients:', result.ingredients); // Kept for debugging
   return result;
 }
 
