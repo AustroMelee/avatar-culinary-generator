@@ -1,15 +1,15 @@
 // src/core/loreGenerator.js
 
-import { getRandomElement } from '@utils/random.js';
-import { DISH_LORE_TEMPLATES } from '@data/index.js';
+import { getRandomElement } from '../utils/random.js';
+import { DISH_LORE_TEMPLATES } from './data/index.js';
 
 /**
- * @typedef {import('@src/types.js').Ingredient} Ingredient
- * @typedef {import('@src/types.js').NationKey} NationKey
- * @typedef {import('@src/types.js').DishType} DishType
- * @typedef {import('@src/types.js').Theme} Theme
- * @typedef {import('@src/types.js').Rarity} Rarity
- * @typedef {import('@src/types.js').NationTag} NationTag
+ * @typedef {import('../types.js').Ingredient} Ingredient
+ * @typedef {import('../types.js').NationKey} NationKey
+ * @typedef {import('../types.js').DishType} DishType
+ * @typedef {import('../types.js').Theme} Theme
+ * @typedef {import('../types.js').Rarity} Rarity
+ * @typedef {import('../types.js').NationTag} NationTag
  */
 
 /** @param {Ingredient} ing @param {boolean} [base=false] @returns {string} */
