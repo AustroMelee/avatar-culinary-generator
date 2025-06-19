@@ -2,14 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Avatar Universe Culinary Generator - V5.0</title>
     <!-- Link to the external CSS file to separate structure from presentation -->
-    <script type="module" crossorigin src="/assets/index-DRNdnivh.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DVPQTHN0.css">
+    <script type="module" crossorigin src="/assets/index-CFch_gVH.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BgFlmHyR.css">
   </head>
   <body>
     <div class="container">
+      <img id="banner-image" class="banner" alt="Avatar Universe Culinary Banner" />
       <h1>📜 Avatar Universe Culinary Generator 🍲 v5.0</h1>
 
       <form id="dishForm">
@@ -142,9 +144,18 @@
       </div>
     </div>
 
-    <!-- 
-  The script now points to a .js file, but `type="module"` is still essential 
-  for enabling `import`/`export` syntax.
--->
+    <footer>
+      <p>
+        Avatar: The Last Airbender and all related content are the property of
+        Paramount and Nickelodeon.
+      </p>
+    </footer>
+
+    <div id="dev-tools" class="hidden">
+      <button id="run-test-suite-btn">Run 20 Test Generations</button>
+    </div>
+
+    <div id="role-warning-container" class="warning-container" aria-live="assertive"></div>
+
   </body>
 </html>

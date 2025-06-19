@@ -15,7 +15,6 @@ import {
   getIngredients,
   selectPrimaryIngredient,
   selectSecondaryIngredient,
-  selectTertiaryIngredient,
   selectBaseIngredient,
   selectSeasoningIngredient,
   selectGarnishIngredient,
@@ -23,12 +22,11 @@ import {
 } from './ingredientManager.js';
 import { generateStructuredName } from './nameGenerator.js';
 import { generateConcept } from './descriptionGenerator.js';
-import { generateLore } from './loreGenerator.js';
 import { generatePreparation } from './preparationGenerator.js';
 import { generateFlavorNotes } from './flavorNotesGenerator.js';
 import { NATIONS, INGREDIENT_ROLES, INGREDIENT_TYPES } from './constants.js';
 import * as allData from './data/index.js';
-import { getRandomElement, rollSeed } from '../utils/random.js';
+import { getRandomElement } from '../utils/random.js';
 import { getLoreTemplate } from './loreGenerator.js';
 import {
   LORE_LIBRARY,
@@ -38,7 +36,7 @@ import {
 import {
   updateUIForLoading,
   displayResults,
-} from '../utils/ui.js';
+} from '../utils/domUtils.js';
 
 /**
  * Fills placeholders in a lore template with specific names from the lore library.
