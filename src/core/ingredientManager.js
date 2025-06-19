@@ -384,3 +384,24 @@ export function getIngredients(options) {
   // TODO: Add filtering logic based on dishType, theme, etc.
   return allIngredients;
 }
+
+export function selectPrimaryIngredient(ingredients, dishType) {
+  // Simplified logic
+  return ingredients.find(ing => ing.rolePreference && ing.rolePreference.includes('primary'));
+}
+
+export function selectSecondaryIngredient(ingredients, dishType, primary) {
+  return ingredients.find(ing => ing.name !== primary.name && ing.rolePreference && ing.rolePreference.includes('accent'));
+}
+
+export function selectBaseIngredient(ingredients, dishType, primary) {
+  return ingredients.find(ing => ing.canBeBase);
+}
+
+export function selectSeasoningIngredient(ingredients, dishType) {
+  return ingredients.find(ing => ing.rolePreference && ing.rolePreference.includes('seasoning'));
+}
+
+export function selectGarnishIngredient(ingredients, dishType) {
+  return ingredients.find(ing => ing.rolePreference && ing.rolePreference.includes('garnish'));
+}
