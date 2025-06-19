@@ -7,7 +7,6 @@ import {
   fireNation,
   unitedRepublic,
   spiritWorld,
-  generic,
 } from './data/index.js';
 import { getRandomElement } from '../utils/random.js';
 import { NATIONS } from './constants.js';
@@ -370,14 +369,7 @@ export function getIngredients(options) {
   const { nations = [], theme = '' } = options;
   const allIngredients = [];
 
-  // 1. Add generic ingredients first
-  for (const category in generic.ingredients) {
-    generic.ingredients[category].forEach((ing) => {
-      allIngredients.push({ ...ing, source: 'Generic' });
-    });
-  }
-
-  // 2. Add ingredients from selected nations, tagging them with their source
+  // 1. Add ingredients from selected nations, tagging them with their source
   nations.forEach((nation) => {
     const nationData = NATION_DATA_MAP[nation];
     if (nationData && nationData.ingredients) {
