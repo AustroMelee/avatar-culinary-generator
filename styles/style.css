@@ -176,15 +176,17 @@ button[type='submit']:active {
 }
 
 .dish-section h3 {
-  margin-bottom: 0.5em;
-  color: var(--color-text-secondary);
-  font-size: 1.1em;
-  font-weight: 600;
+  font-family: 'Cinzel', serif;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .dish-section p {
   margin-top: 0;
-  line-height: 1.6;
+  line-height: 1.8;
 }
 
 #flavorNotes-section p {
@@ -246,7 +248,8 @@ button[type='submit']:active {
 }
 
 .chef-tip p {
-  color: var(--color-text-secondary);
+  color: var(--tip-text);
+  font-style: italic;
 }
 
 .result p {
@@ -433,4 +436,54 @@ footer {
 .dish-section {
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.rarity-rare {
+  color: var(--rarity-rare);
+  font-weight: bold;
+}
+
+.rarity-epic {
+  color: var(--rarity-epic);
+  font-weight: bold;
+}
+
+.rarity-legendary {
+  color: var(--rarity-legendary);
+  font-weight: bold;
+}
+
+#ingredientList .rarity-rare,
+#ingredientList .rarity-epic,
+#ingredientList .rarity-legendary {
+    font-weight: bold;
+}
+
+#ingredientList .rarity-rare {
+    color: var(--rarity-rare-text);
+}
+
+#ingredientList .rarity-epic {
+    color: var(--rarity-legendary-text); /* Using legendary color for epic for more impact */
+}
+
+#ingredientList .rarity-legendary {
+    color: var(--rarity-legendary-text);
+}
+
+/* Rarity classes for ingredient list items */
+#ingredientList li.rarity-rare {
+  color: var(--rarity-rare-text);
+  font-weight: bold;
+}
+
+#ingredientList li.rarity-epic {
+  color: var(--rarity-legendary-text); /* Using legendary for more pop */
+  font-weight: bold;
+}
+
+#ingredientList li.rarity-legendary {
+  color: var(--rarity-legendary-text);
+  font-weight: bold;
+  text-shadow: 0 0 5px var(--rarity-legendary-text);
 }

@@ -10,7 +10,7 @@ export const waterTribes = {
         rawCompatible: true,
         tags: ['fish', 'seafood', 'water_tribe'],
         rarity: 'common',
-        flavorNotes: ['rich_omega'],
+        flavorNotes: ['a rich, oily flavor'],
         loreHints: ['arctic_hunt'],
       },
       {
@@ -22,7 +22,7 @@ export const waterTribes = {
         rawCompatible: true,
         tags: ['water_tribe', 'seafood', 'delicacy', 'briny', 'creamy'],
         rarity: 'rare',
-        flavorNotes: ['rich_creamy_brine', 'buttery_texture'],
+        flavorNotes: ['a rich and creamy brine', 'a buttery texture'],
         loreHints: ['chieftain_feast'],
       },
       {
@@ -34,7 +34,7 @@ export const waterTribes = {
         rawCompatible: false,
         tags: ['water_tribe', 'seafood', 'sweet', 'succulent'],
         rarity: 'uncommon',
-        flavorNotes: ['naturally_sweet', 'savory', 'firm_texture'],
+        flavorNotes: ['a natural sweetness', 'a savory depth', 'a firm texture'],
         loreHints: ['coastal_celebration'],
       },
     ],
@@ -48,7 +48,7 @@ export const waterTribes = {
         rawCompatible: true,
         tags: ['fruit', 'tart', 'water_tribe'],
         rarity: 'uncommon',
-        flavorNotes: ['briny_tart'],
+        flavorNotes: ['a briny tartness'],
         loreHints: ['coastal_foraging'],
       },
       {
@@ -60,7 +60,7 @@ export const waterTribes = {
         rawCompatible: true,
         tags: ['water_tribe', 'vegetable', 'seaweed', 'crisp', 'briny'],
         rarity: 'uncommon',
-        flavorNotes: ['crisp_crunch', 'clean_brine', 'subtle_sea-sweetness'],
+        flavorNotes: ['a crisp crunch', 'a clean brine', 'a subtle sea-sweetness'],
         loreHints: ['southern_lights_snack'],
       },
       {
@@ -72,7 +72,7 @@ export const waterTribes = {
         rawCompatible: true,
         tags: ['water_tribe', 'swamp', 'fruit', 'tart', 'preserved'],
         rarity: 'common',
-        flavorNotes: ['intense_tartness', 'earthy_undertone', 'chewy_texture'],
+        flavorNotes: ['an intense tartness', 'an earthy undertone', 'a chewy texture'],
         loreHints: ['foggy_swamp_staple'],
       },
     ],

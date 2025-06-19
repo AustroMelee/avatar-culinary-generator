@@ -113,11 +113,18 @@ export function displayDish(dishResult) {
   if (notesEl) notesEl.textContent = dishResult.notes;
 
   if (ingredientsListEl && dishResult.ingredients?.length > 0) {
-    dishResult.ingredients.forEach((ingredient) => {
+    const ingredientItems = dishResult.ingredients.map((ingredient) => {
       const li = document.createElement('li');
-      li.textContent = formatIngredient(ingredient);
-      ingredientsListEl.appendChild(li);
+      li.innerHTML = formatIngredient(ingredient); // Use innerHTML to allow for styling tags
+      
+      // Add rarity class for special styling
+      if (ingredient.rarity) {
+        li.classList.add(`rarity-${ingredient.rarity}`);
+      }
+      
+      return li;
     });
+    ingredientsListEl.append(...ingredientItems);
   }
 
   if (loreEl) {

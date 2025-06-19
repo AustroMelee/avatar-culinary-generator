@@ -26,13 +26,12 @@ export const airNomads = {
           ],
           rarity: 'common',
           flavorNotes: [
-            'creamy',
-            'tangy',
-            'mildly sweet',
-            'refreshing',
-            'silken',
-            'cool yogurt tang',
-            'calm',
+            'creamy richness',
+            'a pleasant tang',
+            'mildly sweet undertones',
+            'a refreshing coolness',
+            'a silken texture',
+            'a calming quality',
           ],
           shortDescription:
             'A creamy, tangy staple cherished by young nomads, believed to promote spiritual clarity.',
@@ -64,11 +63,11 @@ export const airNomads = {
           ],
           rarity: 'uncommon',
           flavorNotes: [
-            'floral',
-            'sweetly herbaceous',
-            'calming aroma',
-            'gentle perfume',
-            'airy fragrance',
+            'delicate floral notes',
+            'sweetly herbaceous hints',
+            'a calming aroma',
+            'a gentle perfume',
+            'an airy fragrance',
           ],
           shortDescription:
             'Delicate purple buds used in calming teas and for garnishing desserts.',
@@ -86,9 +85,9 @@ export const airNomads = {
           tags: ['air_nomad', 'floral', 'delicate'],
           rarity: 'uncommon',
           flavorNotes: [
-            'subtle floral',
-            'airy fragrance',
-            'perfume-like sweetness',
+            'subtle floral sweetness',
+            'an airy fragrance',
+            'a perfume-like sweetness',
           ],
           shortDescription:
             'Gossamer-thin petals that dissolve on the tongue, leaving a hint of sweetness.',
@@ -125,11 +124,11 @@ export const airNomads = {
           rarity: 'common',
           flavorNotes: [
             'honeyed sweetness',
-            'floral aroma',
-            'velvety texture',
-            'dream-like',
-            'succulent',
-            'luscious',
+            'a floral aroma',
+            'a velvety texture',
+            'a dream-like quality',
+            'succulent juice',
+            'a luscious mouthfeel',
           ],
           shortDescription:
             'A sweet, velvety fruit that grows under the moonlight in temple gardens.',
@@ -146,7 +145,7 @@ export const airNomads = {
           rawCompatible: true,
           tags: ['air_nomad', 'fresh', 'crisp', 'peppery'],
           rarity: 'common',
-          flavorNotes: ['crisp snap', 'fresh green', 'subtly peppery'],
+          flavorNotes: ['a crisp snap', 'fresh green flavors', 'a subtly peppery finish'],
           shortDescription:
             'Crunchy and cool, a favorite snack for young airbenders during flying lessons.',
           culturalSignificance:
@@ -162,7 +161,7 @@ export const airNomads = {
           rawCompatible: true,
           tags: ['air_nomad', 'fruit', 'light', 'refreshing'],
           rarity: 'uncommon',
-          flavorNotes: ['light sweetness', 'fluffy texture', 'watery essence'],
+          flavorNotes: ['a light sweetness', 'a fluffy texture', 'a watery essence'],
           shortDescription:
             'A fruit with a light, almost fluffy texture, said to taste like a cloud.',
           culturalSignificance:
@@ -180,8 +179,8 @@ export const airNomads = {
           rarity: 'rare',
           flavorNotes: [
             'complex bitter-sweetness',
-            'warming sensation',
-            'earthy aroma',
+            'a warming sensation',
+            'an earthy aroma',
           ],
           shortDescription:
             'A rare root found only on the highest, most inaccessible mountain peaks.',
@@ -212,12 +211,12 @@ export const airNomads = {
           ],
           rarity: 'common',
           flavorNotes: [
-            'nutty',
-            'toasted',
-            'earthy sweetness',
-            'wholesome',
-            'robust',
-            'sustaining',
+            'a nutty character',
+            'toasted grain notes',
+            'an earthy sweetness',
+            'a wholesome quality',
+            'a robust body',
+            'a sustaining feeling',
           ],
           shortDescription:
             'A hearty, nutty-tasting roasted barley flour, a staple for traveling nomads.',

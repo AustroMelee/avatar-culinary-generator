@@ -38,6 +38,11 @@ import {
   displayResults,
 } from '../utils/domUtils.js';
 import { validateStringAndLog } from '../utils/textUtils.js';
+import { generateLore, hasSpecialLore } from './loreGenerator.js';
+import {
+  genericServingTraditions,
+  genericChefTips,
+} from './data/generic.js';
 
 /**
  * Fills placeholders in a lore template with specific names from the lore library.
@@ -163,19 +168,33 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   const ingredientNames = new Set(selectedIngredients.map(ing => ing.name));
   let lore, servingTradition, chefTip;
 
-  if (ingredientNames.has('Moon Peach') && ingredientNames.has('Summit Ginseng')) {
-    lore = getRandomElement(LORE_LIBRARY.ECLIPSE_DISH);
-    servingTradition = SPECIAL_LORE_EXTRAS.ECLIPSE_DISH.servingTradition;
-    chefTip = SPECIAL_LORE_EXTRAS.ECLIPSE_DISH.chefTip;
-  } else {
-    // Default path if no special combo is found
-    lore = getLoreTemplate(selectedIngredients);
-    servingTradition = getRandomElement(primaryNationData?.servingTraditions);
-    chefTip = getRandomElement(primaryNationData?.chefTips);
+  // 1. Check for special, ingredient-driven lore and extras
+  const specialLoreKey = hasSpecialLore(ingredientNames);
+  if (specialLoreKey) {
+    const specialExtras = SPECIAL_LORE_EXTRAS[specialLoreKey];
+    lore = getRandomElement(LORE_LIBRARY[specialLoreKey]);
+    servingTradition = specialExtras?.servingTradition;
+    chefTip = specialExtras?.chefTip;
   }
+
+  // 2. If no special lore was found, generate a default one
+  if (!lore) {
+    lore = getLoreTemplate(selectedIngredients);
+  }
+
+  // 3. Populate serving tradition and chef tip, using fallbacks
+  servingTradition =
+    servingTradition ||
+    getRandomElement(primaryNationData?.servingTraditions) ||
+    getRandomElement(genericServingTraditions);
   
+  chefTip =
+    chefTip ||
+    getRandomElement(primaryNationData?.chefTips) ||
+    getRandomElement(genericChefTips);
+
   // Final validation and population of template
-  lore = lore || getRandomElement(LORE_LIBRARY.default);
+  lore = lore || getRandomElement(LORE_LIBRARY.default); // Final fallback for lore
   lore = populateLoreTemplate(lore)
     .replace(/\{nation_name\}/g, primaryNation)
     .replace(/\{Dish_Name\}/g, name);
@@ -191,11 +210,10 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     flavorNotes,
     ingredients: selectedIngredients,
     preparationAndRitual,
-    servingTradition: servingTradition || 'Served with humble grace.',
+    servingTradition: validateStringAndLog(servingTradition, 'Serving Tradition'),
     lore: validateStringAndLog(lore, 'Dish Lore'),
-    chefTip: chefTip || 'Best enjoyed with an open heart.',
-    // Keep this for now for compatibility, but it's deprecated.
-    notes: preparationAndRitual,
+    chefTip: validateStringAndLog(chefTip, 'Chef Tip'),
+    notes: flavorNotes,
     missingRoles,
   };
 
@@ -301,9 +319,15 @@ export function generateDefaultDish() {
     flavorNotes: 'Opens with a wave of honeyed sweetness, followed by gentle notes of velvety texture and a whisper of calm.',
     ingredients: defaultIngredients,
     preparationAndRitual: 'Barley tsampa is steamed while a novice chants the morning prayer. Yoghurt is whisked until frothy, then folded with the sprouts and petals. Served in hand-thrown bowls, diners are encouraged to eat in silence, honoring air and ancestry.',
-    servingTradition: 'Offered at the Western Air Temple during the Festival of Winds; said to bring clarity and lightness to the soul.',
+    servingTradition: validateStringAndLog(
+      getRandomElement(genericServingTraditions),
+      'Serving Tradition'
+    ),
     lore: 'Legend holds that Sky Bison Yoghurt first appeared in a vision to Monk Gyatso, inspiring generations to seek harmony between spirit and sustenance. Even today, acolytes claim the yoghurt "hums" when a dish is made with pure intent.',
-    chefTip: 'Enjoy after morning glider practice for the full Air Nomad experience.',
+    chefTip: validateStringAndLog(
+      getRandomElement(genericChefTips),
+      'Chef Tip'
+    ),
     notes: 'This is a deprecated field.',
     missingRoles: [],
   };

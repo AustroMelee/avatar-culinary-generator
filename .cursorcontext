@@ -49,6 +49,12 @@ By following these guidelines, you can help keep the project clean, consistent, 
 
 ### Common Pitfalls & Past Build Issues
 
+- **Cascade of Refactoring Errors**: A recent series of runtime and build errors were caused by incomplete refactoring.
+    - **Symptom 1 (`ReferenceError`)**: A function (`validateStringAndLog`) was used in `dishGenerator.js` without its corresponding import.
+    - **Symptom 2 (`TypeError`)**: Legacy UI functions in `domUtils.js` were still being called from `main.js` after the HTML structure had changed, causing crashes when trying to access non-existent element IDs.
+    - **Symptom 3 (Build Failure)**: A new UI function (`showLoadingState`) was called in `main.js` but had not yet been implemented or exported in `domUtils.js`.
+    - **Solution**: This chain of errors highlights the importance of thorough refactoring. When changing UI or utility functions: 1) Ensure all calls have the correct imports. 2) Aggressively remove all legacy/dead code (both the functions themselves and any calls to them). 3) Verify that any newly-introduced helper functions are fully implemented and exported *before* they are used.
+
 - **Invalid Relative Paths**: A recent build failure was caused by incorrect relative paths within the `src/core` directory. Files like `nameGenerator.js` were attempting to import from `./utils.js`, which does not exist.
     - **Symptom**: Build fails with an error like `Could not resolve './utils.js' from 'src/core/nameGenerator.js'`.
     - **Solution**: Always double-check that your relative import paths are correct. The `utils` directory is at `src/utils`, so any module inside `src/core` must import from it using `../utils/`. In the specific case of the error, the imported functions were dead code and the imports were simply removed.
