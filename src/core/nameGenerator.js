@@ -71,142 +71,29 @@ function interpolateTemplate(templateString, dataObject) {
 
 /**
  * Generates a structured name for the dish.
- * @param {Record<NationKey, NationData>} selectedNationsData
- * @param {Ingredient[]} allSelectedIngredients
+ * @param {Ingredient[]} ingredients
  * @param {DishType} dishType
  * @param {string} baseFormat
- * @param {Theme} themeVal
- * @param {NationKey[]} finalNationKeys
- * @param {string[]} nationDisplayNames
  * @returns {string} The generated dish name.
  */
 export function generateStructuredName(
-  selectedNationsData,
-  allSelectedIngredients,
+  nations,
+  ingredients,
   dishType,
-  baseFormat,
-  themeVal,
-  finalNationKeys,
-  nationDisplayNames
+  baseFormat
 ) {
-  /** @type {NameFormat[]} */
-  let potentialNameFormats = [];
-  const primaryNationKey =
-    finalNationKeys && finalNationKeys.length > 0 ? finalNationKeys[0] : null;
-  const primaryNationData = primaryNationKey
-    ? selectedNationsData[primaryNationKey]
-    : null;
-  const primaryNationDisplayName =
-    nationDisplayNames && nationDisplayNames.length > 0
-      ? nationDisplayNames[0]
-      : 'Elemental';
-  const themeData = allThemes[themeVal];
+  const nameData = {};
+  const primaryIngredient = ingredients.find(ing => ing.role === 'primary');
 
-  let nameData = {
-    dishType: dishType,
-    format: baseFormat || dishType,
-    mainIngredient: 'Essence',
-    secondaryIngredient: 'Whispers',
-    themeAdj:
-      themeData && Array.isArray(themeData.adj)
-        ? getRandomElement(themeData.adj)
-        : '',
-    nationAdj:
-      primaryNationData && Array.isArray(primaryNationData.adjectives)
-        ? getRandomElement(primaryNationData.adjectives)
-        : primaryNationDisplayName.split(' ')[0],
-    flavorAdj:
-      getRandomElement(
-        genericAdjectives.filter(
-          (adj) => !adj.endsWith('y') && !adj.endsWith('ing') && adj.length > 5
-        )
-      ) || 'Flavorful',
-    culturalSymbol: 'Elemental Harmony',
-    avatarName: getRandomElement([
-      'Roku',
-      'Kyoshi',
-      'Yangchen',
-      'Aang',
-      'Korra',
-      'Wan',
-    ]),
-    emotion: getRandomElement([
-      'Joyful',
-      'Nostalgic',
-      'Spirited',
-      'Bold',
-      'Comforting',
-    ]),
-    mainIngredient1: 'Component A',
-    mainIngredient2: 'Component B',
-  };
+  // If baseFormat is 'Default' or falsy, use the dishType as the format.
+  nameData.format = (baseFormat && baseFormat !== 'Default') ? baseFormat : dishType;
+  nameData.mainIngredient = primaryIngredient ? primaryIngredient.name : getRandomElement(genericDishNouns);
+  nameData.nationAdj = nations.length > 0 ? nations[0].split(' ')[0] : 'Elemental'; // e.g., "Fire" from "Fire Nation"
+  
+  // A simple, default name pattern. More complex patterns could be chosen from data files.
+  const nameTemplate = `{nationAdj} {mainIngredient} {format}`;
 
-  const primaryIngObj = allSelectedIngredients.find(
-    (i) =>
-      i && i.role === 'primary' && !getIngredientTags(i).includes('placeholder')
-  );
-  const baseIngObj = allSelectedIngredients.find(
-    (i) =>
-      i && i.role === 'base' && !getIngredientTags(i).includes('placeholder')
-  );
-  let mainNameIngredientObj = primaryIngObj || baseIngObj;
-
-  if (mainNameIngredientObj) {
-    nameData.mainIngredient = getIngredientName(mainNameIngredientObj, true);
-  } else {
-    nameData.mainIngredient = getRandomElement(genericDishNouns);
-  }
-  nameData.mainIngredient1 = nameData.mainIngredient;
-
-  let secondaryNameIngredientObj = allSelectedIngredients.find(
-    (i) =>
-      i &&
-      i.role === 'accent' &&
-      !getIngredientTags(i).includes('placeholder') &&
-      getIngredientName(i) !== getIngredientName(mainNameIngredientObj)
-  );
-  if (secondaryNameIngredientObj) {
-    nameData.secondaryIngredient = getIngredientName(
-      secondaryNameIngredientObj,
-      true
-    );
-  } else {
-    nameData.secondaryIngredient =
-      (getIngredientFlavorNotes(mainNameIngredientObj)[0] || 'Subtle').split(
-        '_'
-      )[0] + ' Notes';
-  }
-  nameData.mainIngredient2 = nameData.secondaryIngredient;
-
-  if (finalNationKeys && finalNationKeys.length > 0) {
-    finalNationKeys.forEach((key) => {
-      if (selectedNationsData[key] && selectedNationsData[key].nameFormats) {
-        potentialNameFormats.push(...selectedNationsData[key].nameFormats);
-      }
-    });
-  }
-  if (themeData && themeData.nameFormats) {
-    potentialNameFormats.push(...themeData.nameFormats);
-  }
-
-  let nameFormatTemplate = getRandomElement(
-    potentialNameFormats.filter((f) => f && f.pattern)
-  );
-
-  if (!nameFormatTemplate) {
-    /** @type {NameFormat} */
-    nameFormatTemplate = {
-      pattern: `{nationAdj} {mainIngredient} {format}`,
-      slots: {},
-    };
-  }
-
-  let generatedNameStr = interpolateTemplate(
-    nameFormatTemplate.pattern,
-    nameData
-  );
-
-  return (
-    generatedNameStr.replace(/\s+/g, ' ').trim() || 'Unnamed Culinary Creation'
-  );
+  return interpolateTemplate(nameTemplate, nameData)
+    .replace(/\s+/g, ' ')
+    .trim() || 'Unnamed Culinary Creation';
 }
