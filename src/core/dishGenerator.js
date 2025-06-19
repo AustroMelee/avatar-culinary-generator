@@ -148,6 +148,14 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   // Validate the selected ingredients against standardized lists.
   validateSelectedIngredients(selectedIngredients);
 
+  // Sort ingredients by rarity for display purposes
+  const rarityOrder = { legendary: 4, epic: 3, rare: 2, uncommon: 1, common: 0 };
+  selectedIngredients.sort((a, b) => {
+    const scoreA = rarityOrder[a.rarity] || 0;
+    const scoreB = rarityOrder[b.rarity] || 0;
+    return scoreB - scoreA;
+  });
+
   // 3. Generate the textual components of the dish.
   const name = generateStructuredName(
     finalNations,
@@ -162,7 +170,7 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     dishType
   );
   const flavorNotes = generateFlavorNotes(selectedIngredients);
-  const preparationAndRitual = generatePreparation(selectedIngredients, finalNations);
+  const preparationAndRitual = generatePreparation(selectedIngredients);
 
   // Check for special combinations to drive lore, traditions, and tips
   const ingredientNames = new Set(selectedIngredients.map(ing => ing.name));

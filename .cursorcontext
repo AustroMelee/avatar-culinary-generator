@@ -63,10 +63,15 @@ By following these guidelines, you can help keep the project clean, consistent, 
     - **Symptom**: Build fails with an error like `[vite] Internal server error: Failed to resolve import "../utils/ui.js" from "src/core/dishGenerator.js"`.
     - **Solution**: The file `ui.js` did not exist. The correct import path was `../utils/domUtils.js`. This highlights the need to be extra vigilant with import paths after file renaming or refactoring.
 
-- **Tooling/File I/O Failures & Missing Exports**: A major refactor was recently blocked by two related issues:
-    - **File I/O Anomaly**: A critical syntax fix (a missing comma in `airNomads.js`) could not be saved to disk by the AI tools. The tools would report a successful write, but the file would remain unchanged, leading to persistent data parsing errors. This required manual user intervention to fix the file. **If the generator seems to be failing on valid data, verify the data file on disk is not corrupted or missing expected changes.**
-    - **Missing Module Export**: A build failure (`shuffleArray is not exported by src/utils/random.js`) occurred because a new helper function was implemented and used in `flavorNotesGenerator.js` but was not exported from `src/utils/random.js`.
-    - **Solution**: When adding new helper functions, always ensure they are properly exported. If a data-related bug seems inexplicable, manually inspect the file on disk to ensure the expected changes were actually saved.
+- **Missing Module Exports (Recurring)**: The build has failed multiple times due to functions being used before they are exported. This is a common error during refactoring.
+    - **Symptom**: Build fails with an error like `"functionName" is not exported by "src/path/to/module.js"`.
+    - **Examples**:
+        - `shuffleArray` was used but not exported from `src/utils/random.js`.
+        - `hasSpecialLore` was used but not exported from `src/core/loreGenerator.js`.
+    - **Solution**: When creating or moving a function for cross-module use, always add the `export` keyword immediately.
+
+- **File I/O Anomaly**: A major refactor was blocked because a critical syntax fix (a missing comma in `airNomads.js`) could not be saved by the AI tools. The tools would report a successful write, but the file on disk would remain unchanged, leading to persistent parsing errors.
+    - **Solution**: If a data-related bug seems inexplicable, manually inspect the file on disk to ensure the expected changes were actually saved.
 
 ## GOLDEN MODULE RULE
 

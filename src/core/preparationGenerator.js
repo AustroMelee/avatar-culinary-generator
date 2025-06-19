@@ -1,44 +1,116 @@
 // src/core/preparationGenerator.js
 
 import { getRandomElement } from '../utils/random.js';
-import { PREPARATION_TEMPLATES } from './data/index.js';
 import { validateStringAndLog } from '../utils/textUtils.js';
 
 /**
  * @typedef {import('../types.js').Ingredient} Ingredient
- * @typedef {import('../types.js').NationKey} NationKey
  */
+
+// --- Helper Functions ---
 
 /**
- * Generates the preparation steps for the dish.
+ * Checks if an ingredient name is likely plural.
+ * A simple check for "s" at the end, avoiding words that end in "ss".
+ * @param {string} name The ingredient name.
+ * @returns {boolean} True if the name is likely plural.
+ */
+function isPlural(name) {
+  if (!name) return false;
+  const lower = name.toLowerCase();
+  return lower.endsWith('s') && !lower.endsWith('ss');
+}
+
+/**
+ * Selects the verb form based on whether the ingredient is plural.
+ * @param {Ingredient} ingredient The ingredient object.
+ * @returns {{verb: string, pVerb: string}} 'is'/'are' and 'is'/'are'.
+ */
+function getVerb(ingredient) {
+  return isPlural(ingredient.name)
+    ? { verb: 'are', pVerb: 'are' }
+    : { verb: 'is', pVerb: 'is' };
+}
+
+/**
+ * Finds the most important ingredient to be the subject of the preparation.
+ * Prioritizes 'base', then 'primary', then the first ingredient.
  * @param {Ingredient[]} ingredients
- * @param {string[]} nations
+ *returns {Ingredient} The focal ingredient.
+ */
+function getFocalIngredient(ingredients) {
+  return (
+    ingredients.find((ing) => ing.role === 'base') ||
+    ingredients.find((ing) => ing.role === 'primary') ||
+    ingredients[0]
+  );
+}
+
+// --- Template Fragments ---
+
+const PREP_ACTIONS = {
+  default: [
+    'gently folded with {secondary}',
+    'carefully layered with {secondary}',
+    'artfully arranged with {secondary}',
+    'quickly tossed with {secondary}',
+  ],
+  liquid: [
+    'infused with the essence of {secondary}',
+    'swirled with a hint of {secondary}',
+    'gently blended with {secondary}',
+  ],
+};
+
+const RITUAL_FINISHES = [
+  'and served immediately to capture its vibrant essence',
+  'in a spiral pattern, symbolizing the eternal cycle of seasons',
+  'while a soft chant is hummed, honoring the spirits of the ingredients',
+  'just as the sun sets, aligning the dish with the twilight energies',
+  'to create a beautiful contrast of color and texture',
+];
+
+// --- Main Generator ---
+
+/**
+ * Generates a more logical and grammatically correct preparation description.
+ * @param {Ingredient[]} ingredients
  * @returns {string} The generated preparation steps.
  */
-export function generatePreparation(ingredients, nations) {
-  const primaryNation = nations[0] || 'the Four Nations';
-  const template = getRandomElement(PREPARATION_TEMPLATES);
-
-  if (!template) {
-    return 'The ingredients are combined.';
+export function generatePreparation(ingredients) {
+  if (!ingredients || ingredients.length === 0) {
+    return 'The ingredients are combined with care.';
   }
 
-  const primaryIngredient = ingredients.find(ing => ing.role === 'primary')?.name || 'the main ingredient';
-  const secondaryIngredient = ingredients.find(ing => ing.role === 'accent')?.name || 'another ingredient';
-  const baseIngredient = ingredients.find(ing => ing.role === 'base')?.name || 'the base';
-  const seasoningIngredient = ingredients.find(ing => ing.role === 'seasoning')?.name || 'spices';
-  const garnishIngredient = ingredients.find(ing => ing.role === 'garnish')?.name || 'a garnish';
+  const focalIngredient = getFocalIngredient(ingredients);
+  const secondaryIngredient =
+    ingredients.find((ing) => ing.role === 'accent') ||
+    ingredients.find((ing) => ing.role === 'garnish') ||
+    ingredients.find((ing) => ing !== focalIngredient);
 
-  const generatedPreparation = template
-    .replace(/\{nation_name\}/g, primaryNation)
-    .replace(/\{mainIngredient\}/g, primaryIngredient)
-    .replace(/\{primaryIngredient\}/g, primaryIngredient)
-    .replace(/\{secondaryIngredient\}/g, secondaryIngredient)
-    .replace(/\{baseIngredient\}/g, baseIngredient)
-    .replace(/\{seasoningIngredient\}/g, seasoningIngredient)
-    .replace(/\{garnishIngredient\}/g, garnishIngredient)
-    // A simple placeholder for cooking verbs for now
-    .replace(/\{cooking_verb\}/g, getRandomElement(['prepared', 'cooked', 'mixed', 'blended']));
+  const { verb } = getVerb(focalIngredient);
 
-  return validateStringAndLog(generatedPreparation, 'Dish Preparation');
+  const mainPrep = `${focalIngredient.name} ${verb} ${getRandomElement([
+    'sliced paper-thin',
+    'crushed gently',
+    'warmed slowly',
+    'whisked until frothy',
+    'steamed to perfection',
+  ])}`;
+
+  let secondaryAction = '';
+  if (secondaryIngredient) {
+    const actionType =
+      focalIngredient.type === 'liquid' ? 'liquid' : 'default';
+    secondaryAction = getRandomElement(PREP_ACTIONS[actionType]).replace(
+      '{secondary}',
+      secondaryIngredient.name
+    );
+  }
+
+  const ritual = getRandomElement(RITUAL_FINISHES);
+
+  const fullPreparation = `${mainPrep}, then ${secondaryAction} ${ritual}.`;
+
+  return validateStringAndLog(fullPreparation, 'Dish Preparation');
 } 

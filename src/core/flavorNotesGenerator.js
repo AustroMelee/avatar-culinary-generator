@@ -5,12 +5,16 @@ import { validateStringAndLog } from '../utils/textUtils.js';
  * @typedef {import('../types.js').Ingredient} Ingredient
  */
 
-const FLAVOR_TEMPLATES = [
+const STANDARD_TEMPLATES = [
   'A delicate balance of {note1} and {note2}, with a surprising finish of {note3}.',
   'Opens with a wave of {note1}, followed by gentle notes of {note2} and a whisper of {note3}.',
   'The profile is led by {note1}, complemented by an undercurrent of {note2} and a hint of {note3}.',
-  'Earthy {note1} and bright {note2} mingle, grounded by a touch of {note3}.',
-  'Aromatic {note1} gives way to a complex palate of {note2}, finishing with a clean {note3} note.',
+];
+
+const RARE_FLAVOR_TEMPLATES = [
+  'The experience begins with {note1} and {note2}, but is defined by the rare, lingering sensation of {rare_note}.',
+  'While notes of {note1} are present, the true character comes from {rare_note}, finishing with a touch of {note2}.',
+  'A complex journey of flavor, starting with {note1} and culminating in the extraordinary taste of {rare_note}.',
 ];
 
 /**
@@ -32,24 +36,36 @@ export function generateFlavorNotes(ingredients) {
   }
 
   const uniqueNotes = [...new Set(allNotes)];
+  const shuffledNotes = shuffleArray(uniqueNotes);
 
-  // Filter out notes that are substrings of other notes to avoid repetition
-  const filteredNotes = uniqueNotes.filter(note => 
-    !uniqueNotes.some(otherNote => note !== otherNote && otherNote.includes(note))
+  const rareIngredient = ingredients.find(
+    (ing) =>
+      ing.rarity === 'rare' ||
+      ing.rarity === 'epic' ||
+      ing.rarity === 'legendary'
   );
-
-  const shuffledNotes = shuffleArray(filteredNotes);
   
-  const note1 = shuffledNotes[0] || 'subtlety';
-  const note2 = shuffledNotes[1] || 'complexity';
-  const note3 = shuffledNotes[2] || 'character';
+  let template;
+  let noteString;
 
-  const template = getRandomElement(FLAVOR_TEMPLATES);
+  if (rareIngredient && rareIngredient.flavorNotes?.length > 0) {
+    template = getRandomElement(RARE_FLAVOR_TEMPLATES);
+    const rareNote = getRandomElement(rareIngredient.flavorNotes);
+    
+    // Ensure the rare note isn't also used as a common note
+    const commonNotes = shuffledNotes.filter(n => n !== rareNote);
 
-  const noteString = template
-    .replace('{note1}', note1)
-    .replace('{note2}', note2)
-    .replace('{note3}', note3);
+    noteString = template
+      .replace('{rare_note}', rareNote)
+      .replace('{note1}', commonNotes[0] || 'subtlety')
+      .replace('{note2}', commonNotes[1] || 'complexity');
+  } else {
+    template = getRandomElement(STANDARD_TEMPLATES);
+    noteString = template
+      .replace('{note1}', shuffledNotes[0] || 'subtlety')
+      .replace('{note2}', shuffledNotes[1] || 'complexity')
+      .replace('{note3}', shuffledNotes[2] || 'character');
+  }
 
   return validateStringAndLog(capitalize(noteString), 'Flavor Notes');
 } 
