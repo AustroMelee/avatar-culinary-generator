@@ -1,6 +1,8 @@
 export * from './cooking.js';
 export * from './generic.js';
-export * from './lore.js';
+export * from './dishLoreTemplates.js';
+export * from './conceptTemplates.js';
+export * from './preparationTemplates.js';
 export * from './themes.js';
 
 // Export all nation data from their individual modules

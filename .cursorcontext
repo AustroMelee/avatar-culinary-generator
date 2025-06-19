@@ -45,7 +45,13 @@ The core generation logic is orchestrated in `src/core/dishGenerator.js`. It fol
 3.  It passes the selected ingredients to the `nameGenerator`, `loreGenerator`, and `descriptionGenerator` to create the final text.
 4.  The result is then displayed on the page by `src/utils/domUtils.js`.
 
-By following these guidelines, you can help keep the project clean, consistent, and easy to maintain. 
+By following these guidelines, you can help keep the project clean, consistent, and easy to maintain.
+
+### Common Pitfalls & Past Build Issues
+
+- **Invalid Relative Paths**: A recent build failure was caused by incorrect relative paths within the `src/core` directory. Files like `nameGenerator.js` were attempting to import from `./utils.js`, which does not exist.
+    - **Symptom**: Build fails with an error like `Could not resolve './utils.js' from 'src/core/nameGenerator.js'`.
+    - **Solution**: Always double-check that your relative import paths are correct. The `utils` directory is at `src/utils`, so any module inside `src/core` must import from it using `../utils/`. In the specific case of the error, the imported functions were dead code and the imports were simply removed.
 
 ## GOLDEN MODULE RULE
 

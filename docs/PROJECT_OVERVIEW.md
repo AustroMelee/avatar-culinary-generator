@@ -16,15 +16,25 @@ The primary goal of this project is to create a web-based, procedural generator 
   - **Flavor Notes**: A brief on the dish's taste profile.
   - **Lore**: A small story or historical note about the dish's origins.
 - **Seeded Generation**: The generator supports a seeded pseudo-random number generator via a `?seed=your_seed` URL parameter for reproducible results and debugging.
+- **Thematic Influence**: Users can select a "theme" (e.g., "Ancient," "Spirited," "Modern") that influences the output.
+- **Rich, Narrative Output**: Each generation produces a detailed, sectioned breakdown:
+    - A **Dish Name**: Stylistically appropriate for the selected nations, sometimes with thematic icons.
+    - A **Concept**: An evocative, multi-sentence description of the dish's identity and spirit.
+    - **Flavor Notes**: A sommelier-style summary of the dish's taste and aroma profile.
+    - A **Key Ingredients List**: A formatted list showing each ingredient's name, role, type, and a short piece of "micro-lore." Rare ingredients are visually highlighted.
+    - **Preparation & Ritual**: A description of how the dish is made, often including cultural or spiritual rituals.
+    - **Serving Tradition**: A culturally specific note on how the dish is traditionally served or presented.
+    - **Lore**: A small story or historical note about the dish's origins.
+    - **Chef's Tip**: A fun, flavorful piece of advice for enjoying the dish.
 
 ## 3. Technical Architecture
 
-The project is a modern, front-end application built with vanilla JavaScript (ES Modules). The architecture emphasizes separation of concerns and maintainability.
+The project is a modern, front-end application built with vanilla JavaScript (ES Modules). The architecture emphasizes separation of concerns, data-driven logic, and maintainability.
 
 - **Build Tool**: The project uses **Vite** for its development server and production builds. This provides features like Hot Module Replacement (HMR) and optimized build outputs.
 - **Directory Structure**:
-  - `src/core/`: Contains the main business logic for generation (`dishGenerator.js`, `nameGenerator.js`, etc.).
-  - `src/core/data/`: Houses all the raw data for the generator. Nation-specific data (ingredients, etc.) is broken down into individual files (e.g., `fireNation.js`), while generic data (themes, lore) resides in its own modules.
+  - `src/core/`: Contains the main business logic for generation. This includes the central `dishGenerator.js` orchestrator, as well as specialized, template-based generators for each text section (`nameGenerator.js`, `conceptGenerator.js`, `flavorNotesGenerator.js`, `preparationGenerator.js`, `loreGenerator.js`).
+  - `src/core/data/`: Houses all the raw data for the generator. Nation-specific data (ingredients, serving traditions, chef tips) is broken down into individual files (e.g., `fireNation.js`). Generic data and text templates (`conceptTemplates.js`, `dishLoreTemplates.js`) also reside here.
   - `src/utils/`: Contains helper functions for DOM manipulation (`domUtils.js`) and randomization (`random.js`).
   - `src/`: The root source directory, containing the main entry point (`main.js`) and type definitions (`types.js`).
   - `src/assets`: Contains static assets like images.
@@ -103,9 +113,9 @@ Adding new ingredients is a core part of expanding this project. Follow these st
 1.  **Error Boundary**: The entire process is wrapped in a `try...catch` block in `main.js`. Any critical failure will be caught and will display a clean error message to the user while logging the full error details in the console.
 2.  **Collection & Validation**: It collects all ingredients from the selected nations, validating each one with `validateIngredientEntry`.
 3.  **Selection**: It selects ingredients for required roles (`primary`, `base`, `accent`, `seasoning`, `garnish`). It logs warnings if roles cannot be filled and guarantees no duplicate ingredients in the final dish.
-4.  **Text Generation & Validation**: It passes the selected ingredients to the `nameGenerator`, `loreGenerator`, and `descriptionGenerator`. The output of each is validated for leftover placeholders.
+4.  **Text Generation & Validation**: The selected ingredients and nation data are passed to a series of specialized text generators (`generateConcept`, `generateFlavorNotes`, `generatePreparation`, `generateLore`). Each generator uses a template-based system to create rich, varied text. The output is validated for leftover placeholders.
 5.  **Final Audit**: The complete `DishResult` object is validated one last time before being sent to the UI.
-6.  **Display**: The result is displayed by `src/utils/domUtils.js`. If any roles were missing, a user-facing warning is shown.
+6.  **Display**: The final, rich result is rendered by `displayRichDish` in `src/utils/domUtils.js`, which builds a sectioned, visually styled output in the DOM. If any roles were missing, a user-facing warning is shown.
 
 By following these guidelines, you can help keep the project clean, consistent, and easy to maintain.
 

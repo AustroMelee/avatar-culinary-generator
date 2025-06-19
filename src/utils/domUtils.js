@@ -210,3 +210,110 @@ export function displayDish(dishResult) {
 export function setupNationCheckboxes(nations) {
   // Implementation of setupNationCheckboxes function
 }
+
+/**
+ * Creates a styled section for the dish output.
+ * @param {string} title - The title of the section.
+ * @param {string} content - The text content of the section.
+ * @param {string} [icon=''] - An optional icon to display before the title.
+ * @returns {HTMLElement} The created section element.
+ */
+function createSection(title, content, icon = '') {
+  const section = document.createElement('div');
+  section.className = 'dish-section';
+
+  const titleEl = document.createElement('h3');
+  titleEl.innerHTML = `${icon} ${title}`;
+  section.appendChild(titleEl);
+
+  const contentEl = document.createElement('p');
+  contentEl.innerHTML = content; // Using innerHTML to allow for bolding or other simple tags
+  section.appendChild(contentEl);
+
+  return section;
+}
+
+/**
+ * Displays the richly formatted dish result in the UI.
+ * @param {DishResult} dishResult
+ */
+export function displayRichDish(dishResult) {
+  const resultContainer = document.getElementById('dishResult');
+  if (!resultContainer) return;
+
+  // Clear previous results and show the container
+  resultContainer.innerHTML = '';
+  resultContainer.style.display = 'block';
+
+  const {
+    name,
+    concept,
+    flavorNotes,
+    ingredients,
+    preparationAndRitual,
+    servingTradition,
+    lore,
+    chefTip,
+  } = dishResult;
+
+  // 1. Dish Name
+  const nameEl = document.createElement('h2');
+  nameEl.id = 'dishName';
+  nameEl.textContent = name;
+  resultContainer.appendChild(nameEl);
+
+  // 2. Concept
+  if (concept) {
+    resultContainer.appendChild(createSection('Concept', concept, '💡'));
+  }
+
+  // 3. Flavor Notes
+  if (flavorNotes) {
+    resultContainer.appendChild(createSection('Flavor Notes', flavorNotes, '-'));
+  }
+
+  // 4. Key Ingredients
+  if (ingredients && ingredients.length > 0) {
+    const section = document.createElement('div');
+    section.className = 'dish-section';
+    const titleEl = document.createElement('h3');
+    titleEl.innerHTML = '🌱 Key Ingredients & Roles';
+    section.appendChild(titleEl);
+    const listEl = document.createElement('ul');
+    listEl.id = 'ingredientList';
+    ingredients.forEach(ing => {
+      const li = document.createElement('li');
+      li.classList.add(`rarity-${ing.rarity || 'common'}`);
+      
+      const roleAndType = `(${ing.role}, ${ing.type})`;
+      const shortDesc = ing.shortDescription ? `— <em>${ing.shortDescription}</em>` : '';
+      
+      li.innerHTML = `<strong>${ing.name}</strong> ${roleAndType} ${shortDesc}`;
+      listEl.appendChild(li);
+    });
+    section.appendChild(listEl);
+    resultContainer.appendChild(section);
+  }
+  
+  // 5. Preparation & Ritual
+  if (preparationAndRitual) {
+    resultContainer.appendChild(createSection('Preparation & Ritual', preparationAndRitual, '🥣'));
+  }
+  
+  // 6. Serving Tradition
+  if (servingTradition) {
+    resultContainer.appendChild(createSection('Serving Tradition', servingTradition, '🏮'));
+  }
+
+  // 7. Lore
+  if (lore) {
+    resultContainer.appendChild(createSection('Lore', lore, '📜'));
+  }
+
+  // 8. Chef's Tip
+  if (chefTip) {
+    const tipSection = createSection("Chef's Tip", chefTip, '🧑‍🍳');
+    tipSection.classList.add('chef-tip');
+    resultContainer.appendChild(tipSection);
+  }
+}

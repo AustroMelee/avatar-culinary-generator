@@ -22,8 +22,10 @@ import {
   formatIngredient,
 } from './ingredientManager.js';
 import { generateStructuredName } from './nameGenerator.js';
-import { generateDescription } from './descriptionGenerator.js';
+import { generateConcept } from './descriptionGenerator.js';
 import { generateLore } from './loreGenerator.js';
+import { generatePreparation } from './preparationGenerator.js';
+import { generateFlavorNotes } from './flavorNotesGenerator.js';
 import { NATIONS, INGREDIENT_ROLES, INGREDIENT_TYPES } from './constants.js';
 import * as allData from './data/index.js';
 import { getRandomElement, rollSeed } from '../utils/random.js';
@@ -53,6 +55,10 @@ const getIngredientName = (ing, base = false) =>
 export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
   // If no nations are selected, default to all of them for variety.
   const finalNations = nationNamesInput.length > 0 ? nationNamesInput : NATIONS;
+  const primaryNation = finalNations[0];
+  // This is a bit of a hack to get the nation data. A better system would be a registry.
+  // @ts-ignore
+  const primaryNationData = allData[primaryNation.toLowerCase().replace(' ', '')];
 
   // 1. Gather all possible ingredients from the selected nations.
   const availableIngredientObjects = getIngredients({
@@ -111,20 +117,30 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
     dishType,
     baseFormat
   );
-  const description = generateDescription(
+  const concept = generateConcept(
     name,
     selectedIngredients,
-    finalNations
+    finalNations,
+    dishType
   );
+  const flavorNotes = generateFlavorNotes(selectedIngredients);
+  const preparationAndRitual = generatePreparation(selectedIngredients, finalNations);
   const lore = generateLore(name, finalNations, selectedIngredients);
+  const servingTradition = getRandomElement(primaryNationData?.servingTraditions || []);
+  const chefTip = getRandomElement(primaryNationData?.chefTips || []);
 
   // 4. Assemble and validate the final result.
   const result = {
     name,
-    concept: description.concept,
+    concept,
+    flavorNotes,
     ingredients: selectedIngredients,
-    notes: description.notes,
+    preparationAndRitual,
+    servingTradition,
     lore,
+    chefTip,
+    // Keep this for now for compatibility, but it's deprecated.
+    notes: preparationAndRitual,
     missingRoles,
   };
 
@@ -141,7 +157,7 @@ export function generateDish(dishType, nationNamesInput, baseFormat, themeVal) {
  */
 function validateDishResult(dishResult) {
   let isValid = true;
-  const TEXT_KEYS = ['name', 'concept', 'notes'];
+  const TEXT_KEYS = ['name', 'concept', 'flavorNotes', 'preparationAndRitual', 'servingTradition', 'lore', 'chefTip'];
 
   // Validate presence and type of required text fields
   TEXT_KEYS.forEach((key) => {
@@ -217,18 +233,23 @@ function validateSelectedIngredients(ingredients) {
  */
 export function generateDefaultDish() {
   const defaultIngredients = [
-    { name: 'Sky Bison Yoghurt', role: 'base', type: 'dairy', source: 'Air Nomads' },
-    { name: 'Aero-Melon', role: 'primary', type: 'Fruit', source: 'Air Nomads', rarity: 'uncommon' },
-    { name: 'Lavender Buds', role: 'seasoning', type: 'herb', source: 'Air Nomads', rarity: 'uncommon' },
-    { name: 'Sky Sprouts', role: 'accent', type: 'Vegetable', source: 'Air Nomads' },
-    { name: 'Whisperwind Petals', role: 'garnish', type: 'Edible Flower', source: 'Air Nomads', rarity: 'uncommon' },
+    { name: 'Sky Bison Yoghurt', role: 'base', type: 'dairy', source: 'Air Nomads', shortDescription: 'Creamy and tart, prized for its lightness—said to clear the mind before meditation.' },
+    { name: 'Moon Peach', role: 'primary', type: 'Fruit', source: 'Air Nomads', rarity: 'common', shortDescription: 'A sweet, velvety fruit that grows under the moonlight in temple gardens.' },
+    { name: 'Lavender Buds', role: 'seasoning', type: 'herb', source: 'Air Nomads', rarity: 'uncommon', shortDescription: 'A final touch for tranquility, scattered before serving.' },
+    { name: 'Sky Sprouts', role: 'accent', type: 'Vegetable', source: 'Air Nomads', shortDescription: 'Crunchy and cool, believed to bring luck in flight.' },
+    { name: 'Whisperwind Petals', role: 'garnish', type: 'Edible Flower', source: 'Air Nomads', rarity: 'uncommon', shortDescription: 'Their subtle aroma is thought to connect diners with the spirit world.' },
   ];
 
   return {
-    name: 'Sky Temple Aero-Melon Salad',
-    concept: 'A refreshing main course that embodies the light and spiritual nature of the Air Nomads, focusing on fresh, vegetarian ingredients.',
+    name: '🍃 Sky Temple Moon Peach Salad',
+    concept: 'A serene, cloudlike dish cherished by wandering acolytes. This main course weaves together airy textures and pure flavors, evoking the peace of a mountain sunrise.',
+    flavorNotes: 'Tangy yoghurt, fresh grassiness, mellow barley, hints of wild lavender, delicate floral finish.',
     ingredients: defaultIngredients,
-    notes: 'The Aero-Melon is lightly tossed with a Sky Bison Yoghurt dressing infused with crushed Lavender Buds. Tender Sky Sprouts add a crisp texture, while delicate Whisperwind Petals provide a beautiful and fragrant garnish. The dish is served chilled in a simple, hand-carved wooden bowl.',
-    lore: 'A meditative dish often prepared by young acolytes to practice mindfulness. It is said that the subtle hum of the Aero-Melon can only be heard when one\'s mind is truly at peace, making its preparation a spiritual exercise.',
+    preparationAndRitual: 'Barley tsampa is steamed while a novice chants the morning prayer. Yoghurt is whisked until frothy, then folded with the sprouts and petals. Served in hand-thrown bowls, diners are encouraged to eat in silence, honoring air and ancestry.',
+    servingTradition: 'Offered at the Western Air Temple during the Festival of Winds; said to bring clarity and lightness to the soul.',
+    lore: 'Legend holds that Sky Bison Yoghurt first appeared in a vision to Monk Gyatso, inspiring generations to seek harmony between spirit and sustenance. Even today, acolytes claim the yoghurt "hums" when a dish is made with pure intent.',
+    chefTip: 'Enjoy after morning glider practice for the full Air Nomad experience.',
+    notes: 'This is a deprecated field.',
+    missingRoles: [],
   };
 }

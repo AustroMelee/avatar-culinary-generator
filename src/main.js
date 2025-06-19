@@ -10,6 +10,7 @@ import {
   updateUIForLoading,
   displayResults,
   displayError,
+  displayRichDish,
 } from './utils/domUtils.js';
 import { initializeRNG } from './utils/random.js';
 
@@ -77,8 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
           themeVal
         );
 
+        // FOR UI TESTING: Use the default dish to avoid data loading errors
+        // const dishResult = generateDefaultDish();
+
         // 5. Display the results.
-        displayResults(dishResult);
+        displayRichDish(dishResult);
       } catch (error) {
         // WHY: A try...catch block is essential. It catches any errors during generation and
         // allows us to display a friendly message instead of crashing the script.
