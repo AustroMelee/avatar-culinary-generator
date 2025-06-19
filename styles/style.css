@@ -417,3 +417,20 @@ footer {
   color: var(--color-text-meta);
   font-size: 0.9em;
 }
+
+.loading-message,
+.loading-error {
+  font-family: 'Cinzel', serif;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.5rem;
+}
+
+.loading-error {
+  color: var(--rarity-legendary);
+}
+
+.dish-section {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+}

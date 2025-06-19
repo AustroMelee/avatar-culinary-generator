@@ -168,6 +168,25 @@ function createSection(title, content, icon = '') {
 }
 
 /**
+ * Shows a loading or error message in the main result container.
+ * @param {string} message - The message to display.
+ * @param {boolean} [isError=false] - If true, styles the message as an error.
+ */
+export function showLoadingState(message, isError = false) {
+  const resultContainer = document.getElementById('dishResult');
+  if (!resultContainer) return;
+
+  resultContainer.innerHTML = ''; // Clear previous results
+  resultContainer.style.display = 'block';
+
+  const messageEl = document.createElement('h2');
+  messageEl.textContent = message;
+  messageEl.className = isError ? 'loading-error' : 'loading-message';
+
+  resultContainer.appendChild(messageEl);
+}
+
+/**
  * Displays the richly formatted dish result in the UI.
  * @param {DishResult} dishResult
  */
