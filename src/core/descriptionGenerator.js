@@ -21,58 +21,31 @@ const getIngredientName = (ing, base = false) =>
 
 /**
  * Generates the concept and notes for the dish.
- * @param {string} generatedName
- * @param {Ingredient[]} allSelectedIngredients
- * @param {DishType} dishType
- * @param {string} baseFormat
- * @param {Theme} themeVal
- * @param {NationKey[]} finalNationKeys
- * @param {string[]} nationDisplayNames
- * @param {Record<NationKey, NationData>} nations
+ * @param {string} name
+ * @param {Ingredient[]} ingredients
+ * @param {string[]} nations
  * @returns {{concept: string, notes: string}} The generated concept and notes.
  */
-export function generateConceptAndNotes(
-  generatedName,
-  allSelectedIngredients,
-  dishType,
-  baseFormat,
-  themeVal,
-  finalNationKeys,
-  nationDisplayNames,
-  nations
-) {
+export function generateDescription(name, ingredients, nations) {
   /** @type {string[]} */
   let conceptParts = [];
   /** @type {string[]} */
   let notesParts = [];
 
   // Concept Generation
-  let actualNationsString = nationDisplayNames.join(' and ');
-  let dishCategory = dishType.toLowerCase();
+  let actualNationsString = nations.join(' and ');
   conceptParts.push(
-    `A ${dishCategory} creation that embodies the distinctive spirit of ${actualNationsString}.`
+    `A main course creation that embodies the distinctive spirit of ${actualNationsString}.`
   );
 
-  const currentThemeData = themeVal && allThemes[themeVal];
-  if (currentThemeData && currentThemeData.conceptMod) {
-    conceptParts.push(currentThemeData.conceptMod);
-  }
-
   // Notes Generation
-  let prepIntro = `This dish is brought to life through traditional techniques, honoring the traditions of ${nationDisplayNames.join(' and ')}.`;
+  let prepIntro = `This dish is brought to life through traditional techniques, honoring the traditions of ${nations.join(
+    ' and '
+  )}.`;
   notesParts.push(prepIntro);
 
-  let finalPlatingNotesForNotes = '';
-  const primaryNationKeyForPlating =
-    finalNationKeys && finalNationKeys.length > 0
-      ? finalNationKeys[0]
-      : 'earthKingdom';
-  const platingNationData = nations[primaryNationKeyForPlating];
-  if (platingNationData && platingNationData.platingNotes) {
-    finalPlatingNotesForNotes =
-      'Presentation is an art form here. ' +
-      getRandomElement(platingNationData.platingNotes);
-  }
+  let finalPlatingNotesForNotes =
+    'Presentation is an art form here. Served with minimalist elegance on simple, unadorned pottery.';
   notesParts.push(finalPlatingNotesForNotes);
 
   const generatedConcept = conceptParts.join(' ');
