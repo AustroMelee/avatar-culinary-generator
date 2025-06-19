@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@vitejs/plugin-react": "^4.5.2",
     "prettier": "^3.5.3",
     "sharp": "^0.34.2",
     "vite": "^5.0.0"
