@@ -67,3 +67,27 @@ export function getRandomInt(min, max) {
   if (min > max) return min;
   return Math.floor(rng() * (max - min + 1)) + min;
 }
+
+/**
+ * Shuffles an array in place using the Fisher-Yates algorithm.
+ * @template T
+ * @param {T[]} array The array to shuffle.
+ * @returns {T[]} The shuffled array.
+ */
+export function shuffleArray(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(rng() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
