@@ -37,6 +37,7 @@ import {
   updateUIForLoading,
   displayResults,
 } from '../utils/domUtils.js';
+import { validateStringAndLog } from '../utils/textUtils.js';
 
 /**
  * Fills placeholders in a lore template with specific names from the lore library.
