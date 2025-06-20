@@ -2,6 +2,7 @@ import { SovereignDishGenerator } from './generator/sovereign-dish-generator.js'
 import { AirNomadDataProvider } from './data/air-nomad-data-provider.js';
 import { DishDisplay } from './ui/dish-display.js';
 import { initializeEmojiRenderer, enhanceDishDisplayWithEmojis } from './ui/emoji-renderer.js';
+import { LoadingAnimationController } from './ui/loading-animation.js';
 import type { GeneratedAirNomadDish } from './types.js';
 
 /**
@@ -13,23 +14,23 @@ async function yieldToEventLoop(): Promise<void> {
 }
 
 /**
- * Non-blocking dish generation with yielding points
+ * Non-blocking dish generation with beautiful Air Nomad loading animation
  * Uses the SOVEREIGN ARCHITECTURE: Core Generator + Nation Config
  */
-async function generateDishWithYielding(): Promise<void> {
-  const loadingElement = document.getElementById('loading') as HTMLElement;
+async function generateDishWithLoadingAnimation(): Promise<void> {
   const generateButton = document.getElementById('generate-button') as HTMLButtonElement;
   const dishDisplay = new DishDisplay('dish-container');
+  const loadingController = new LoadingAnimationController('body');
   
   try {
-    // Show loading state
-    if (loadingElement) loadingElement.style.display = 'block';
+    // Disable button to prevent spam clicking
     generateButton.disabled = true;
     generateButton.textContent = 'Generating...';
     
-    dishDisplay.showGeneratingState();
+    // Start the beautiful 5-second loading animation
+    await loadingController.startLoadingAnimation();
     
-    // Yield to allow UI update
+    // Yield to allow UI update after animation
     await yieldToEventLoop();
     
     // SOVEREIGN ARCHITECTURE: One True Generator + Nation Data Provider
@@ -58,6 +59,9 @@ async function generateDishWithYielding(): Promise<void> {
   } catch (error) {
     console.error('Error generating dish:', error);
     
+    // Hide loading animation on error
+    loadingController.forceStop();
+    
     // Display error message to user
     const displayContainer = document.getElementById('dish-container');
     if (displayContainer) {
@@ -71,7 +75,6 @@ async function generateDishWithYielding(): Promise<void> {
     }
   } finally {
     // Reset UI state
-    if (loadingElement) loadingElement.style.display = 'none';
     generateButton.disabled = false;
     generateButton.textContent = 'Generate New Dish';
   }
@@ -79,7 +82,7 @@ async function generateDishWithYielding(): Promise<void> {
 
 /**
  * Application initialization and event binding
- * Sets up sovereign generation workflow
+ * Sets up sovereign generation workflow with loading animation system
  */
 async function initializeApplication(): Promise<void> {
   console.log('🍲 Air Nomad Food Generator - Sovereign Architecture Initialized...');
@@ -96,18 +99,18 @@ async function initializeApplication(): Promise<void> {
   const generateButton = document.getElementById('generate-button') as HTMLButtonElement;
   if (generateButton) {
     generateButton.addEventListener('click', async () => {
-      await generateDishWithYielding();
+      await generateDishWithLoadingAnimation();
     });
   } else {
     console.warn('Generate button not found in DOM');
   }
   
-  // Generate initial dish on page load
+  // Generate initial dish on page load (with loading animation)
   setTimeout(async () => {
-    await generateDishWithYielding();
+    await generateDishWithLoadingAnimation();
   }, 100); // Small delay to allow DOM to settle
   
-  console.log('✨ Sovereign Architecture: SovereignDishGenerator + Air Nomad Data Provider');
+  console.log('✨ Sovereign Architecture: SovereignDishGenerator + Air Nomad Data Provider + Loading Animation');
 }
 
 // Initialize when DOM is ready
@@ -120,5 +123,5 @@ if (document.readyState === 'loading') {
 }
 
 // Make functions available globally for debugging
-(window as any).generateDish = generateDishWithYielding;
+(window as any).generateDish = generateDishWithLoadingAnimation;
 (window as any).yieldToEventLoop = yieldToEventLoop; 
