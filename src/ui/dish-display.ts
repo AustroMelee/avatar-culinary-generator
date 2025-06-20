@@ -1,9 +1,9 @@
-import { GeneratedAirNomadDish } from '../types.js';
+import type { GeneratedAirNomadDish } from '../types.js';
 
 // UI display constants
 const EMPTY_STATE_MESSAGE = 'Click "Generate Dish" to create an Air Nomad culinary masterpiece!';
 const GENERATING_STATE_MESSAGE = '🌪️ Consulting the Ancient Scrolls...';
-const GENERATING_STATE_EMOJI = '🌪️';
+// const GENERATING_STATE_EMOJI = '🌪️'; // Available for future UI enhancements
 
 /**
  * Handles visual presentation of generated Air Nomad dishes in the DOM
@@ -71,7 +71,7 @@ export class DishDisplay {
    */
   private renderCompleteDish(dish: GeneratedAirNomadDish): void {
     const ingredientsHtml = this.formatIngredientsHtml(dish.ingredients);
-    const spiritualBenefitHtml = this.formatSpiritualBenefitHtml(dish.spiritualBenefit);
+    const spiritualBenefitHtml = this.formatSpiritualBenefitHtml((dish as any).spiritualBenefit);
 
     this.container.innerHTML = `
       <div class="dish-display">
@@ -89,13 +89,13 @@ export class DishDisplay {
           <div class="technique">
             <h3>Technique:</h3>
             <p><strong>${dish.technique.name}</strong></p>
-            <p>${dish.technique.description}</p>
+            <p>${(dish.technique as any).description || 'Traditional Air Nomad preparation method'}</p>
           </div>
           
           <div class="metadata">
             <p><strong>Difficulty:</strong> ${dish.difficulty}</p>
             <p><strong>Serves:</strong> ${dish.servingSize}</p>
-            ${spiritualBenefitHtml}
+            ${this.formatSpiritualBenefitHtml((dish as any).spiritualBenefit)}
           </div>
         </div>
       </div>

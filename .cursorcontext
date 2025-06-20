@@ -2,6 +2,51 @@
 # This project is maintained and edited primarily by LLMs.
 # All code must be optimized for LLM readability, editability, and refactorability.
 
+---
+
+## ⚠️ CRITICAL: ARCHITECTURAL PITFALLS PREVENTION
+
+**MANDATORY READING**: Before making ANY significant architectural changes, code refactoring, or major feature additions, you MUST consult `ARCHITECTURAL_PITFALLS_GUIDE.md`.
+
+**This guide documents REAL disasters that occurred in this project:**
+- God Object Catastrophe (661-line files)
+- Global State Contamination 
+- Mixed Responsibility Violations
+- Framework Coupling Disasters
+- Type System Chaos
+- Constants Scatter Catastrophe
+
+**Prevention Protocol**:
+1. **Read the pitfalls guide** before major changes
+2. **Apply the prevention checklists** during development
+3. **Follow the enforcement rules** to avoid regression
+4. **Use the success metrics** to validate architectural quality
+
+**Remember**: These pitfalls caused 40% development overhead and required massive refactoring. Prevention is critical.
+
+---
+
+## 🎯 CRITICAL: ONE SOURCE OF TRUTH FOR GENERATORS
+
+**MANDATORY COMPLIANCE**: There must be exactly ONE dish generation entry point per nation. This is ESSENTIAL for multi-nation expansion.
+
+**CURRENT ARCHITECTURE - DO NOT VIOLATE**:
+- **FrameworkCoreDishGenerator**: Framework-agnostic base class (NEVER nation-specific)
+- **AirNomadDishGenerator**: Single Air Nomad entry point via `createDish()` method
+- **Support Modules**: Pure functions only (prose, cleanup, metadata) - NO dish creation capability
+
+**FORBIDDEN PATTERNS**:
+❌ Multiple generator classes per nation (e.g., AirNomadMainDishGenerator, AirNomadSideDishGenerator)
+❌ Direct dish creation in support modules (e.g., ProseComposer.createDish())
+❌ Duplicate framework implementations (e.g., CoreDishGenerator - already removed)
+❌ Cross-layer imports (Support modules importing generators)
+
+**MANDATORY READING**: `ONE_SOURCE_OF_TRUTH_GENERATOR.md` before adding ANY new generator functionality.
+
+**Critical for Multi-Nation Expansion**: When adding Water Tribe, Earth Kingdom, or Fire Nation - follow the exact pattern of AirNomadDishGenerator extending FrameworkCoreDishGenerator with a single createDish() method.
+
+---
+
 ### GENERAL PRINCIPLES
 
 - Treat the LLM as the primary developer, not a human.
@@ -17,6 +62,7 @@
 - Each file should represent **one clear concept or domain unit**.
 - Do not create monolithic "utils" or "index" hubs unless absolutely necessary.
 - Group related files into domain-based folders, not generic categories.
+- **ACTIVE MONITORING**: See `FILE_SIZE_MONITOR.md` for live compliance tracking.
 
 ---
 
@@ -95,4 +141,18 @@ Every code file should act as a **self-contained, intention-labeled semantic blo
 2. Modify without context leaks,
 3. Refactor without introducing regressions.
 
-If it’s not explainable in a single pass by an AI, rewrite it until it is.
+If it's not explainable in a single pass by an AI, rewrite it until it is.
+
+---
+
+### FILE SIZE COMPLIANCE MONITORING
+
+**MANDATORY**: Update `FILE_SIZE_MONITOR.md` with every response that modifies code files.
+
+**Protocol**:
+1. Check line counts of any modified files
+2. Log violations immediately in the monitor document
+3. Plan modularization for any file approaching 500 lines
+4. Maintain perfect LLM-first compliance across entire codebase
+
+**Current Status**: ✅ ALL FILES COMPLIANT (as of 2025-01-19)
