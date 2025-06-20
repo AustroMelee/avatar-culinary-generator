@@ -185,7 +185,10 @@ export function enhanceDishDisplayWithEmojis(
   if (dishNameElement) {
     const nameEmoji = createDishNameEmoji(dishData.name, nation);
     if (nameEmoji) {
+      // Add emoji and spacing to dish name
+      const spacer = document.createTextNode(' ');
       dishNameElement.insertBefore(nameEmoji, dishNameElement.firstChild);
+      dishNameElement.insertBefore(spacer, nameEmoji.nextSibling);
     }
   }
   
@@ -195,7 +198,10 @@ export function enhanceDishDisplayWithEmojis(
     if (index < dishData.ingredients.length) {
       const ingredientEmoji = createIngredientEmoji(dishData.ingredients[index], nation);
       if (ingredientEmoji) {
+        // Add some spacing and insert emoji at the beginning
+        const spacer = document.createTextNode(' ');
         element.insertBefore(ingredientEmoji, element.firstChild);
+        element.insertBefore(spacer, ingredientEmoji.nextSibling);
       }
     }
   });

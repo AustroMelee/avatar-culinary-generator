@@ -71,13 +71,13 @@ export class DishDisplay {
 
     this.container.innerHTML = `
       <div class="dish-display">
-        <h2>${dish.name}</h2>
+        <h2 class="dish-name">${dish.name}</h2>
         <p class="description">${dish.description}</p>
         
         <div class="dish-details">
           <div class="ingredients">
             <h3>Ingredients:</h3>
-            <ul>
+            <ul class="ingredients-list">
               ${ingredientsHtml}
             </ul>
           </div>
@@ -104,7 +104,7 @@ export class DishDisplay {
    */
   private formatIngredientsHtml(ingredients: GeneratedAirNomadDish['ingredients']): string {
     return ingredients.map(ingredient => 
-      `<li class="rarity-${ingredient.rarity}">${ingredient.name}</li>`
+      `<li class="ingredient-item rarity-${ingredient.rarity}">${ingredient.name}</li>`
     ).join('');
   }
 
