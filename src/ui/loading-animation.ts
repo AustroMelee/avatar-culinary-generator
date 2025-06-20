@@ -89,23 +89,31 @@ export class LoadingAnimationController {
    * Creates immersive Air Nomad dish preparation experience
    */
   async startLoadingAnimation(onComplete?: () => void): Promise<void> {
-    this.onComplete = onComplete;
-    this.currentProgress = 0;
-    this.currentPhase = 'gathering';
+    return new Promise<void>((resolve) => {
+      this.onComplete = () => {
+        if (onComplete) {
+          onComplete();
+        }
+        resolve(); // Resolve the Promise when animation completes
+      };
+      
+      this.currentProgress = 0;
+      this.currentPhase = 'gathering';
 
-    // Create loading UI
-    this.createLoadingUI();
+      // Create loading UI
+      this.createLoadingUI();
 
-    // Start progress bar animation
-    this.startProgressAnimation();
+      // Start progress bar animation
+      this.startProgressAnimation();
 
-    // Cycle through phases every 1 second
-    this.cyclePhases();
+      // Cycle through phases every 1 second
+      this.cyclePhases();
 
-    // Auto-complete after 5 seconds
-    setTimeout(() => {
-      this.completeLoading();
-    }, 5000);
+      // Auto-complete after 5 seconds
+      setTimeout(() => {
+        this.completeLoading();
+      }, 5000);
+    });
   }
 
   /**

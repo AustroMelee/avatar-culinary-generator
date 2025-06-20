@@ -105,10 +105,9 @@ async function initializeApplication(): Promise<void> {
     console.warn('Generate button not found in DOM');
   }
   
-  // Generate initial dish on page load (with loading animation)
-  setTimeout(async () => {
-    await generateDishWithLoadingAnimation();
-  }, 100); // Small delay to allow DOM to settle
+  // Show initial empty state (no automatic generation)
+  const dishDisplay = new DishDisplay('dish-container');
+  dishDisplay.renderDish(null); // Shows the "Click to generate" message
   
   console.log('✨ Sovereign Architecture: SovereignDishGenerator + Air Nomad Data Provider + Loading Animation');
 }
