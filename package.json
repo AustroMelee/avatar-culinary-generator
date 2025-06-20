@@ -1,24 +1,43 @@
 {
-  "name": "avatar-food-generator",
+  "name": "food-generator",
   "private": true,
-  "version": "1.0.0",
-  "description": "A procedural generator for fictional dishes from the world of Avatar: The Last Airbender.",
-  "main": "src/main.js",
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "format": "prettier --write ."
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.34.1",
+    "@typescript-eslint/parser": "^8.34.1",
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.0",
+    "eslint-plugin-react": "^7.37.5",
+    "prettier": "^3.5.3",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "esbuild": "^0.21.5",
+    "nanoid": "^3.3.11",
+    "picocolors": "^1.1.1",
+    "postcss": "^8.5.6",
+    "rollup": "^4.44.0",
+    "source-map-js": "^1.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AustroMelee/avatar-culinary-generator.git"
+  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.5.2",
-    "prettier": "^3.5.3",
-    "sharp": "^0.34.2",
-    "vite": "^5.0.0"
+  "bugs": {
+    "url": "https://github.com/AustroMelee/avatar-culinary-generator/issues"
   },
-  "dependencies": {
-    "canvg": "^4.0.3"
-  }
+  "homepage": "https://github.com/AustroMelee/avatar-culinary-generator#readme",
+  "description": ""
 }
