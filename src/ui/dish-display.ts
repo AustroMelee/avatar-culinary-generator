@@ -55,12 +55,12 @@ export class DishDisplay {
 
   /**
    * Renders empty state when no dish is available
-   * Encourages user interaction with clear call-to-action
+   * Shows clean empty container without any message
    */
   private renderEmptyState(): void {
     this.container.innerHTML = `
       <div class="dish-display empty">
-        <p>${EMPTY_STATE_MESSAGE}</p>
+        <!-- Empty state - no message shown -->
       </div>
     `;
   }
