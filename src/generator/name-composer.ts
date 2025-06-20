@@ -2,180 +2,221 @@ import type {
   AirNomadIngredient, 
   AirNomadCookingTechnique
 } from '../types.js';
-import {
-  selectWithAntiClustering
-} from '../data/grammar/weighted-selection.js';
-import {
-  getLegendaryIngredientContext
-} from '../data/air-nomad/lore-system.js';
 
 /**
- * Composes authentic Air Nomad dish names with cultural titles and ingredient integration
- * Handles legendary ingredients with special naming conventions
+ * Composes simple, canonical Avatar-style dish names that reflect the actual ingredients
+ * Examples: "Pine Nut Noodles", "Fire Flakes", "Mushroom Carrot Stew"
+ * Focuses on concise, memorable names that describe the unique dish composition
  */
 export function composeDishName(
   ingredients: AirNomadIngredient[], 
   technique: AirNomadCookingTechnique
 ): string {
-  const ingredientNames = ingredients.map(ing => ing.name);
-  const legendaryContext = findLegendaryIngredient(ingredientNames);
+  // Find the most interesting ingredients to feature in the name
+  const featuredIngredients = selectFeaturedIngredients(ingredients);
+  const dishType = getDishTypeFromTechnique(technique);
   
-  // Cultural titles based on ingredient rarity and sacred status
-  const culturalTitle = selectCulturalTitle(ingredients, legendaryContext);
-  
-  // Main ingredient and technique integration
-  const mainIngredient = ingredientNames[0];
-  const secondaryIngredient = ingredientNames.length > 1 ? ingredientNames[1] : null;
-  
-  // Special naming for legendary ingredients
-  if (legendaryContext) {
-    return composeLegendaryName(culturalTitle, mainIngredient, technique, legendaryContext);
+  // Check for legendary ingredients for special naming
+  const legendaryIngredient = ingredients.find(ing => ing.rarity === 'legendary');
+  if (legendaryIngredient) {
+    return composeLegendaryName(legendaryIngredient, featuredIngredients, technique, dishType);
   }
   
-  // Standard naming patterns
-  return composeStandardName(culturalTitle, mainIngredient, secondaryIngredient, technique);
+  // Create meaningful names based on the featured ingredients
+  return composeDescriptiveName(featuredIngredients, technique, dishType);
 }
 
 /**
- * Finds legendary ingredient context for special naming
+ * Selects the most interesting ingredients to feature in the dish name
+ * Prioritizes rare ingredients and distinctive flavors
  */
-function findLegendaryIngredient(ingredientNames: string[]): any {
-  for (const ingredientName of ingredientNames) {
-    const context = getLegendaryIngredientContext(ingredientName);
-    if (context) {
-      return context;
-    }
-  }
-  return null;
+function selectFeaturedIngredients(ingredients: AirNomadIngredient[]): AirNomadIngredient[] {
+  // Sort by rarity and distinctiveness
+  const sorted = [...ingredients].sort((a, b) => {
+    const rarityScore = { legendary: 4, rare: 3, uncommon: 2, common: 1 };
+    const aScore = rarityScore[a.rarity] || 0;
+    const bScore = rarityScore[b.rarity] || 0;
+    
+    if (aScore !== bScore) return bScore - aScore;
+    
+    // Prefer ingredients with distinctive characteristics
+    const distinctive = ['nuts', 'mushroom', 'flower', 'fruit', 'spice', 'herb'];
+    const aDistinctive = distinctive.some(word => a.name.toLowerCase().includes(word));
+    const bDistinctive = distinctive.some(word => b.name.toLowerCase().includes(word));
+    
+    if (aDistinctive && !bDistinctive) return -1;
+    if (!aDistinctive && bDistinctive) return 1;
+    return 0;
+  });
+  
+  // Take 1-2 most interesting ingredients
+  if (sorted.length === 1) return [sorted[0]];
+  if (sorted.length === 2) return sorted;
+  
+  // For 3+ ingredients, take the most interesting one and one other
+  const primary = sorted[0];
+  const secondary = sorted[1].rarity !== 'common' ? sorted[1] : sorted.find(ing => ing.rarity === 'common') || sorted[1];
+  
+  return [primary, secondary];
 }
 
 /**
- * Selects cultural title based on ingredient rarity and sacred significance
- */
-function selectCulturalTitle(ingredients: AirNomadIngredient[], legendaryContext: any): string {
-  const hasLegendary = !!legendaryContext;
-  const hasSacred = ingredients.some(ing => ing.isSacred);
-  const maxRarity = Math.max(...ingredients.map(ing => 
-    ing.rarity === 'legendary' ? 4 : ing.rarity === 'rare' ? 3 : ing.rarity === 'uncommon' ? 2 : 1
-  ));
-  
-  if (hasLegendary) {
-    const legendaryTitles = [
-      "Avatar's", "Ancient Master's", "Sky Father's", "Temple Guardian's", 
-      "Eternal Monk's", "Sacred Elder's", "Celestial Master's"
-    ];
-    return selectWithAntiClustering(legendaryTitles);
-  }
-  
-  if (hasSacred || maxRarity >= 3) {
-    const sacredTitles = [
-      "Temple Elder's", "Master's", "Guru's", "High Monk's", 
-      "Sacred", "Blessed", "Enlightened"
-    ];
-    return selectWithAntiClustering(sacredTitles);
-  }
-  
-  if (maxRarity >= 2) {
-    const uncommonTitles = [
-      "Cloud Dancer's", "Wind Walker's", "Mountain Sage's", "Temple Cook's",
-      "Traveling Monk's", "Sky Nomad's", "Meditation Master's"
-    ];
-    return selectWithAntiClustering(uncommonTitles);
-  }
-  
-  // Common ingredient titles
-  const commonTitles = [
-    "Novice's", "Student's", "Young Monk's", "Temple", "Simple", 
-    "Humble", "Daily", "Community"
-  ];
-  return selectWithAntiClustering(commonTitles);
-}
-
-/**
- * Composes names for dishes with legendary ingredients
+ * Creates legendary dish names with mystical touch but still descriptive
  */
 function composeLegendaryName(
-  culturalTitle: string, 
-  mainIngredient: string, 
+  legendaryIngredient: AirNomadIngredient,
+  featuredIngredients: AirNomadIngredient[],
   technique: AirNomadCookingTechnique,
-  legendaryContext: any
+  dishType: string
 ): string {
-  const techniqueDescriptor = getTechniqueDescriptor(technique);
+  const legendaryName = getSimpleIngredientName(legendaryIngredient.name);
+  const otherIngredient = featuredIngredients.find(ing => ing !== legendaryIngredient);
+  const otherName = otherIngredient ? getSimpleIngredientName(otherIngredient.name) : null;
   
-  // Legendary naming patterns emphasize the mystical ingredient
-  const legendaryIngredientName = (legendaryContext as any)?.ingredient || mainIngredient;
-  const legendaryPatterns = [
-    `${culturalTitle} ${legendaryIngredientName} ${techniqueDescriptor}`,
-    `${culturalTitle} Transcendent ${techniqueDescriptor} ${mainIngredient}`,
-    `${culturalTitle} Sacred ${legendaryIngredientName} Preparation`,
-    `${culturalTitle} Celestial ${techniqueDescriptor} with ${legendaryIngredientName}`
+  const patterns = [
+    `Sacred ${legendaryName} ${dishType}`,
+    `Spirit ${legendaryName} ${otherName ? otherName + ' ' : ''}${dishType}`,
+    `Mystic ${legendaryName}${otherName ? ' ' + otherName : ''} ${dishType}`,
+    `Ancient ${legendaryName} ${dishType}`,
+    `Celestial ${dishType}`
   ];
   
-  return selectWithAntiClustering(legendaryPatterns);
+  return randomChoice(patterns);
 }
 
 /**
- * Composes standard dish names with varied patterns
+ * Creates descriptive dish names that reflect the actual ingredients
  */
-function composeStandardName(
-  culturalTitle: string, 
-  mainIngredient: string, 
-  secondaryIngredient: string | null,
-  technique: AirNomadCookingTechnique
+function composeDescriptiveName(
+  featuredIngredients: AirNomadIngredient[],
+  technique: AirNomadCookingTechnique,
+  dishType: string
 ): string {
-  const techniqueDescriptor = getTechniqueDescriptor(technique);
+  const primaryName = getSimpleIngredientName(featuredIngredients[0].name);
+  const secondaryName = featuredIngredients.length > 1 ? getSimpleIngredientName(featuredIngredients[1].name) : null;
+  const techniqueName = getSimpleTechniqueName(technique);
   
-  // Multiple naming patterns for variety
-  const namingPatterns = [
-    // Single ingredient focus
-    `${culturalTitle} ${techniqueDescriptor} ${mainIngredient}`,
-    `${culturalTitle} ${mainIngredient} ${techniqueDescriptor}`,
+  // Always create descriptive names that include ingredients
+  const patterns = [
+    // Primary ingredient + dish type: "Pine Nut Noodles", "Mushroom Soup"
+    `${primaryName} ${dishType}`,
     
-    // Dual ingredient when available
-    ...(secondaryIngredient ? [
-      `${culturalTitle} ${techniqueDescriptor} ${mainIngredient} and ${secondaryIngredient}`,
-      `${culturalTitle} ${mainIngredient} with ${secondaryIngredient}`,
-      `${culturalTitle} Balanced ${techniqueDescriptor} ${mainIngredient}`
+    // Dual ingredient combinations: "Pine Nut Mushroom Stew", "Carrot Apple Soup"
+    ...(secondaryName ? [
+      `${primaryName} ${secondaryName} ${dishType}`,
+      `${secondaryName} ${primaryName} ${dishType}`,
+      `${primaryName} and ${secondaryName}`
     ] : []),
     
-    // Technique-focused
-    `${culturalTitle} ${techniqueDescriptor} Creation`,
-    `${culturalTitle} ${getTechniqueAdjective(technique)} ${mainIngredient}`
+    // Technique + primary ingredient: "Steamed Pine Nuts", "Roasted Mushrooms"
+    `${techniqueName} ${primaryName}`,
+    
+    // Air Nomad themed but still descriptive
+    `Wind ${primaryName} ${dishType}`,
+    `Sky ${primaryName}${secondaryName ? ' ' + secondaryName : ''}`,
+    `Temple ${primaryName} ${dishType}`,
+    
+    // Special combinations for certain ingredients
+    ...(getSpecialCombinations(primaryName, secondaryName, dishType))
   ];
   
-  return selectWithAntiClustering(namingPatterns);
+  return randomChoice(patterns);
 }
 
 /**
- * Gets descriptive name for cooking technique
+ * Creates special name combinations for certain ingredient pairs
  */
-function getTechniqueDescriptor(technique: AirNomadCookingTechnique): string {
-  const techniqueDescriptors: Record<string, string[]> = {
-    'Steam-Whipping': ['Steam-Whipped', 'Cloud-Whipped', 'Mist-Whipped'],
-    'Whisper-Steaming': ['Whisper-Steamed', 'Gentle-Steamed', 'Breath-Steamed'],
-    'Wind-Drying': ['Wind-Dried', 'Air-Dried', 'Breeze-Dried'],
-    'Float-Boiling': ['Float-Boiled', 'Levitating', 'Floating'],
-    'Meditation Brewing': ['Meditation-Brewed', 'Contemplative', 'Mindful'],
-    'Sky-Roasting': ['Sky-Roasted', 'Cloud-Roasted', 'Wind-Roasted']
-  };
+function getSpecialCombinations(primaryName: string, secondaryName: string | null, dishType: string): string[] {
+  const special: string[] = [];
   
-  const descriptors = techniqueDescriptors[technique.name] || [technique.name];
-  return selectWithAntiClustering(descriptors);
+  // Noodle dishes should emphasize what's WITH the noodles
+  if (dishType.toLowerCase().includes('noodle') && secondaryName) {
+    special.push(`${secondaryName} Noodles`);
+  }
+  
+  // Soup combinations
+  if (dishType.toLowerCase().includes('soup') && secondaryName) {
+    special.push(`${primaryName} ${secondaryName} Soup`);
+  }
+  
+  // Fruit combinations
+  if (primaryName.toLowerCase().includes('apple') || primaryName.toLowerCase().includes('fruit')) {
+    special.push(`Sweet ${primaryName}${secondaryName ? ' ' + secondaryName : ''}`);
+  }
+  
+  return special;
 }
 
 /**
- * Gets adjective form of cooking technique
+ * Simplifies ingredient names to core descriptive terms
+ * "Crystal Cave Minerals" -> "Crystal"
+ * "Sacred Sky Bison Horn Powder" -> "Bison Horn"
+ * "Pine Nuts" -> "Pine Nut" (keeps meaningful descriptors)
  */
-function getTechniqueAdjective(technique: AirNomadCookingTechnique): string {
-  const techniqueAdjectives: Record<string, string[]> = {
-    'Steam-Whipping': ['Ethereal', 'Floating', 'Elevated'],
-    'Whisper-Steaming': ['Gentle', 'Soft', 'Pure'],
-    'Wind-Drying': ['Preserved', 'Concentrated', 'Essential'],
-    'Float-Boiling': ['Levitated', 'Suspended', 'Weightless'],
-    'Meditation Brewing': ['Contemplative', 'Peaceful', 'Centered'],
-    'Sky-Roasting': ['Elevated', 'Ascending', 'Lifted']
+function getSimpleIngredientName(fullName: string): string {
+  // Remove overly mystical descriptive words but keep meaningful ones
+  const cleaned = fullName
+    .replace(/\b(sacred|blessed|ancient|mystical|pure|spiritual|divine|eternal)\b/gi, '')
+    .replace(/\b(powder|extract|essence|oil|crystals?|minerals?)\b/gi, '')
+    .trim();
+  
+  // Extract meaningful words, preserving important descriptors
+  const words = cleaned.split(/\s+/).filter(word => word.length > 2);
+  
+  if (words.length === 0) {
+    // Fallback: take first meaningful word from original
+    const originalWords = fullName.split(/\s+/).filter(word => word.length > 2);
+    return originalWords[0] || fullName;
+  } else if (words.length === 1) {
+    return words[0];
+  } else if (words.length === 2) {
+    // Keep both words for descriptive combinations like "Pine Nut"
+    return words.join(' ');
+  } else {
+    // For longer names, take the most descriptive 1-2 words
+    // Prefer the last two words as they're usually most specific
+    const important = words.slice(-2);
+    return important.join(' ');
+  }
+}
+
+/**
+ * Maps cooking techniques to appropriate dish types
+ * Now includes noodle dishes and more variety
+ */
+function getDishTypeFromTechnique(technique: AirNomadCookingTechnique): string {
+  const techniqueMap: Record<string, string[]> = {
+    'Steam-Whipping': ['Noodles', 'Soup', 'Stew', 'Broth'],
+    'Whisper-Steaming': ['Steamed Dish', 'Bowl', 'Dumplings'],
+    'Wind-Drying': ['Chips', 'Flakes', 'Crisps', 'Jerky'],
+    'Float-Boiling': ['Soup', 'Broth', 'Stew', 'Porridge'],
+    'Meditation Brewing': ['Tea', 'Brew', 'Elixir'],
+    'Sky-Roasting': ['Roast', 'Nuts', 'Crisps', 'Toast']
   };
   
-  const adjectives = techniqueAdjectives[technique.name] || ['Sacred'];
-  return selectWithAntiClustering(adjectives);
+  const dishTypes = techniqueMap[technique.name] || ['Bowl', 'Dish', 'Meal'];
+  return randomChoice(dishTypes);
+}
+
+/**
+ * Gets simple technique names for dish naming
+ */
+function getSimpleTechniqueName(technique: AirNomadCookingTechnique): string {
+  const techniqueMap: Record<string, string> = {
+    'Steam-Whipping': 'Whipped',
+    'Whisper-Steaming': 'Steamed',
+    'Wind-Drying': 'Dried',
+    'Float-Boiling': 'Boiled',
+    'Meditation Brewing': 'Brewed',
+    'Sky-Roasting': 'Roasted'
+  };
+  
+  return techniqueMap[technique.name] || 'Prepared';
+}
+
+/**
+ * Simple random choice helper
+ */
+function randomChoice<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
 } 

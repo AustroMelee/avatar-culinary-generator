@@ -9,11 +9,22 @@
 <body>
     <div class="app">
         <header class="app-header">
-            <h1>🌪️ Avatar Culinary Dish Generator</h1>
-            <p>Culinary Dash Generator - Air Nomad Cuisine</p>
+            <img src="/food-banner.jpg" alt="Avatar Food Banner" class="food-banner">
+            <h1>Avatar Culinary Dish Generator</h1>
         </header>
         
+        <button id="theme-toggle" class="theme-icon">🌙</button>
+        
         <main class="app-main">
+            <div class="nation-controls">
+                <select id="nation-selector" class="nation-selector">
+                    <option value="air-nomads">🌿 Air Nomads</option>
+                    <option value="water-tribe">🌊 Water Tribe</option>
+                    <option value="earth-kingdom">🏔️ Earth Kingdom</option>
+                    <option value="fire-nation">🔥 Fire Nation</option>
+                </select>
+            </div>
+            
             <button id="generate-button" class="generator-button">
                 Generate Air Nomad Dish
             </button>

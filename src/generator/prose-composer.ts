@@ -51,6 +51,97 @@ export class ProseComposer {
   }
 
   /**
+   * Composes separate description and lore sections for Air Nomad dishes
+   * Each section is limited to 2 sentences for readability
+   */
+  composeDescriptionAndLore(
+    ingredients: AirNomadIngredient[], 
+    technique: AirNomadCookingTechnique
+  ): { description: string; lore: string } {
+    try {
+      const description = this.generateTwoSentenceDescription(ingredients, technique);
+      const lore = this.generateTwoSentenceLore(ingredients, technique);
+      
+      return { description, lore };
+    } catch (error) {
+      throw new Error(`ProseComposer.composeDescriptionAndLore: Failed to compose separate sections - ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Generates a concise 2-sentence description focusing on sensory and preparation details
+   */
+  private generateTwoSentenceDescription(
+    ingredients: AirNomadIngredient[], 
+    technique: AirNomadCookingTechnique
+  ): string {
+    const mainIngredient = ingredients.find(ing => ing.role === 'base') || ingredients[0];
+    const rareIngredient = ingredients.find(ing => ing.rarity === 'legendary' || ing.rarity === 'rare');
+    
+    // Visual and aroma descriptors
+    const visuals = ['ethereal', 'golden', 'cloud-like', 'pristine', 'radiant', 'delicate', 'luminous'];
+    const aromas = ['fragrant', 'aromatic', 'soul-stirring', 'mystical', 'enchanting', 'peaceful', 'harmonious'];
+    const textures = ['silky', 'tender', 'perfectly balanced', 'light yet satisfying', 'harmoniously textured'];
+    
+    const visual = this.randomChoice(visuals);
+    const aroma = this.randomChoice(aromas);
+    const texture = this.randomChoice(textures);
+    
+    // First sentence: appearance and aroma
+    const firstSentence = rareIngredient 
+      ? `This ${visual} creation features the sacred ${rareIngredient.name}, releasing ${aroma} vapors that awaken the senses.`
+      : `A ${visual} dish showcasing ${mainIngredient.name}, with ${aroma} aromas that drift like mountain mist.`;
+    
+    // Second sentence: technique and texture
+    const secondSentence = `${technique.name} with mindful attention creates a ${texture} experience that nourishes both body and spirit.`;
+    
+    return `${firstSentence} ${secondSentence}`;
+  }
+
+  /**
+   * Generates a concise 2-sentence lore section focusing on cultural and historical context
+   */
+  private generateTwoSentenceLore(
+    ingredients: AirNomadIngredient[], 
+    technique: AirNomadCookingTechnique
+  ): string {
+    const rareIngredient = ingredients.find(ing => ing.rarity === 'legendary' || ing.rarity === 'rare');
+    const isLegendary = ingredients.some(ing => ing.rarity === 'legendary');
+    
+    // Cultural contexts
+    const temples = ['Eastern Air Temple', 'Western Air Temple', 'Northern Air Temple', 'Southern Air Temple'];
+    const monks = ['wandering monks', 'temple elders', 'young acolytes', 'meditation masters'];
+    const occasions = ['spiritual gatherings', 'seasonal celebrations', 'meditation retreats', 'wisdom teachings'];
+    const qualities = ['inner peace', 'spiritual clarity', 'chakra alignment', 'connection to the spirit world'];
+    
+    const temple = this.randomChoice(temples);
+    const monk = this.randomChoice(monks);
+    const occasion = this.randomChoice(occasions);
+    const quality = this.randomChoice(qualities);
+    
+    // Generate lore based on rarity
+    if (isLegendary) {
+      const legendaryContexts = [
+        `Ancient texts speak of this sacred recipe, whispered only among the highest masters of the ${temple}.`,
+        `Legend holds that this dish was first prepared by Avatar Yangchen during a profound spiritual revelation.`,
+        `This mystical creation is said to have been gifted to the Air Nomads by the spirit world itself.`
+      ];
+      
+      const spiritualEffects = [
+        `Those who partake are blessed with glimpses of past lives and enhanced ${quality}.`,
+        `It is believed to open doorways between the physical and spirit worlds, granting profound ${quality}.`,
+        `Consumption during meditation is said to unlock the deepest mysteries of airbending and ${quality}.`
+      ];
+      
+      return `${this.randomChoice(legendaryContexts)} ${this.randomChoice(spiritualEffects)}`;
+    } else if (rareIngredient) {
+      return `This treasured recipe was traditionally prepared by ${monk} for special ${occasion}, using ingredients gathered with great reverence. The dish is cherished for its ability to promote ${quality} and strengthen bonds within the Air Nomad community.`;
+    } else {
+      return `A beloved dish commonly shared among ${monk} during ${occasion}, representing the Air Nomad values of simplicity and mindfulness. Its preparation serves as a meditation in itself, fostering ${quality} and communal harmony.`;
+    }
+  }
+
+  /**
    * Generates prose using the selected template type
    */
   private generateProseByTemplate(templateType: TemplateType, templateData: any): string {
@@ -70,6 +161,13 @@ export class ProseComposer {
       default:
         return ProseTemplates.composeTraditionalTemplate(templateData, this.fragmentCache);
     }
+  }
+
+  /**
+   * Simple random choice helper
+   */
+  private randomChoice<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
   }
 
   /**
@@ -110,6 +208,17 @@ export function composeDishDescription(
   technique: AirNomadCookingTechnique
 ): string {
   return globalProseComposer.composeDishDescription(ingredients, technique);
+}
+
+/**
+ * Composes separate description and lore sections for better readability
+ * Each section is limited to 2 sentences for optimal user experience
+ */
+export function composeDescriptionAndLore(
+  ingredients: AirNomadIngredient[], 
+  technique: AirNomadCookingTechnique
+): { description: string; lore: string } {
+  return globalProseComposer.composeDescriptionAndLore(ingredients, technique);
 }
 
 /**

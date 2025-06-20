@@ -5,7 +5,7 @@ import type {
   GeneratorConfig,
   IngredientRole
 } from '../types/core-interfaces.js';
-import { composeDishDescription } from './prose-composer.js';
+import { composeDishDescription, composeDescriptionAndLore } from './prose-composer.js';
 import { composeDishName } from './name-composer.js';
 import { applyTextCleanup } from './text-cleanup.js';
 import { 
@@ -48,11 +48,12 @@ export class SovereignDishGenerator {
       
       // 2. Generate textual content using nation-provided templates
       const rawName = this.generateDishName(ingredients, technique, config);
-      const rawDescription = this.generateDishDescription(ingredients, technique, config);
+      const { description: rawDescription, lore: rawLore } = this.generateDescriptionAndLore(ingredients, technique, config);
       
       // 3. Apply nation-specific text cleanup rules
       const cleanName = this.applyNationCleanup(rawName, config);
       const cleanDescription = this.applyNationCleanup(rawDescription, config);
+      const cleanLore = this.applyNationCleanup(rawLore, config);
       
       // 4. Calculate metadata using nation-specific rules
       const metadata = this.generateMetadata(ingredients, technique, config);
@@ -61,6 +62,7 @@ export class SovereignDishGenerator {
       return {
         name: cleanName,
         description: cleanDescription,
+        lore: cleanLore,
         ingredients,
         technique,
         ...metadata
@@ -116,6 +118,19 @@ export class SovereignDishGenerator {
   ): string {
     // Use existing prose composer with the selected ingredients and technique
     return composeDishDescription(ingredients, technique);
+  }
+
+  /**
+   * Generates separate description and lore sections for better readability
+   * Each section is limited to 2 sentences for optimal user experience
+   */
+  private generateDescriptionAndLore<TIngredient extends BaseIngredient, TTechnique extends BaseCookingTechnique>(
+    ingredients: TIngredient[], 
+    technique: TTechnique, 
+    config: GeneratorConfig<TIngredient, TTechnique>
+  ): { description: string; lore: string } {
+    // Use new prose composer method for separate sections
+    return composeDescriptionAndLore(ingredients, technique);
   }
 
   /**

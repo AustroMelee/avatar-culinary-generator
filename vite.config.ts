@@ -4,18 +4,31 @@ export default defineConfig({
   server: {
     port: 5174,
     host: true,
-    open: true,
+    open: false, // Disable auto-open to prevent multiple browser instances
     hmr: {
-      port: 5175, // Use different port for HMR to prevent conflicts
-      overlay: false // Disable error overlay that might cause refreshes
+      port: 5175,
+      overlay: false,
+      clientPort: 5175
     },
     watch: {
-      usePolling: false, // Disable polling to prevent excessive file watching
-      ignored: ['**/node_modules/**', '**/dist/**']
+      usePolling: false,
+      ignored: [
+        '**/node_modules/**', 
+        '**/dist/**',
+        '**/.git/**',
+        '**/coverage/**',
+        '**/temp/**',
+        '**/tmp/**'
+      ]
     }
   },
   build: {
     target: 'esnext',
     outDir: 'dist'
+  },
+  // Add file change debouncing to prevent rapid refreshes
+  optimizeDeps: {
+    include: [],
+    exclude: []
   }
 }) 

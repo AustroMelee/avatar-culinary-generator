@@ -61,8 +61,10 @@ export type CookingTimeRequirement = 'quick' | 'moderate' | 'slow' | 'ceremonial
 /**
  * Represents a complete generated Air Nomad dish
  * Contains all components needed for display and gameplay
+ * Features separated description and lore sections for better readability
  */
 export interface GeneratedAirNomadDish extends BaseGeneratedDish {
+  readonly lore?: string; // 2-sentence cultural/historical background
   readonly spiritualBenefit?: SpiritualBenefit;
 }
 

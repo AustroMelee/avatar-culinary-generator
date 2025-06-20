@@ -203,17 +203,27 @@ export class LoadingAnimationController {
   }
 
   /**
-   * Animates progress bar with realistic timing
+   * Animates progress bar with realistic timing over exactly 5 seconds
    */
   private startProgressAnimation(): void {
     const progressFill = document.getElementById('loading-progress-fill') as HTMLElement;
     const progressText = document.getElementById('loading-progress-text') as HTMLElement;
+    
+    const startTime = Date.now();
+    const duration = 5000; // 5 seconds total
+    const updateInterval = 50; // Update every 50ms for smooth animation
 
     this.progressInterval = window.setInterval(() => {
-      this.currentProgress += Math.random() * 4 + 1; // Random progress increments
+      const elapsed = Date.now() - startTime;
+      const baseProgress = Math.min((elapsed / duration) * 100, 100);
       
-      if (this.currentProgress > 100) {
-        this.currentProgress = 100;
+      // Add slight random variation for realistic feel, but keep it bounded
+      const variation = (Math.random() - 0.5) * 3; // ±1.5% variation
+      this.currentProgress = Math.min(Math.max(baseProgress + variation, 0), 100);
+      
+      // Ensure we don't exceed 95% until the final second
+      if (elapsed < 4500 && this.currentProgress > 95) {
+        this.currentProgress = 95;
       }
 
       if (progressFill && progressText) {
@@ -221,10 +231,16 @@ export class LoadingAnimationController {
         progressText.textContent = `${Math.floor(this.currentProgress)}%`;
       }
 
-      if (this.currentProgress >= 100) {
+      // Only clear when animation completes (5 seconds)
+      if (elapsed >= duration) {
+        this.currentProgress = 100;
+        if (progressFill && progressText) {
+          progressFill.style.width = '100%';
+          progressText.textContent = '100%';
+        }
         this.clearProgressInterval();
       }
-    }, 100);
+    }, updateInterval);
   }
 
   /**
@@ -297,7 +313,7 @@ export class LoadingAnimationController {
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, rgba(255,245,220,0.95), rgba(245,255,250,0.95));
+        background: var(--theme-bg-overlay);
         backdrop-filter: blur(8px);
         display: flex;
         align-items: center;
@@ -308,11 +324,11 @@ export class LoadingAnimationController {
 
       .loading-content {
         text-align: center;
-        background: white;
+        background: var(--theme-bg-card);
         padding: 3rem;
         border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        border: 3px solid #e8f5e8;
+        box-shadow: var(--theme-shadow-heavy);
+        border: 3px solid var(--theme-border-primary);
         max-width: 500px;
         width: 90%;
       }
@@ -349,7 +365,7 @@ export class LoadingAnimationController {
 
       .loading-caption {
         font-size: 1.2rem;
-        color: #2c5530;
+        color: var(--theme-text-primary);
         margin-bottom: 2rem;
         font-weight: 500;
         transition: opacity 0.3s ease;
@@ -363,16 +379,16 @@ export class LoadingAnimationController {
       .loading-progress-bar {
         width: 100%;
         height: 20px;
-        background: #e8f5e8;
+        background: var(--theme-bg-secondary);
         border-radius: 10px;
         overflow: hidden;
         margin-bottom: 0.5rem;
-        border: 2px solid #d4ebd4;
+        border: 2px solid var(--theme-border-secondary);
       }
 
       .loading-progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, #4CAF50, #8BC34A, #CDDC39);
+        background: var(--theme-gradient-button);
         border-radius: 8px;
         transition: width 0.3s ease;
         background-size: 200% 100%;
@@ -381,13 +397,13 @@ export class LoadingAnimationController {
 
       .loading-progress-text {
         font-size: 1rem;
-        color: #2c5530;
+        color: var(--theme-text-primary);
         font-weight: 600;
       }
 
       .loading-subtitle {
         font-size: 1rem;
-        color: #666;
+        color: var(--theme-text-secondary);
         font-style: italic;
         margin-top: 1rem;
       }

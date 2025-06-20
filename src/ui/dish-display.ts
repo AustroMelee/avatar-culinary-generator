@@ -72,7 +72,20 @@ export class DishDisplay {
     this.container.innerHTML = `
       <div class="dish-display">
         <h2 class="dish-name">${dish.name}</h2>
-        <p class="description">${dish.description}</p>
+        
+        <div class="dish-sections">
+          <div class="description-section">
+            <h3>Description</h3>
+            <p class="description">${dish.description}</p>
+          </div>
+          
+          ${dish.lore ? `
+          <div class="lore-section">
+            <h3>Lore</h3>
+            <p class="lore">${dish.lore}</p>
+          </div>
+          ` : ''}
+        </div>
         
         <div class="dish-details">
           <div class="ingredients">
@@ -101,11 +114,32 @@ export class DishDisplay {
   /**
    * Converts ingredient array to formatted HTML list items
    * Applies CSS classes based on ingredient rarity for visual styling
+   * Includes rarity labels for better user understanding
    */
   private formatIngredientsHtml(ingredients: GeneratedAirNomadDish['ingredients']): string {
-    return ingredients.map(ingredient => 
-      `<li class="ingredient-item rarity-${ingredient.rarity}">${ingredient.name}</li>`
-    ).join('');
+    return ingredients.map(ingredient => {
+      const rarityLabel = this.formatRarityLabel(ingredient.rarity);
+      return `<li class="ingredient-item rarity-${ingredient.rarity}">
+        <span class="ingredient-name">${ingredient.name}</span>
+        <span class="ingredient-rarity">${rarityLabel}</span>
+      </li>`;
+    }).join('');
+  }
+
+  /**
+   * Formats rarity labels with appropriate styling and icons
+   * Provides clear visual indication of ingredient rarity
+   */
+  private formatRarityLabel(rarity: string): string {
+    const rarityConfig = {
+      'common': { label: 'Common', icon: '●' },
+      'uncommon': { label: 'Uncommon', icon: '◆' },
+      'rare': { label: 'Rare', icon: '★' },
+      'legendary': { label: 'Legendary', icon: '✦' }
+    };
+
+    const config = rarityConfig[rarity as keyof typeof rarityConfig] || { label: 'Unknown', icon: '?' };
+    return `${config.icon} ${config.label}`;
   }
 
   /**
