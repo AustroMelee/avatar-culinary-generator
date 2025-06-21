@@ -1496,3 +1496,31 @@ const AVATAR_NAMING_PATTERNS = [
 ---
 
 **Commitment**: This pitfalls guide will be consulted before ANY major architectural changes to prevent regression and maintain the 95-97/100 quality standard with optimal performance characteristics. Special attention must be paid to TypeScript configuration consistency, HTML/TypeScript element synchronization, semantic module naming that immediately reveals architectural roles, professional UI/UX design with proper visual hierarchy, and intelligent content generation that creates descriptive, ingredient-aware names reflecting actual dish composition. 
+
+---
+
+### 12. Misinterpretation of Core User Intent and Botched Reversions
+
+#### **What Went Wrong**
+A direct user request was made to carry over the styling of the **homepage** (pre-generation view) to the **results page** (post-generation view). The AI agent completely inverted this request.
+
+-   **INCORRECT ACTION**: The agent copied the styles from the results page *onto* the homepage, breaking the primary user interface.
+-   **COMPOUNDING FAILURE**: When the error was pointed out, the agent's attempts to revert the changes were unsuccessful. It left orphaned CSS rules in the stylesheet, failing to restore the homepage to its original, correct state.
+-   **CONSEQUENCE**: This critical failure forced the user to abandon their original goal and instead dedicate significant time to manually guiding the agent, step-by-step, to fix the UI it had broken. The workflow was derailed, and trust in the agent's ability to handle large-scale changes was compromised.
+
+#### **Critical Warning Signs**
+- ✅ **Major UI/Style Change Request**: Any request to overhaul the appearance of a major component or page state.
+- ✅ **Ambiguity in "Before" vs. "After"**: A request involving two different states that could be easily confused.
+- ✅ **Reverting Complex Changes**: An attempt to undo a large, multi-file change that may have scattered artifacts.
+- ✅ **User Reports "That's Not Right"**: The first sign of a major misunderstanding requires an immediate halt and reassessment, not a blind attempt to "fix" the previous change.
+
+#### **Prevention Strategy**
+1.  **Confirm, Don't Assume**: Before implementing any major stylistic overhaul, explicitly confirm the source and destination of the styles. For example: "To confirm, you want the look of the *initial homepage* to be applied to the *dish results page*, correct?"
+2.  **Isolate Changes for Reversion**: When making significant changes, do so in a way that is easily and cleanly revertible. Avoid scattering small changes across multiple files if a single, targeted change can be made.
+3.  **Verify Reversions**: After a reversion attempt, do not assume it was successful. A "revert" is just another code change that must be verified. The agent must check that the code has returned to the previous known-good state.
+4.  **Prioritize User-Reported Errors**: When a user states that a change is incorrect, especially after a major operation, the agent's top priority is to understand the discrepancy, not to layer more changes on top of a broken foundation.
+
+#### **Enforcement Rules**
+- **Mandatory Confirmation for UI Overhauls**: The agent MUST ask a clarifying question to confirm the direction of any significant style transfer between application states.
+- **State Restoration Guarantee**: A "revert" operation must guarantee a return to the exact previous state. If the agent cannot guarantee this, it must explicitly state its uncertainty and ask for user guidance.
+- **Immediate Stop on Major Discrepancy**: If the user's description of the current state does not match the agent's understanding, all work must stop until the discrepancy is resolved.

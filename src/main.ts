@@ -15,6 +15,175 @@ async function yieldToEventLoop(): Promise<void> {
 }
 
 /**
+ * Set up custom nation selector functionality
+ * Handles dropdown opening/closing and option selection
+ */
+function setupCustomNationSelector(): void {
+  const selector = document.getElementById('nation-selector') as HTMLElement;
+  const selectedOption = selector?.querySelector('.selected-option') as HTMLElement;
+  const dropdownOptions = selector?.querySelector('.dropdown-options') as HTMLElement;
+  const options = selector?.querySelectorAll('.option') as NodeListOf<HTMLElement>;
+  
+  if (!selector || !selectedOption || !dropdownOptions || !options) {
+    console.warn('Custom nation selector elements not found in DOM');
+    return;
+  }
+
+  // Set current nation as selected
+  const currentTheme = themeManager.getCurrentTheme();
+  updateSelectedOption(currentTheme.nation);
+  
+  // Toggle dropdown on click
+  selectedOption.addEventListener('click', () => {
+    const isOpen = selectedOption.classList.contains('open');
+    
+    if (isOpen) {
+      selectedOption.classList.remove('open');
+      dropdownOptions.classList.remove('show');
+    } else {
+      selectedOption.classList.add('open');
+      dropdownOptions.classList.add('show');
+    }
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (event) => {
+    if (!selector.contains(event.target as Node)) {
+      selectedOption.classList.remove('open');
+      dropdownOptions.classList.remove('show');
+    }
+  });
+  
+  // Handle option selection
+  options.forEach(option => {
+    option.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const selectedNation = option.getAttribute('data-value') as any;
+      
+      // Update UI
+      updateSelectedOption(selectedNation);
+      selectedOption.classList.remove('open');
+      dropdownOptions.classList.remove('show');
+      
+      // Update theme
+      themeManager.switchNation(selectedNation);
+      console.log(`🎨 Switched to ${selectedNation} theme`);
+      
+      // Update generate button text
+      updateGenerateButtonText(selectedNation);
+    });
+  });
+  
+  function updateSelectedOption(nation: string): void {
+    // Update selected option display
+    const option = selector.querySelector(`[data-value="${nation}"]`) as HTMLElement;
+    if (option) {
+      const icon = option.querySelector('.nation-icon') as HTMLImageElement;
+      const text = option.querySelector('span') as HTMLSpanElement;
+      
+      if (icon && text) {
+        const selectedContent = selectedOption.querySelector('.selected-option-content') as HTMLElement;
+        const selectedIcon = selectedContent.querySelector('.nation-icon') as HTMLImageElement;
+        const selectedText = selectedContent.querySelector('span') as HTMLSpanElement;
+        
+        selectedIcon.src = icon.src;
+        selectedIcon.alt = icon.alt;
+        selectedText.textContent = text.textContent;
+        
+        // Update data-value attribute
+        selector.setAttribute('data-value', nation);
+        
+        // Update decorative symbols to match selected nation
+        updateDecorativeSymbols(nation, icon.src, icon.alt);
+      }
+    }
+    
+    // Update selected state in options
+    options.forEach(opt => opt.classList.remove('selected'));
+    option?.classList.add('selected');
+  }
+  
+  function updateDecorativeSymbols(nation: string, iconSrc: string, iconAlt: string): void {
+    // Update left side symbols
+    const leftSymbols = document.querySelectorAll('.nation-symbols-left .decorative-symbol') as NodeListOf<HTMLImageElement>;
+    leftSymbols.forEach(symbol => {
+      symbol.src = iconSrc;
+      symbol.alt = iconAlt;
+    });
+    
+    // Update right side symbols
+    const rightSymbols = document.querySelectorAll('.nation-symbols-right .decorative-symbol') as NodeListOf<HTMLImageElement>;
+    rightSymbols.forEach(symbol => {
+      symbol.src = iconSrc;
+      symbol.alt = iconAlt;
+    });
+  }
+  
+  function updateGenerateButtonText(nation: string): void {
+    const generateButton = document.getElementById('generate-button') as HTMLButtonElement;
+    if (generateButton && !generateButton.disabled) {
+      generateButton.textContent = 'Generate';
+    }
+  }
+}
+
+/**
+ * Set up custom dish type selector functionality
+ */
+function setupDishTypeSelector(): void {
+  const selector = document.getElementById('dish-type-selector') as HTMLElement;
+  const selectedOption = selector?.querySelector('.selected-option') as HTMLElement;
+  const dropdownOptions = selector?.querySelector('.dropdown-options') as HTMLElement;
+  const options = selector?.querySelectorAll('.option') as NodeListOf<HTMLElement>;
+
+  if (!selector || !selectedOption || !dropdownOptions || !options) {
+    console.warn('Custom dish type selector elements not found in DOM');
+    return;
+  }
+
+  selectedOption.addEventListener('click', () => {
+    const isOpen = selectedOption.classList.contains('open');
+    if (isOpen) {
+      selectedOption.classList.remove('open');
+      dropdownOptions.classList.remove('show');
+    } else {
+      selectedOption.classList.add('open');
+      dropdownOptions.classList.add('show');
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!selector.contains(event.target as Node)) {
+      selectedOption.classList.remove('open');
+      dropdownOptions.classList.remove('show');
+    }
+  });
+
+  options.forEach(option => {
+    option.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const selectedValue = option.getAttribute('data-value');
+      
+      const icon = option.querySelector('.dish-type-icon')?.textContent;
+      const text = option.querySelector('span:last-child')?.textContent;
+
+      if (icon && text && selectedValue) {
+        const selectedContent = selectedOption.querySelector('.selected-option-content') as HTMLElement;
+        selectedContent.querySelector('.dish-type-icon')!.textContent = icon;
+        selectedContent.querySelector('span:last-child')!.textContent = text;
+        selector.setAttribute('data-value', selectedValue);
+      }
+
+      options.forEach(opt => opt.classList.remove('selected'));
+      option.classList.add('selected');
+
+      selectedOption.classList.remove('open');
+      dropdownOptions.classList.remove('show');
+    });
+  });
+}
+
+/**
  * Set up theme control event handlers
  * Enables theme switching and nation selection
  */
@@ -22,47 +191,23 @@ function setupThemeControls(): void {
   // Theme toggle button
   const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
   if (themeToggle) {
-    // Update button text based on current theme
+    // Update button with just emoji based on current theme
     const currentTheme = themeManager.getCurrentTheme();
-    themeToggle.textContent = currentTheme.variant === 'dark' ? '☀️ Light Theme' : '🌙 Dark Theme';
+    themeToggle.textContent = currentTheme.variant === 'dark' ? '☀️' : '🌙';
     
     themeToggle.addEventListener('click', () => {
       themeManager.toggleVariant();
       const newTheme = themeManager.getCurrentTheme();
-      themeToggle.textContent = newTheme.variant === 'dark' ? '☀️ Light Theme' : '🌙 Dark Theme';
+      themeToggle.textContent = newTheme.variant === 'dark' ? '☀️' : '🌙';
       console.log(`🎨 Switched to ${newTheme.theme?.name}`);
     });
   } else {
     console.warn('Theme toggle button not found in DOM');
   }
   
-  // Nation selector
-  const nationSelector = document.getElementById('nation-selector') as HTMLSelectElement;
-  if (nationSelector) {
-    // Set current nation
-    const currentTheme = themeManager.getCurrentTheme();
-    nationSelector.value = currentTheme.nation;
-    
-    nationSelector.addEventListener('change', (event) => {
-      const selectedNation = (event.target as HTMLSelectElement).value as any;
-      themeManager.switchNation(selectedNation);
-      console.log(`🎨 Switched to ${selectedNation} theme`);
-      
-      // Update generate button text based on selected nation
-      const generateButton = document.getElementById('generate-button') as HTMLButtonElement;
-      if (generateButton) {
-        const nationNames = {
-          'air-nomads': 'Air Nomad',
-          'water-tribe': 'Water Tribe',
-          'earth-kingdom': 'Earth Kingdom',
-          'fire-nation': 'Fire Nation'
-        };
-        generateButton.textContent = `Generate ${nationNames[selectedNation as keyof typeof nationNames]} Dish`;
-      }
-    });
-  } else {
-    console.warn('Nation selector not found in DOM');
-  }
+  // Custom nation selector
+  setupCustomNationSelector();
+  setupDishTypeSelector();
 }
 
 /**
@@ -71,7 +216,6 @@ function setupThemeControls(): void {
  */
 async function generateDishWithLoadingAnimation(): Promise<void> {
   const generateButton = document.getElementById('generate-button') as HTMLButtonElement;
-  const dishDisplay = new DishDisplay('dish-container');
   const loadingController = new LoadingAnimationController('body');
   
   try {
@@ -92,6 +236,9 @@ async function generateDishWithLoadingAnimation(): Promise<void> {
     
     // Yield before rendering
     await yieldToEventLoop();
+    
+    // Create dish display with emoji mappings
+    const dishDisplay = new DishDisplay('dish-container', (airNomadConfig as any).ingredientEmojiMappings);
     
     // Display the generated dish
     dishDisplay.renderDish(dish);
@@ -128,7 +275,7 @@ async function generateDishWithLoadingAnimation(): Promise<void> {
   } finally {
     // Reset UI state
     generateButton.disabled = false;
-    generateButton.textContent = 'Generate New Dish';
+    generateButton.textContent = 'Generate';
   }
 }
 

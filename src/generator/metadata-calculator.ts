@@ -38,6 +38,54 @@ const TIME_COMPLEXITY_SCORES: Record<TimeRequirement, number> = {
 };
 
 /**
+ * SPIRITUAL BENEFIT LOOKUP TABLE - Enhanced spiritual benefits system
+ * Provides contextual spiritual benefits based on dish characteristics
+ */
+const SPIRITUAL_BENEFIT_LOOKUP = {
+  legendary: [
+    'awakens_spiritual_awareness',
+    'connects_to_ancestral_wisdom',
+    'facilitates_air_nomad_traditions'
+  ],
+  sacred: [
+    'purifies_mind_and_body',
+    'stimulates_chakra_alignment',
+    'enhances_meditation_focus'
+  ],
+  ceremonial: [
+    'fosters_community_harmony',
+    'facilitates_air_nomad_traditions',
+    'promotes_inner_peace'
+  ],
+  common: [
+    'promotes_inner_peace',
+    'enhances_meditation_focus',
+    'fosters_community_harmony'
+  ]
+} as const;
+
+/**
+ * DIFFICULTY ENHANCEMENT LOOKUP - Technique-specific difficulty modifiers
+ * Maps techniques to difficulty descriptors for richer metadata
+ */
+const TECHNIQUE_DIFFICULTY_MAP: Record<string, { level: string; description: string }> = {
+  'Steam-Whipping': { level: 'Moderate', description: 'Requires precise timing and technique control' },
+  'Whisper-Steaming': { level: 'Simple', description: 'Gentle technique suitable for novice practitioners' },
+  'Wind-Drying': { level: 'Complex', description: 'Demands patience and environmental awareness' },
+  'Float-Boiling': { level: 'Moderate', description: 'Traditional method requiring steady attention' },
+  'Meditation Brewing': { level: 'Masterful', description: 'Sacred technique requiring spiritual preparation' },
+  'Sky-Roasting': { level: 'Complex', description: 'Advanced technique using high-altitude methods' },
+  'Wind-Roasted': { level: 'Complex', description: 'Requires mastery of wind patterns and timing' },
+  'Cloud-Fermented': { level: 'Masterful', description: 'Ancient technique requiring extended meditation' },
+  'Sun-Basked': { level: 'Simple', description: 'Natural technique following solar patterns' },
+  'Mist-Infused': { level: 'Moderate', description: 'Delicate process requiring atmospheric awareness' },
+  'Temple-Smoked': { level: 'Complex', description: 'Sacred technique reserved for temple preparation' },
+  'Prayer-Blessed': { level: 'Masterful', description: 'Spiritual technique requiring ritual knowledge' },
+  'Mountain-Cured': { level: 'Complex', description: 'Traditional preservation requiring altitude mastery' },
+  'Spirit-Touched': { level: 'Masterful', description: 'Mystical technique bridging physical and spiritual realms' }
+};
+
+/**
  * Calculates appropriate serving size based on ingredient composition
  * Returns framework-agnostic serving size
  */
@@ -47,7 +95,7 @@ export function calculateServingSize(): ServingSize {
 }
 
 /**
- * Calculates dish difficulty based on ingredient complexity and technique requirements
+ * Enhanced difficulty calculation with technique-specific awareness
  * Uses weighted scoring system for fair difficulty assessment
  */
 export function calculateDifficulty(
@@ -61,8 +109,10 @@ export function calculateDifficulty(
     return total + rarityScore + sacredBonus;
   }, 0);
   
-  // Calculate technique complexity score
-  const techniqueComplexity = TIME_COMPLEXITY_SCORES[technique.timeRequired];
+  // Calculate technique complexity score with enhanced awareness
+  const baseTechniqueComplexity = TIME_COMPLEXITY_SCORES[technique.timeRequired];
+  const techniqueModifier = getTechniqueComplexityModifier(technique.name);
+  const techniqueComplexity = baseTechniqueComplexity + techniqueModifier;
   
   // Calculate total complexity score
   const totalComplexity = ingredientComplexity + techniqueComplexity;
@@ -87,73 +137,158 @@ export function assignSpiritualBenefit(
   ingredients: AirNomadIngredient[], 
   technique: AirNomadCookingTechnique
 ): SpiritualBenefit {
-  // Check if dish qualifies for spiritual benefits
+  // Determine benefit category based on dish characteristics
   const hasLegendaryIngredient = ingredients.some(ing => ing.rarity === 'legendary');
   const hasSacredIngredient = ingredients.some(ing => ing.isSacred);
   const isCeremonialTechnique = technique.timeRequired === 'ceremonial';
-  const isSlowTechnique = technique.timeRequired === 'slow';
   
-  // 80% chance for legendary/sacred dishes to have spiritual benefits
-  // 60% chance for ceremonial technique dishes
-  // 40% chance for slow technique dishes
-  // 20% chance for other dishes
-  let benefitChance = 0.2;
+  let benefitCategory: keyof typeof SPIRITUAL_BENEFIT_LOOKUP;
   
-  if (hasLegendaryIngredient || hasSacredIngredient) {
-    benefitChance = 0.8;
+  if (hasLegendaryIngredient) {
+    benefitCategory = 'legendary';
+  } else if (hasSacredIngredient) {
+    benefitCategory = 'sacred';
   } else if (isCeremonialTechnique) {
-    benefitChance = 0.6;
-  } else if (isSlowTechnique) {
-    benefitChance = 0.4;
+    benefitCategory = 'ceremonial';
+  } else {
+    benefitCategory = 'common';
   }
   
-  // Use Air Nomad spiritual benefit types directly
-  const availableBenefits: SpiritualBenefit[] = [
-    'enhances_meditation_focus',
-    'promotes_inner_peace', 
-    'stimulates_chakra_alignment',
-    'awakens_spiritual_awareness',
-    'fosters_community_harmony',
-    'connects_to_ancestral_wisdom',
-    'purifies_mind_and_body',
-    'facilitates_air_nomad_traditions'
-  ];
-  
-  // Weight benefits based on dish characteristics
-  let benefitWeights: Record<SpiritualBenefit, number> = {
-    'enhances_meditation_focus': 1,
-    'promotes_inner_peace': 1,
-    'stimulates_chakra_alignment': 1,
-    'awakens_spiritual_awareness': 1,
-    'fosters_community_harmony': 1,
-    'connects_to_ancestral_wisdom': 1,
-    'purifies_mind_and_body': 1,
-    'facilitates_air_nomad_traditions': 1
+  // Select from appropriate benefit category
+  const benefitOptions = SPIRITUAL_BENEFIT_LOOKUP[benefitCategory];
+  const randomIndex = Math.floor(Math.random() * benefitOptions.length);
+  return benefitOptions[randomIndex];
+}
+
+/**
+ * NEW: Calculates spiritual benefit description based on dish characteristics
+ * Provides rich, contextual spiritual benefit explanations
+ */
+export function calculateSpiritualBenefitDescription(
+  ingredients: AirNomadIngredient[], 
+  technique: AirNomadCookingTechnique,
+  benefit: SpiritualBenefit
+): string {
+  const benefitDescriptions: Record<SpiritualBenefit, string[]> = {
+    'enhances_meditation_focus': [
+      'Quiets the mind and deepens concentration during meditation practice',
+      'Promotes sustained attention and mental clarity for spiritual work',
+      'Supports mindful awareness and present-moment consciousness'
+    ],
+    'promotes_inner_peace': [
+      'Calms turbulent emotions and brings harmony to the spirit',
+      'Cultivates serenity and emotional balance within the heart',
+      'Encourages gentle acceptance and peaceful contentment'
+    ],
+    'stimulates_chakra_alignment': [
+      'Harmonizes energy centers and promotes spiritual balance',
+      'Encourages proper energy flow throughout the body',
+      'Supports chakra healing and energetic alignment'
+    ],
+    'awakens_spiritual_awareness': [
+      'Opens pathways to higher consciousness and divine connection',
+      'Enhances perception of spiritual truths and mystical insights',
+      'Facilitates awakening to deeper spiritual realities'
+    ],
+    'fosters_community_harmony': [
+      'Strengthens bonds between temple members and visitors',
+      'Promotes cooperation and mutual understanding in groups',
+      'Builds bridges of compassion and shared purpose'
+    ],
+    'connects_to_ancestral_wisdom': [
+      'Links the partaker to ancient Air Nomad teachings and traditions',
+      'Awakens memories of past masters and their spiritual insights',
+      'Provides access to accumulated wisdom of countless generations'
+    ],
+    'purifies_mind_and_body': [
+      'Cleanses negative thoughts and harmful energy from the system',
+      'Promotes physical detoxification and spiritual purification',
+      'Removes obstacles to clear thinking and spiritual growth'
+    ],
+    'facilitates_air_nomad_traditions': [
+      'Deepens connection to sacred Air Nomad customs and practices',
+      'Supports traditional ceremonies and spiritual observances',
+      'Preserves and honors ancient cultural wisdom and values'
+    ]
   };
   
-  // Boost specific benefits for special ingredients/techniques
-  if (hasLegendaryIngredient) {
-    benefitWeights['awakens_spiritual_awareness'] *= 3;
-    benefitWeights['connects_to_ancestral_wisdom'] *= 3;
+  const descriptions = benefitDescriptions[benefit];
+  const randomIndex = Math.floor(Math.random() * descriptions.length);
+  return descriptions[randomIndex];
+}
+
+/**
+ * NEW: Determines dish difficulty category with descriptive explanation
+ * Returns both level and contextual difficulty description
+ */
+export function calculateDifficultyWithDescription(
+  ingredients: AirNomadIngredient[], 
+  technique: AirNomadCookingTechnique
+): { level: DifficultyLevel; description: string } {
+  const level = calculateDifficulty(ingredients, technique);
+  
+  // Get technique-specific description if available
+  const techniqueInfo = TECHNIQUE_DIFFICULTY_MAP[technique.name];
+  if (techniqueInfo) {
+    return {
+      level,
+      description: techniqueInfo.description
+    };
   }
   
-  if (hasSacredIngredient) {
-    benefitWeights['purifies_mind_and_body'] *= 2;
-    benefitWeights['stimulates_chakra_alignment'] *= 2;
-  }
+  // Fallback to generic descriptions based on level
+  const genericDescriptions: Record<DifficultyLevel, string[]> = {
+    simple: [
+      'Accessible to novice practitioners with basic temple training',
+      'Straightforward preparation suitable for daily temple meals',
+      'Gentle technique requiring minimal specialized knowledge'
+    ],
+    moderate: [
+      'Requires some experience with traditional Air Nomad cooking methods',
+      'Intermediate technique needing careful attention to timing',
+      'Standard temple preparation requiring focused practice'
+    ],
+    complex: [
+      'Advanced technique requiring years of dedicated practice',
+      'Challenging preparation reserved for experienced temple cooks',
+      'Sophisticated method demanding mastery of multiple skills'
+    ],
+    masterful: [
+      'Sacred technique requiring spiritual preparation and master-level skills',
+      'Elite preparation reserved for the most accomplished temple masters',
+      'Mystical cooking method bridging culinary art and spiritual practice'
+    ]
+  };
   
-  if (isCeremonialTechnique) {
-    benefitWeights['facilitates_air_nomad_traditions'] *= 2;
-    benefitWeights['fosters_community_harmony'] *= 2;
-  }
+  const descriptions = genericDescriptions[level];
+  const randomIndex = Math.floor(Math.random() * descriptions.length);
   
-  // Create weighted pool and select
-  const weightedPool: SpiritualBenefit[] = [];
-  for (const [benefit, weight] of Object.entries(benefitWeights)) {
-    for (let i = 0; i < weight; i++) {
-      weightedPool.push(benefit as SpiritualBenefit);
-    }
-  }
+  return {
+    level,
+    description: descriptions[randomIndex]
+  };
+}
+
+/**
+ * Helper function to get technique-specific complexity modifier
+ */
+function getTechniqueComplexityModifier(techniqueName: string): number {
+  const complexityModifiers: Record<string, number> = {
+    'Steam-Whipping': 1,
+    'Whisper-Steaming': 0,
+    'Wind-Drying': 2,
+    'Float-Boiling': 1,
+    'Meditation Brewing': 3,
+    'Sky-Roasting': 2,
+    'Wind-Roasted': 2,
+    'Cloud-Fermented': 3,
+    'Sun-Basked': 0,
+    'Mist-Infused': 1,
+    'Temple-Smoked': 2,
+    'Prayer-Blessed': 3,
+    'Mountain-Cured': 2,
+    'Spirit-Touched': 3
+  };
   
-  return weightedPool[Math.floor(Math.random() * weightedPool.length)];
+  return complexityModifiers[techniqueName] || 0;
 } 

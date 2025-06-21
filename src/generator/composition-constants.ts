@@ -158,4 +158,71 @@ export const NATION_CULINARY_PROFILES: Record<string, NationCulinaryProfile> = {
     excludedIngredients: ['Eggs', 'Egg Whites', 'Butter', 'Milk', 'Cream', 'Creamy Sauce', 'Milk Powder'] as string[],
     preferredRoles: ['vegetable', 'fruit', 'seasoning'] as IngredientRole[]
   }
+} as const;
+
+/**
+ * RARITY CURVES - Dynamic rarity distribution patterns
+ * Provides variety in ingredient rarity selection for different dish types
+ * Format: [common_weight, uncommon_weight, rare_weight, legendary_weight]
+ */
+export const RARITY_CURVES = [
+  [3, 1, 0, 0], // Common-heavy: everyday dishes
+  [2, 2, 0, 0], // Balanced common/uncommon
+  [1, 2, 1, 0], // Uncommon-focused: special occasions
+  [1, 1, 1, 1], // Equal distribution: ceremonial
+  [2, 1, 1, 0], // Moderate variety
+  [4, 0, 0, 0], // Pure common: simple meals
+] as const;
+
+/**
+ * TECHNIQUE EXPANSION - Extended cooking technique pool
+ * Includes traditional Air Nomad techniques plus new variants for variety
+ */
+export const TECHNIQUE_IDS = [
+  // Existing traditional techniques
+  'steam-whipped',
+  'whisper-steaming', 
+  'wind-drying',
+  'float-boiling',
+  'meditation-brewing',
+  'sky-roasting',
+  
+  // New technique variants for expanded variety
+  'wind-roasted',
+  'cloud-fermented',
+  'sun-basked',
+  'mist-infused',
+  'temple-smoked',
+  'prayer-blessed',
+  'mountain-cured',
+  'spirit-touched',
+  'dawn-dried',
+  'moonlight-steeped',
+  'breeze-chilled',
+  'storm-charged'
+] as const;
+
+/**
+ * LORE INTENSITY LEVELS - Controls depth of cultural lore in descriptions
+ * Allows fine-tuning of prose complexity and cultural depth
+ */
+export const LORE_INTENSITY_LEVELS = {
+  light: {
+    maxWords: 15,
+    useMythicElements: false,
+    festivalFrequency: 0.1,
+    spiritualDepth: 'basic'
+  },
+  moderate: {
+    maxWords: 25,
+    useMythicElements: true,
+    festivalFrequency: 0.3,
+    spiritualDepth: 'moderate'
+  },
+  deep: {
+    maxWords: 50,
+    useMythicElements: true,
+    festivalFrequency: 0.5,
+    spiritualDepth: 'profound'
+  }
 } as const; 

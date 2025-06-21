@@ -105,6 +105,20 @@ export interface DishCompositionRules {
   readonly maxLegendaryIngredients: number;
   readonly enforceVegetarian: boolean;
   readonly culturalWeightThreshold?: number;
+  readonly ingredientCount?: IngredientCountRange;
+  readonly rarityDistribution?: RarityDistribution;
+  readonly culturalWeightBias?: number;
+  readonly allowedRarities?: IngredientRarity[];
+  readonly sacredIngredientLimits?: {
+    regular: number;
+    ceremonial: number;
+  };
+  readonly legendaryIngredientLimits?: {
+    regular: number;
+    ceremonial: number;
+  };
+  readonly excludedIngredients?: string[];
+  readonly preferredRoles?: IngredientRole[];
 }
 
 /**

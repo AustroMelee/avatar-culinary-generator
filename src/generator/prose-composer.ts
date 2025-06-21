@@ -7,6 +7,90 @@ import { TemplateSelector, TemplateType } from './prose/template-selector.js';
 import { ProseTemplates } from './prose/prose-templates.js';
 
 /**
+ * ENHANCED DESCRIPTION FRAGMENT SETS - Expanded sensory-focused templates
+ * Provides rich variety in description generation with multiple variants per slot
+ */
+const TEXTURE_FOCUSED_FRAGMENTS = [
+  'each grain pops like a trapped cloud, releasing bursts of flavor',
+  'the texture dances between silk and starlight, ethereal yet grounding',
+  'every bite dissolves like morning mist, leaving essence behind',
+  'the surface crackles with temple energy, tender within like meditation',
+  'each morsel flows like wind through prayer flags, light and meaningful',
+  'the consistency shifts like changing seasons, complex and harmonious'
+];
+
+const AROMA_FOCUSED_FRAGMENTS = [
+  'lemongrass wafts like distant thunder, awakening ancient memories',
+  'mountain spices spiral upward like incense smoke from temple altars',
+  'the scent carries whispers of high peaks and sacred gardens',
+  'fragrance blooms like dawn over temple spires, pure and inspiring',
+  'aromatic vapors dance like sky bison on invisible currents',
+  'the bouquet unfolds like prayer scrolls, revealing hidden wisdom'
+];
+
+const TEMPERATURE_FOCUSED_FRAGMENTS = [
+  'warmth lingers on your tongue like sunset rays through temple windows',
+  'coolness spreads like mountain stream water, refreshing the spirit',
+  'heat builds slowly like meditation fire, warming from within',
+  'temperature flows like breathing, rhythmic and perfectly balanced',
+  'gentle warmth embraces like temple robes in winter wind',
+  'cooling sensation washes like morning mist across temple courtyards'
+];
+
+const VISUAL_FOCUSED_FRAGMENTS = [
+  'colors shift like Aurora Borealis dancing above the temples',
+  'the presentation gleams like polished prayer wheels in candlelight',
+  'hues flow together like watercolors in temple manuscript illumination',
+  'the appearance radiates like stained glass filtering divine light',
+  'visual harmony reflects like still temple pools at twilight',
+  'the sight enchants like floating lanterns during festivals'
+];
+
+const SOUND_FOCUSED_FRAGMENTS = [
+  'preparation whispers like wind chimes in gentle temple breezes',
+  'cooking sounds echo like distant temple bells across valleys',
+  'the sizzle harmonizes like monks chanting in perfect unison',
+  'preparation resonates like prayer bowls struck at sunset',
+  'cooking creates symphony like rain on temple roof tiles',
+  'the process hums like sacred mantras carried on mountain air'
+];
+
+const EMOTIONAL_FOCUSED_FRAGMENTS = [
+  'each taste awakens memories of childhood temple festivals',
+  'the experience connects diners to something greater than themselves',
+  'flavors resonate with the peaceful heart of Air Nomad philosophy',
+  'the meal creates moments of perfect presence and mindful awareness',
+  'consumption becomes meditation, transforming simple eating into reverence',
+  'each bite deepens connection to the ancient wisdom of the temples'
+];
+
+/**
+ * BITE-SIZED LORE OPTIONS - Streamlined cultural lore for lighter reading
+ * Provides quick cultural context without overwhelming prose density
+ */
+const LIGHT_LORE_FRAGMENTS = [
+  'Temple tradition honors simplicity',
+  'Monks prepare this mindfully',
+  'Ancient recipe brings peace',
+  'Sacred ingredients blessed daily',
+  'Community dish shared lovingly',
+  'Traditional temple meal',
+  'Spiritual nourishment provided',
+  'Meditation-inspired cooking',
+  'Harmony in every portion',
+  'Blessed temple preparation'
+];
+
+const MODERATE_LORE_FRAGMENTS = [
+  'This recipe connects generations of Air Nomad wisdom',
+  'Temple elders pass down preparation secrets through centuries',
+  'Sacred cooking methods honor the spiritual path of nourishment',
+  'Community gathering strengthens bonds through shared meals',
+  'Meditation and mindfulness guide every step of preparation',
+  'Ancient traditions live on in temple kitchen practices'
+];
+
+/**
  * Main prose composition engine for Air Nomad dish descriptions
  * Orchestrates template selection, fragment caching, and prose generation
  * Uses modular architecture to eliminate global state and ensure maintainability
@@ -14,10 +98,12 @@ import { ProseTemplates } from './prose/prose-templates.js';
 export class ProseComposer {
   private fragmentCache: FragmentCache;
   private templateSelector: TemplateSelector;
+  private loreIntensity: 'light' | 'moderate' | 'deep';
 
-  constructor() {
+  constructor(loreIntensity: 'light' | 'moderate' | 'deep' = 'moderate') {
     this.fragmentCache = new FragmentCache();
     this.templateSelector = new TemplateSelector();
+    this.loreIntensity = loreIntensity;
   }
 
   /**
@@ -51,21 +137,144 @@ export class ProseComposer {
   }
 
   /**
-   * Composes separate description and lore sections for Air Nomad dishes
-   * Each section is limited to 2 sentences for readability
+   * ENHANCED: Composes separate description and lore sections with intensity control
+   * Each section is limited based on lore intensity setting for optimal readability
    */
   composeDescriptionAndLore(
     ingredients: AirNomadIngredient[], 
     technique: AirNomadCookingTechnique
   ): { description: string; lore: string } {
     try {
-      const description = this.generateTwoSentenceDescription(ingredients, technique);
-      const lore = this.generateTwoSentenceLore(ingredients, technique);
+      const description = this.generateEnhancedDescription(ingredients, technique);
+      const lore = this.generateContextualLore(ingredients, technique);
       
       return { description, lore };
     } catch (error) {
       throw new Error(`ProseComposer.composeDescriptionAndLore: Failed to compose separate sections - ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
+
+  /**
+   * NEW: Generates enhanced descriptions using expanded fragment sets
+   * Rotates between texture, aroma, temperature, visual, sound, and emotional focus
+   */
+  private generateEnhancedDescription(
+    ingredients: AirNomadIngredient[], 
+    technique: AirNomadCookingTechnique
+  ): string {
+    const mainIngredient = ingredients.find(ing => ing.role === 'base') || ingredients[0];
+    const rareIngredient = ingredients.find(ing => ing.rarity === 'legendary' || ing.rarity === 'rare');
+    
+    // Rotate focus types to ensure variety
+    const focusTypes = ['texture', 'aroma', 'temperature', 'visual', 'sound', 'emotional'];
+    const selectedFocus = this.randomChoice(focusTypes);
+    
+    let focusFragment = '';
+    switch (selectedFocus) {
+      case 'texture':
+        focusFragment = this.fragmentCache.selectUniqueFragment(TEXTURE_FOCUSED_FRAGMENTS);
+        break;
+      case 'aroma':
+        focusFragment = this.fragmentCache.selectUniqueFragment(AROMA_FOCUSED_FRAGMENTS);
+        break;
+      case 'temperature':
+        focusFragment = this.fragmentCache.selectUniqueFragment(TEMPERATURE_FOCUSED_FRAGMENTS);
+        break;
+      case 'visual':
+        focusFragment = this.fragmentCache.selectUniqueFragment(VISUAL_FOCUSED_FRAGMENTS);
+        break;
+      case 'sound':
+        focusFragment = this.fragmentCache.selectUniqueFragment(SOUND_FOCUSED_FRAGMENTS);
+        break;
+      case 'emotional':
+        focusFragment = this.fragmentCache.selectUniqueFragment(EMOTIONAL_FOCUSED_FRAGMENTS);
+        break;
+    }
+    
+    // First sentence: ingredient introduction with focus element
+    const firstSentence = rareIngredient 
+      ? `This sacred creation features ${rareIngredient.name}, where ${focusFragment}.`
+      : `A masterful blend of ${mainIngredient.name} and complementary ingredients creates a dish where ${focusFragment}.`;
+    
+    // Second sentence: technique and result
+    const secondSentence = `Through ${technique.name.toLowerCase()}, the harmony achieves perfect balance, nourishing both body and spirit.`;
+    
+    return `${firstSentence} ${secondSentence}`;
+  }
+
+  /**
+   * NEW: Generates contextual lore based on intensity setting
+   * Provides appropriate cultural depth without overwhelming the description
+   */
+  private generateContextualLore(
+    ingredients: AirNomadIngredient[], 
+    technique: AirNomadCookingTechnique
+  ): string {
+    const rareIngredient = ingredients.find(ing => ing.rarity === 'legendary' || ing.rarity === 'rare');
+    const isLegendary = ingredients.some(ing => ing.rarity === 'legendary');
+    
+    switch (this.loreIntensity) {
+      case 'light':
+        return this.generateLightLore(rareIngredient, isLegendary);
+      
+      case 'moderate':
+        return this.generateModerateLore(ingredients, technique, rareIngredient, isLegendary);
+      
+      case 'deep':
+        return this.generateDeepLore(ingredients, technique, rareIngredient, isLegendary);
+      
+      default:
+        return this.generateModerateLore(ingredients, technique, rareIngredient, isLegendary);
+    }
+  }
+
+  /**
+   * Generates bite-sized lore (10-15 words) for quick reads
+   */
+  private generateLightLore(rareIngredient?: AirNomadIngredient, isLegendary?: boolean): string {
+    if (isLegendary) {
+      const legendaryLore = [
+        'Sacred recipe whispered among the highest temple masters.',
+        'Ancient dish blessed by Avatar Yangchen herself.',
+        'Mystical preparation reserved for spiritual awakenings.'
+      ];
+      return this.randomChoice(legendaryLore);
+    }
+    
+    return this.fragmentCache.selectUniqueFragment(LIGHT_LORE_FRAGMENTS);
+  }
+
+  /**
+   * Generates moderate lore (15-25 words) for balanced cultural context
+   */
+  private generateModerateLore(
+    ingredients: AirNomadIngredient[], 
+    technique: AirNomadCookingTechnique,
+    rareIngredient?: AirNomadIngredient, 
+    isLegendary?: boolean
+  ): string {
+    if (isLegendary) {
+      return 'Ancient texts speak of this sacred recipe, prepared only when the stars align with temple spires. Those who partake are blessed with profound spiritual insights.';
+    }
+    
+    const baseFragment = this.fragmentCache.selectUniqueFragment(MODERATE_LORE_FRAGMENTS);
+    const temples = ['Eastern Air Temple', 'Western Air Temple', 'Northern Air Temple', 'Southern Air Temple'];
+    const selectedTemple = this.randomChoice(temples);
+    
+    return `${baseFragment} At the ${selectedTemple}, this dish strengthens community bonds and honors tradition.`;
+  }
+
+  /**
+   * Generates deep lore (25-50 words) for full cultural immersion
+   */
+  private generateDeepLore(
+    ingredients: AirNomadIngredient[], 
+    technique: AirNomadCookingTechnique,
+    rareIngredient?: AirNomadIngredient, 
+    isLegendary?: boolean
+  ): string {
+    // Use existing deep lore generation from generateTwoSentenceLore
+    return this.generateTwoSentenceLore(ingredients, technique);
   }
 
   /**
@@ -168,6 +377,13 @@ export class ProseComposer {
    */
   private randomChoice<T>(array: T[]): T {
     return array[Math.floor(Math.random() * array.length)];
+  }
+
+  /**
+   * NEW: Sets lore intensity for future generations
+   */
+  setLoreIntensity(intensity: 'light' | 'moderate' | 'deep'): void {
+    this.loreIntensity = intensity;
   }
 
   /**

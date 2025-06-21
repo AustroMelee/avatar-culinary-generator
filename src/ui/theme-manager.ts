@@ -481,6 +481,8 @@ export class ThemeManager {
   private currentVariant: ThemeVariant = 'dark'; // Default to dark theme
   private appliedTheme: NationTheme | null = null;
 
+
+
   /**
    * Apply theme to the DOM
    */
@@ -497,6 +499,9 @@ export class ThemeManager {
     root.style.setProperty('--theme-primary', theme.primary);
     root.style.setProperty('--theme-secondary', theme.secondary);
     root.style.setProperty('--theme-accent', theme.accent);
+    
+    // Update dropdown arrow with theme color
+    this.updateDropdownArrow(theme.accent);
     
     // Background properties
     root.style.setProperty('--theme-bg-primary', theme.background.primary);
@@ -591,6 +596,15 @@ export class ThemeManager {
    */
   getTheme(nation: NationType, variant: ThemeVariant): NationTheme {
     return NATION_THEMES[nation][variant];
+  }
+
+  /**
+   * Update dropdown arrow color dynamically
+   */
+  private updateDropdownArrow(accentColor: string): void {
+    // Update the CSS variable for dropdown arrow color
+    const root = document.documentElement;
+    root.style.setProperty('--dropdown-arrow-color', accentColor);
   }
 }
 

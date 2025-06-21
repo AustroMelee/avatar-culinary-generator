@@ -182,45 +182,138 @@ function filterCulturallyAuthenticTechniques(dishType: DishType): AirNomadCookin
 }
 
 /**
- * Creates emoji mappings for Air Nomad ingredients
- * Maps ingredient names to appropriate emojis for visual enhancement
+ * Creates emoji mappings for Air Nomad ingredients with specific matches and category labels
+ * Maps ingredient names to emoji + category format for better organization
  * 
  * @param ingredients - Array of Air Nomad ingredients to map
- * @returns Record mapping ingredient names to emoji characters
+ * @returns Record mapping ingredient names to emoji + category strings
  */
 function createIngredientEmojiMappings(ingredients: AirNomadIngredient[]): Record<string, string> {
+  // Meticulously crafted specific ingredient emoji mappings based on EXACT matches
+  const specificMappings: Record<string, { emoji: string; category: string }> = {
+    // === GRAINS & FLOURS ===
+    'Basmati Rice': { emoji: '🍚', category: 'GRAIN' },
+    'Flour': { emoji: '🌾', category: 'GRAIN' },
+    'Glutinous Rice': { emoji: '🍚', category: 'GRAIN' },
+    'Noodles': { emoji: '🍜', category: 'GRAIN' },
+    'Pastry': { emoji: '🥐', category: 'GRAIN' },
+    'Rice': { emoji: '🍚', category: 'GRAIN' },
+    'Rice Flour': { emoji: '🌾', category: 'GRAIN' },
+    'Roasted Barley Flour': { emoji: '🌾', category: 'GRAIN' },
+    
+    // === VEGETABLES ===
+    'Bamboo Shoots': { emoji: '🎋', category: 'VEGETABLE' },
+    'Bean Sprouts': { emoji: '🌱', category: 'VEGETABLE' },
+    'Bell Peppers': { emoji: '🫑', category: 'VEGETABLE' },
+    'Cabbage': { emoji: '🥬', category: 'VEGETABLE' },
+    'Carrot': { emoji: '🥕', category: 'VEGETABLE' },
+    'Chayote': { emoji: '🥒', category: 'VEGETABLE' },
+    'Chrysanthemum Greens': { emoji: '🌼', category: 'VEGETABLE' },
+    'Fiddlehead Ferns': { emoji: '🌿', category: 'VEGETABLE' },
+    'Lotus Root': { emoji: '🪷', category: 'VEGETABLE' },
+    'Onion': { emoji: '🧅', category: 'VEGETABLE' },
+    'Oyster Mushroom': { emoji: '🍄', category: 'MUSHROOM' },
+    'Pickles': { emoji: '🥒', category: 'PRESERVED' },
+    'Potato': { emoji: '🥔', category: 'VEGETABLE' },
+    'Red Cabbage': { emoji: '🥬', category: 'VEGETABLE' },
+    'Scallions': { emoji: '🧅', category: 'HERB' },
+    'Seaweed': { emoji: '🌊', category: 'SEA VEGETABLE' },
+    'Shiitake': { emoji: '🍄', category: 'MUSHROOM' },
+    'Snow Lotus Petals': { emoji: '🪷', category: 'SACRED FLOWER' },
+    'Taro': { emoji: '🥔', category: 'ROOT VEGETABLE' },
+    'Tomato': { emoji: '🍅', category: 'VEGETABLE' },
+    'Water Chestnuts': { emoji: '🌰', category: 'AQUATIC VEGETABLE' },
+    'Yam': { emoji: '🍠', category: 'ROOT VEGETABLE' },
+    
+    // === PROTEINS ===
+    'Almonds': { emoji: '🌰', category: 'NUT' },
+    'Azuki Beans': { emoji: '🫘', category: 'LEGUME' },
+    'Cashews': { emoji: '🌰', category: 'NUT' },
+    'Coconut': { emoji: '🥥', category: 'TROPICAL FRUIT' },
+    'Egg Whites': { emoji: '🥚', category: 'PROTEIN' },
+    'Eggs': { emoji: '🥚', category: 'PROTEIN' },
+    'Jackfruit': { emoji: '🥭', category: 'TROPICAL FRUIT' },
+    'Lychee Nuts': { emoji: '🌰', category: 'EXOTIC NUT' },
+    'Mung Beans': { emoji: '🫘', category: 'LEGUME' },
+    'Pine Nuts': { emoji: '🌰', category: 'TREE NUT' },
+    'Silken Tofu': { emoji: '🟦', category: 'SOY PROTEIN' },
+    'Tofu': { emoji: '🟫', category: 'SOY PROTEIN' },
+    
+    // === FRUITS ===
+    'Apple': { emoji: '🍎', category: 'FRUIT' },
+    'Banana': { emoji: '🍌', category: 'FRUIT' },
+    'Cloudberries': { emoji: '☁️', category: 'SACRED BERRY' },
+    'Dried Apricots': { emoji: '🍑', category: 'DRIED FRUIT' },
+    'Goji Berries': { emoji: '🫐', category: 'SUPERFRUIT' },
+    'Longan Fruit': { emoji: '🌰', category: 'EXOTIC FRUIT' },
+    'Moon Peaches': { emoji: '🌙', category: 'SACRED FRUIT' },
+    'Raisins': { emoji: '🍇', category: 'DRIED FRUIT' },
+    
+    // === SEASONINGS & AROMATICS ===
+    'Butter': { emoji: '🧈', category: 'DAIRY' },
+    'Crystal Cave Minerals': { emoji: '💎', category: 'SACRED MINERAL' },
+    'Fruit Extracts': { emoji: '🧪', category: 'EXTRACT' },
+    'Ginger': { emoji: '🫚', category: 'SPICE ROOT' },
+    'Himalayan Salt': { emoji: '🧂', category: 'MINERAL SALT' },
+    'Jasmine Blossoms': { emoji: '🌸', category: 'SACRED FLOWER' },
+    'Lemon Zest': { emoji: '🍋', category: 'CITRUS PEEL' },
+    'Lemongrass': { emoji: '🌿', category: 'AROMATIC HERB' },
+    'Milk Powder': { emoji: '🥛', category: 'DAIRY POWDER' },
+    'Plum Filling': { emoji: '🟣', category: 'FRUIT FILLING' },
+    'Red Bean Paste': { emoji: '🫘', category: 'BEAN PASTE' },
+    'Rock Sugar': { emoji: '🍯', category: 'CRYSTAL SWEETENER' },
+    'Sacred Lotus Root': { emoji: '🪷', category: 'SACRED ROOT' },
+    'Salt': { emoji: '🧂', category: 'BASIC SEASONING' },
+    'Soy Sauce': { emoji: '🫗', category: 'FERMENTED SAUCE' },
+    'Sugar': { emoji: '🟫', category: 'SWEETENER' },
+    'Sweet Fillings': { emoji: '🍯', category: 'SWEET PASTE' },
+    'Tea Leaves': { emoji: '🍃', category: 'TEA HERB' },
+    'Toasted Sesame Seeds': { emoji: '🌰', category: 'TOASTED SEED' },
+    'Wild Honey': { emoji: '🍯', category: 'WILD SWEETENER' },
+    'Wind Flower Nectar': { emoji: '🌸', category: 'SACRED NECTAR' },
+    
+    // === LIQUIDS ===
+    'Butter Tea': { emoji: '🍵', category: 'TRADITIONAL TEA' },
+    'Cream': { emoji: '🥛', category: 'DAIRY LIQUID' },
+    'Creamy Sauce': { emoji: '🥛', category: 'SAUCE' },
+    'Milk': { emoji: '🥛', category: 'DAIRY' },
+    'Sky Bison Milk': { emoji: '☁️', category: 'SACRED DAIRY' },
+    'Soy Milk': { emoji: '🥛', category: 'PLANT MILK' },
+    'Vegetable Broth': { emoji: '🍲', category: 'BROTH' },
+    'Yak Milk': { emoji: '🥛', category: 'MOUNTAIN DAIRY' }
+  };
+  
   const mappings: Record<string, string> = {};
   
+  // Category emoji mappings for non-specific ingredients
+  const categoryMappings: Record<string, { emoji: string; category: string }> = {
+    'grain': { emoji: '🌾', category: 'GRAIN' },
+    'vegetable': { emoji: '🥬', category: 'VEGETABLE' },
+    'fruit': { emoji: '🍎', category: 'FRUIT' },
+    'protein': { emoji: '🥜', category: 'PROTEIN' },
+    'seasoning': { emoji: '🧂', category: 'SEASONING' },
+    'liquid': { emoji: '💧', category: 'LIQUID' }
+  };
+  
   for (const ingredient of ingredients) {
-    const ingredientName = ingredient.name.toLowerCase();
-    
-    // Try to find appropriate emoji based on ingredient name
-    const emojiMatches = searchEmojis(ingredientName);
-    if (emojiMatches.length > 0) {
-      mappings[ingredient.name] = emojiMatches[0].char;
-    } else {
-      // Fallback mappings for common Air Nomad ingredients
-      if (ingredientName.includes('fruit') || ingredientName.includes('apple') || ingredientName.includes('pear')) {
-        mappings[ingredient.name] = '🍎';
-      } else if (ingredientName.includes('vegetable') || ingredientName.includes('carrot') || ingredientName.includes('root')) {
-        mappings[ingredient.name] = '🥕';
-      } else if (ingredientName.includes('herb') || ingredientName.includes('leaf') || ingredientName.includes('basil')) {
-        mappings[ingredient.name] = '🌿';
-      } else if (ingredientName.includes('mushroom') || ingredientName.includes('fungus')) {
-        mappings[ingredient.name] = '🍄';
-      } else if (ingredientName.includes('grain') || ingredientName.includes('rice') || ingredientName.includes('wheat')) {
-        mappings[ingredient.name] = '🌾';
-      } else if (ingredientName.includes('tea') || ingredientName.includes('drink')) {
-        mappings[ingredient.name] = '🍵';
-      } else if (ingredientName.includes('flower') || ingredientName.includes('blossom')) {
-        mappings[ingredient.name] = '🌸';
-      } else if (ingredientName.includes('seed') || ingredientName.includes('nut')) {
-        mappings[ingredient.name] = '🌰';
-      } else {
-        // Default fallback for Air Nomad ingredients
-        mappings[ingredient.name] = '🌿'; // Herb emoji as general fallback
-      }
+    // Check for exact specific match first
+    if (specificMappings[ingredient.name]) {
+      const mapping = specificMappings[ingredient.name];
+      mappings[ingredient.name] = `${mapping.emoji}`;
+      continue;
     }
+    
+    // Try semantic search in emoji pool for exact match
+    const emojiMatches = searchEmojis(ingredient.name);
+    if (emojiMatches.length > 0) {
+      const categoryInfo = categoryMappings[ingredient.category] || { emoji: '🌿', category: 'INGREDIENT' };
+      mappings[ingredient.name] = `${emojiMatches[0].char}`;
+      continue;
+    }
+    
+    // Use category-based mapping as final fallback
+    const categoryInfo = categoryMappings[ingredient.category] || { emoji: '🌿', category: 'INGREDIENT' };
+    mappings[ingredient.name] = `${categoryInfo.emoji}`;
   }
   
   return mappings;

@@ -181,6 +181,7 @@ export function enhanceDishDisplayWithEmojis(
   const nation = dishData.nation || 'air-nomads';
   
   // Add emoji to dish name
+  /*
   const dishNameElement = dishContainer.querySelector('.dish-name');
   if (dishNameElement) {
     const nameEmoji = createDishNameEmoji(dishData.name, nation);
@@ -191,6 +192,7 @@ export function enhanceDishDisplayWithEmojis(
       dishNameElement.insertBefore(spacer, nameEmoji.nextSibling);
     }
   }
+  */
   
   // Add emojis to ingredients
   const ingredientElements = dishContainer.querySelectorAll('.ingredient-item');

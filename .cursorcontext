@@ -107,6 +107,33 @@ Phase 5: ✨ "Blessing the sacred meal..." (shaking)
 
 ---
 
+## 🚫 CRITICAL: DEVELOPMENT SERVER RESTRICTIONS
+
+**MANDATORY CONSTRAINT**: AI assistants CANNOT view or interact with running development servers.
+
+**FORBIDDEN OPERATIONS**:
+❌ Starting dev servers with `npm run dev`, `yarn dev`, `vite`, etc.
+❌ Running `npm run build` or build commands when testing is the goal
+❌ Telling user to "test the changes" when AI cannot verify functionality
+❌ Making UI/UX changes without being able to visually verify them
+
+**PERMITTED OPERATIONS**:
+✅ Static file analysis and code review
+✅ TypeScript compilation checking with `npm run build`
+✅ Script execution for data generation or testing (`npm run generate-*`)
+✅ Code modifications based on established patterns and requirements
+✅ Documentation updates and architectural guidance
+
+**DEV SERVER WORKFLOW RULE**:
+- **User manages dev server**: Only the user should start/stop development servers
+- **AI provides code**: AI makes code changes, user tests them
+- **Explicit delegation**: If testing is needed, explicitly tell user to run the dev server and report results
+- **No blind dev commands**: Never run `npm run dev` without specific user instruction
+
+**RATIONALE**: Starting dev servers when AI cannot view them wastes system resources, creates port conflicts, and provides no value to the development process.
+
+---
+
 ## 🏷️ CRITICAL: INTELLIGENT NAME GENERATION SYSTEM
 
 **CURRENT NAMING ARCHITECTURE - MAINTAIN ACCURACY**:

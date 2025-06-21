@@ -17,16 +17,97 @@
         
         <main class="app-main">
             <div class="nation-controls">
-                <select id="nation-selector" class="nation-selector">
-                    <option value="air-nomads">🌿 Air Nomads</option>
-                    <option value="water-tribe">🌊 Water Tribe</option>
-                    <option value="earth-kingdom">🏔️ Earth Kingdom</option>
-                    <option value="fire-nation">🔥 Fire Nation</option>
-                </select>
+                <div class="nation-symbols-left">
+                    <img src="/assets/air_nation.png" alt="Air Nomads" class="decorative-symbol">
+                    <img src="/assets/air_nation.png" alt="Air Nomads" class="decorative-symbol">
+                </div>
+                
+                <div class="custom-select-container">
+                    <div id="nation-selector" class="custom-nation-selector" data-value="air-nomads">
+                        <div class="selected-option">
+                            <div class="selected-option-content">
+                                <img src="/assets/air_nation.png" alt="Air Nomads" class="nation-icon">
+                                <span>Air Nomads</span>
+                            </div>
+                            <div class="dropdown-arrow"></div>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="option" data-value="air-nomads">
+                                <img src="/assets/air_nation.png" alt="Air Nomads" class="nation-icon">
+                                <span>Air Nomads</span>
+                            </div>
+                            <div class="option" data-value="water-tribe">
+                                <img src="/assets/water_nation.png" alt="Water Tribe" class="nation-icon">
+                                <span>Water Tribe</span>
+                            </div>
+                            <div class="option" data-value="earth-kingdom">
+                                <img src="/assets/earth_nation.png" alt="Earth Kingdom" class="nation-icon">
+                                <span>Earth Kingdom</span>
+                            </div>
+                            <div class="option" data-value="fire-nation">
+                                <img src="/assets/fire_nation.png" alt="Fire Nation" class="nation-icon">
+                                <span>Fire Nation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="custom-select-container">
+                    <div id="dish-type-selector" class="custom-dish-type-selector" data-value="main-course">
+                        <div class="selected-option">
+                            <div class="selected-option-content">
+                                <span class="dish-type-icon">🥘</span>
+                                <span>MAIN COURSE</span>
+                            </div>
+                            <div class="dropdown-arrow"></div>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="option" data-value="main-course">
+                                <span class="dish-type-icon">🥘</span>
+                                <span>MAIN COURSE</span>
+                            </div>
+                            <div class="option" data-value="side-dish">
+                                <span class="dish-type-icon">🍚</span>
+                                <span>SIDE DISH</span>
+                            </div>
+                            <div class="option" data-value="snack">
+                                <span class="dish-type-icon">🥜</span>
+                                <span>SNACK</span>
+                            </div>
+                            <div class="option" data-value="dessert">
+                                <span class="dish-type-icon">🍓</span>
+                                <span>DESSERT</span>
+                            </div>
+                            <div class="option" data-value="soup-stew">
+                                <span class="dish-type-icon">🍲</span>
+                                <span>SOUP/STEW</span>
+                            </div>
+                            <div class="option" data-value="salad">
+                                <span class="dish-type-icon">🥬</span>
+                                <span>SALAD</span>
+                            </div>
+                            <div class="option" data-value="beverage">
+                                <span class="dish-type-icon">🍵</span>
+                                <span>BEVERAGE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nation-symbols-right">
+                    <img src="/assets/air_nation.png" alt="Air Nomads" class="decorative-symbol">
+                    <img src="/assets/air_nation.png" alt="Air Nomads" class="decorative-symbol">
+                </div>
             </div>
             
             <button id="generate-button" class="generator-button">
-                Generate Air Nomad Dish
+                Generate
+                <span class="ingredient-emoji-1">🥕</span>
+                <span class="ingredient-emoji-2">🍄</span>
+                <span class="ingredient-emoji-3">🌿</span>
+                <span class="ingredient-emoji-4">🥜</span>
+                <span class="ingredient-emoji-5">🫐</span>
+                <span class="ingredient-emoji-6">🍯</span>
             </button>
             
             <div id="dish-container"></div>

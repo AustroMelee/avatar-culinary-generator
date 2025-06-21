@@ -27,6 +27,100 @@ export type CulturalEmojiSet = {
 };
 
 /**
+ * MASTER FOOD EMOJI POOL - Comprehensive food and drink emoji collection
+ * Expanded from npm-merge script with OpenMoji+Emojibase integration
+ */
+export const FOOD_EMOJI_POOL: EmojiRecord[] = [
+  // Fruits & Berries
+  { char: '🍎', name: 'red apple', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'red', 'apple'], codepoint: '1F34E' },
+  { char: '🍊', name: 'tangerine', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'citrus', 'orange'], codepoint: '1F34A' },
+  { char: '🍌', name: 'banana', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'yellow', 'banana'], codepoint: '1F34C' },
+  { char: '🍇', name: 'grapes', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'grapes', 'purple'], codepoint: '1F347' },
+  { char: '🥝', name: 'kiwi fruit', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'kiwi', 'green'], codepoint: '1F95D' },
+  { char: '🥭', name: 'mango', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'mango', 'tropical'], codepoint: '1F96D' },
+  { char: '🍓', name: 'strawberry', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'berry', 'red'], codepoint: '1F353' },
+  { char: '🫐', name: 'blueberries', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'berry', 'blue'], codepoint: '1FAD0' },
+  { char: '🍑', name: 'cherries', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'cherry', 'red'], codepoint: '1F351' },
+  { char: '🍒', name: 'cherry', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'cherry', 'single'], codepoint: '1F352' },
+  { char: '🥥', name: 'coconut', group: 'Food & Drink', subgroup: 'food-fruit', keywords: ['fruit', 'coconut', 'tropical'], codepoint: '1F965' },
+  
+  // Vegetables & Herbs
+  { char: '🥔', name: 'potato', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['vegetable', 'potato', 'tuber'], codepoint: '1F954' },
+  { char: '🥕', name: 'carrot', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['vegetable', 'carrot', 'orange'], codepoint: '1F955' },
+  { char: '🌽', name: 'ear of corn', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['vegetable', 'corn', 'grain'], codepoint: '1F33D' },
+  { char: '🥬', name: 'leafy greens', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['vegetable', 'greens', 'lettuce'], codepoint: '1F96C' },
+  { char: '🥒', name: 'cucumber', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['vegetable', 'cucumber', 'green'], codepoint: '1F952' },
+  { char: '🌶️', name: 'hot pepper', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['vegetable', 'pepper', 'spicy'], codepoint: '1F336' },
+  { char: '🫑', name: 'bell pepper', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['vegetable', 'pepper', 'bell'], codepoint: '1FAD1' },
+  { char: '🍄', name: 'mushroom', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['mushroom', 'fungi', 'umami'], codepoint: '1F344' },
+  { char: '🥜', name: 'nuts', group: 'Food & Drink', subgroup: 'food-vegetable', keywords: ['nuts', 'protein', 'snack'], codepoint: '1F95C' },
+  { char: '🌿', name: 'herb', group: 'Animals & Nature', subgroup: 'plant-other', keywords: ['herb', 'plant', 'green'], codepoint: '1F33F' },
+  
+  // Grains & Prepared Foods
+  { char: '🌾', name: 'sheaf of rice', group: 'Food & Drink', subgroup: 'food-asian', keywords: ['grain', 'rice', 'wheat'], codepoint: '1F33E' },
+  { char: '🍚', name: 'cooked rice', group: 'Food & Drink', subgroup: 'food-asian', keywords: ['rice', 'grain', 'bowl'], codepoint: '1F35A' },
+  { char: '🍜', name: 'steaming bowl', group: 'Food & Drink', subgroup: 'food-asian', keywords: ['bowl', 'soup', 'noodles'], codepoint: '1F35C' },
+  { char: '🍲', name: 'pot of food', group: 'Food & Drink', subgroup: 'food-prepared', keywords: ['pot', 'stew', 'cooking'], codepoint: '1F372' },
+  { char: '🥘', name: 'shallow pan of food', group: 'Food & Drink', subgroup: 'food-prepared', keywords: ['pan', 'paella', 'cooking'], codepoint: '1F958' },
+  { char: '🥣', name: 'bowl with spoon', group: 'Food & Drink', subgroup: 'food-prepared', keywords: ['bowl', 'spoon', 'cereal'], codepoint: '1F963' },
+  { char: '🥪', name: 'sandwich', group: 'Food & Drink', subgroup: 'food-prepared', keywords: ['sandwich', 'bread', 'meal'], codepoint: '1F96A' },
+  { char: '🫔', name: 'tamale', group: 'Food & Drink', subgroup: 'food-prepared', keywords: ['tamale', 'wrapped', 'corn'], codepoint: '1FAD4' },
+  { char: '🥟', name: 'dumpling', group: 'Food & Drink', subgroup: 'food-asian', keywords: ['dumpling', 'asian', 'steamed'], codepoint: '1F95F' },
+  
+  // Beverages
+  { char: '🍵', name: 'teacup without handle', group: 'Food & Drink', subgroup: 'drink', keywords: ['tea', 'cup', 'beverage'], codepoint: '1F375' },
+  { char: '🫖', name: 'teapot', group: 'Food & Drink', subgroup: 'drink', keywords: ['tea', 'pot', 'brewing'], codepoint: '1FAD6' },
+  { char: '🥃', name: 'tumbler glass', group: 'Food & Drink', subgroup: 'drink', keywords: ['glass', 'tumbler', 'beverage'], codepoint: '1F943' },
+  { char: '🧋', name: 'bubble tea', group: 'Food & Drink', subgroup: 'drink', keywords: ['tea', 'bubble', 'asian'], codepoint: '1F9CB' },
+  { char: '🥤', name: 'cup with straw', group: 'Food & Drink', subgroup: 'drink', keywords: ['cup', 'straw', 'beverage'], codepoint: '1F964' },
+  
+  // Cultural & Nature Elements
+  { char: '🍃', name: 'leaf fluttering in wind', group: 'Animals & Nature', subgroup: 'plant-other', keywords: ['leaf', 'wind', 'nature'], codepoint: '1F343' },
+  { char: '🌱', name: 'seedling', group: 'Animals & Nature', subgroup: 'plant-other', keywords: ['plant', 'seedling', 'growth'], codepoint: '1F331' },
+  { char: '🌸', name: 'cherry blossom', group: 'Animals & Nature', subgroup: 'plant-flower', keywords: ['flower', 'blossom', 'spring'], codepoint: '1F338' },
+  { char: '🏔️', name: 'snow capped mountain', group: 'Travel & Places', subgroup: 'place-geographic', keywords: ['mountain', 'snow', 'peak'], codepoint: '1F3D4' },
+  { char: '🌊', name: 'water wave', group: 'Travel & Places', subgroup: 'place-geographic', keywords: ['water', 'wave', 'ocean'], codepoint: '1F30A' },
+  { char: '💨', name: 'dashing away', group: 'Smileys & Emotion', subgroup: 'emotion', keywords: ['wind', 'dash', 'movement'], codepoint: '1F4A8' },
+  { char: '🧘', name: 'person in lotus position', group: 'People & Body', subgroup: 'person-activity', keywords: ['meditation', 'lotus', 'spiritual'], codepoint: '1F9D8' },
+  { char: '🕯️', name: 'candle', group: 'Objects', subgroup: 'light', keywords: ['candle', 'flame', 'light'], codepoint: '1F56F' }
+];
+
+/**
+ * Picks a random food emoji from the expanded pool
+ * Returns emoji character for use in dish metadata
+ */
+export function pickRandomFoodEmoji(): string {
+  const randomIndex = Math.floor(Math.random() * FOOD_EMOJI_POOL.length);
+  return FOOD_EMOJI_POOL[randomIndex].char;
+}
+
+/**
+ * Picks an emoji based on dish characteristics
+ * Returns culturally appropriate emoji for the dish type
+ */
+export function pickThematicEmoji(dishType?: string, hasRareIngredients?: boolean): string {
+  // Special emojis for different dish types
+  const thematicEmojis = {
+    beverage: ['🍵', '🫖', '🧋', '🥤'],
+    soup: ['🍜', '🍲', '🥣'],
+    ceremonial: ['🌸', '🧘', '🕯️', '🏔️'],
+    rare: ['🌸', '🏔️', '🧘', '🍃'],
+    default: ['🍜', '🥣', '🍵', '🌿', '🍃']
+  };
+  
+  let emojiPool = thematicEmojis.default;
+  
+  if (hasRareIngredients) {
+    emojiPool = thematicEmojis.rare;
+  } else if (dishType) {
+    emojiPool = thematicEmojis[dishType as keyof typeof thematicEmojis] || thematicEmojis.default;
+  }
+  
+  const randomIndex = Math.floor(Math.random() * emojiPool.length);
+  return emojiPool[randomIndex];
+}
+
+/**
  * Creates normalized emoji record from various source formats
  */
 function createEmojiRecord(

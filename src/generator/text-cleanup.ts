@@ -5,7 +5,36 @@
  */
 
 /**
- * Core text cleanup engine with simple string replacements
+ * SENTENCE-LEVEL DEDUPLICATION SYSTEM
+ * Tracks full sentences to prevent repetition across dish generations
+ */
+let sentenceHistory: Set<string> = new Set();
+const MAX_SENTENCE_HISTORY = 50; // Track last 50 unique sentences
+
+/**
+ * RITUAL JARGON DETECTION PATTERNS
+ * Identifies overly dense cultural language for lightening
+ */
+const RITUAL_DENSITY_PATTERNS = [
+  /\b(sacred|divine|blessed|holy|mystical|spiritual)\b/gi,
+  /\b(ancient|eternal|timeless|ageless)\b/gi,
+  /\b(ritual|ceremony|meditation|prayer)\b/gi,
+  /\b(temple|shrine|altar|monastery)\b/gi
+];
+
+const RITUAL_REPLACEMENTS: Record<string, string[]> = {
+  'sacred': ['special', 'treasured', 'honored', 'revered'],
+  'divine': ['wonderful', 'exceptional', 'remarkable', 'inspiring'],
+  'blessed': ['favored', 'cherished', 'prized', 'valued'],
+  'mystical': ['unique', 'distinctive', 'intriguing', 'fascinating'],
+  'ancient': ['traditional', 'time-honored', 'classic', 'enduring'],
+  'eternal': ['lasting', 'enduring', 'persistent', 'ongoing'],
+  'ritual': ['tradition', 'practice', 'custom', 'method'],
+  'ceremony': ['celebration', 'gathering', 'occasion', 'event']
+};
+
+/**
+ * Core text cleanup engine with enhanced deduplication and jargon control
  * Applies comprehensive cleanup optimizations for Avatar world dish descriptions
  */
 export function applyTextCleanup(text: string): string {
@@ -23,7 +52,113 @@ export function applyTextCleanup(text: string): string {
   cleaned = fixListFormatting(cleaned);
   cleaned = fixSpiritualBenefits(cleaned);
   
+  // NEW: Apply sentence-level deduplication
+  cleaned = applySentenceDeduplication(cleaned);
+  
+  // NEW: Lighten excessive ritual jargon if detected
+  cleaned = lightenRitualJargon(cleaned);
+  
   return cleaned;
+}
+
+/**
+ * NEW: Applies sentence-level deduplication to prevent repetitive prose
+ * Tracks sentences across multiple dish generations to ensure variety
+ */
+function applySentenceDeduplication(text: string): string {
+  const sentences = text.split(/\.\s+/).filter(s => s.trim().length > 10);
+  const modifiedSentences: string[] = [];
+  
+  for (let sentence of sentences) {
+    // Normalize sentence for comparison (remove minor variations)
+    const normalized = sentence.toLowerCase().replace(/[^a-z\s]/g, '').trim();
+    
+    if (sentenceHistory.has(normalized)) {
+      // Sentence has been used recently, try to modify it
+      sentence = modifySentenceForVariety(sentence);
+    } else {
+      // Track this new sentence
+      sentenceHistory.add(normalized);
+      
+      // Limit history size
+      if (sentenceHistory.size > MAX_SENTENCE_HISTORY) {
+        const firstSentence = Array.from(sentenceHistory)[0];
+        sentenceHistory.delete(firstSentence);
+      }
+    }
+    
+    modifiedSentences.push(sentence);
+  }
+  
+  return modifiedSentences.join('. ') + '.';
+}
+
+/**
+ * NEW: Modifies repeated sentences to create variety
+ * Uses synonym replacement and structural variation
+ */
+function modifySentenceForVariety(sentence: string): string {
+  const synonymSets = {
+    'creates': ['forms', 'produces', 'generates', 'develops'],
+    'provides': ['offers', 'delivers', 'brings', 'gives'],
+    'enhances': ['improves', 'strengthens', 'amplifies', 'deepens'],
+    'promotes': ['encourages', 'supports', 'fosters', 'cultivates'],
+    'tradition': ['custom', 'practice', 'heritage', 'legacy'],
+    'harmony': ['balance', 'unity', 'accord', 'peace'],
+    'wisdom': ['knowledge', 'insight', 'understanding', 'guidance']
+  };
+  
+  let modified = sentence;
+  
+  // Apply synonym replacements
+  for (const [original, synonyms] of Object.entries(synonymSets)) {
+    const regex = new RegExp(`\\b${original}\\b`, 'gi');
+    if (regex.test(modified)) {
+      const randomSynonym = synonyms[Math.floor(Math.random() * synonyms.length)];
+      modified = modified.replace(regex, randomSynonym);
+      break; // Only replace one word to maintain readability
+    }
+  }
+  
+  return modified;
+}
+
+/**
+ * NEW: Lightens excessive ritual jargon when density is too high
+ * Detects overly dense cultural language and applies lighter alternatives
+ */
+function lightenRitualJargon(text: string): string {
+  // Count ritual/ceremony references
+  const ritualMatches = (text.match(/\b(ritual|ceremony|sacred|divine|mystical)\b/gi) || []).length;
+  const wordCount = text.split(/\s+/).length;
+  const ritualDensity = ritualMatches / wordCount;
+  
+  // If more than 15% of words are ritual-related, lighten the language
+  if (ritualDensity > 0.15) {
+    let lightened = text;
+    
+    // Apply lighter alternatives to overly dense ritual language
+    for (const [heavy, alternatives] of Object.entries(RITUAL_REPLACEMENTS)) {
+      const regex = new RegExp(`\\b${heavy}\\b`, 'gi');
+      const matches = text.match(regex);
+      
+      if (matches && matches.length > 2) {
+        // If a word appears more than twice, replace some instances
+        let replacementCount = 0;
+        lightened = lightened.replace(regex, (match) => {
+          replacementCount++;
+          if (replacementCount > 2) {
+            return alternatives[Math.floor(Math.random() * alternatives.length)];
+          }
+          return match;
+        });
+      }
+    }
+    
+    return lightened;
+  }
+  
+  return text;
 }
 
 /**
@@ -199,39 +334,49 @@ function fixPunctuationAndCapitalization(text: string): string {
     // Fix capitalization after periods
     .replace(/\.\s*([a-z])/g, (_, letter) => '. ' + letter.toUpperCase())
     
-    // Fix quotes
-    .replace(/"\s+/g, '"')
-    .replace(/\s+"/g, '"')
-    
-    // Ensure proper sentence ending
-    .replace(/([^.!?])\s*$/g, '$1.');
+    // Fix capitalization after colons in some cases
+    .replace(/:\s*([a-z])/g, (_, letter) => ': ' + letter.toUpperCase());
 }
 
 /**
- * Fixes list formatting and spiritual benefits
+ * Fixes list formatting and enumeration issues
  */
 function fixListFormatting(text: string): string {
   return text
-    // Fix three-item lists
-    .replace(/enhancing ([^,]+), ([^,]+), and ([^.,]+)/gi, 'enhancing $1, $2, and $3')
-    .replace(/improving ([^,]+), ([^,]+), and ([^.,]+)/gi, 'improving $1, $2, and $3')
-    .replace(/promoting ([^,]+), ([^,]+), and ([^.,]+)/gi, 'promoting $1, $2, and $3')
+    // Fix missing commas in lists
+    .replace(/(\w+) (\w+) and (\w+) (\w+)/g, '$1, $2, and $3 $4')
     
-    // General list formatting
-    .replace(/([^,]+), ([^,]+), and ([^.,]+)/gi, '$1, $2, and $3');
+    // Fix Oxford comma consistency
+    .replace(/(\w+), (\w+) and (\w+)/g, '$1, $2, and $3')
+    
+    // Fix list continuation issues
+    .replace(/; and (\w+)/g, ', and $1');
 }
 
 /**
- * Fixes spiritual benefits section formatting
+ * Fixes spiritual benefits formatting and redundancy
  */
 function fixSpiritualBenefits(text: string): string {
   return text
-    // Fix spiritual benefits lists
-    .replace(/Spiritual benefits include enhancing ([^,]+), ([^,]+), and ([^.,]+)/gi, 'Spiritual benefits include enhancing $1, $2, and $3')
-    .replace(/Benefits include improving ([^,]+), ([^,]+), and ([^.,]+)/gi, 'Benefits include improving $1, $2, and $3')
+    // Fix benefit description formatting
+    .replace(/spiritual benefit:\s*([a-z])/gi, 'spiritual benefit: $1')
     
-    // Fix spiritual benefit phrases
-    .replace(/enhancing spiritual awareness and/gi, 'enhancing spiritual awareness and')
-    .replace(/promoting inner peace and/gi, 'promoting inner peace and')
-    .replace(/improving meditation focus and/gi, 'improving meditation focus and');
+    // Fix redundant benefit statements
+    .replace(/enhances meditation enhances/gi, 'enhances meditation and')
+    .replace(/promotes peace promotes/gi, 'promotes peace and');
+}
+
+/**
+ * NEW: Resets sentence history for fresh generation cycles
+ * Call this when starting a new batch of dish generation
+ */
+export function resetSentenceHistory(): void {
+  sentenceHistory.clear();
+}
+
+/**
+ * NEW: Gets current sentence history size for monitoring
+ */
+export function getSentenceHistorySize(): number {
+  return sentenceHistory.size;
 } 

@@ -1,102 +1,294 @@
 /**
- * Domain-specific text cleanup for Air Nomad cuisine generation
- * Handles ingredient-specific grammar patterns and cultural context fixes
+ * DOMAIN-SPECIFIC CLEANUP ENGINE
+ * Handles Air Nomad cultural patterns, lore density, and nation-specific text issues
+ * Separates cultural knowledge from generic text processing following architectural guidelines
  */
 
 /**
- * Applies Air Nomad specific grammar and contextual fixes
- * Handles ingredient names, cooking techniques, and cultural patterns
+ * AIR NOMAD CULTURAL PATTERNS - Nation-specific cleanup rules
+ * Handles ingredient names, cultural terms, and temple-specific language
+ */
+const AIR_NOMAD_INGREDIENT_FIXES: Record<string, string> = {
+  'Crystal Cave Mineral': 'Crystal Cave Minerals',
+  'Sky Bison Milk': "Sky Bison's Milk",
+  'Mountain Berry': 'Mountain Berries',
+  'Temple Herb': 'Temple Herbs',
+  'Sacred Mushroom': 'Sacred Mushrooms',
+  'Wind Flower': 'Wind Flowers'
+};
+
+const AIR_NOMAD_CULTURAL_STANDARDIZATIONS: Record<string, string> = {
+  'sky-bison': 'sky bison',
+  'air-bending': 'airbending',
+  'air-nomad': 'Air Nomad',
+  'temple-bells': 'temple bells',
+  'prayer-wheels': 'prayer wheels',
+  'monk robes': 'monastic robes',
+  'temple kitchens': 'temple kitchen',
+  'meditation halls': 'meditation hall'
+};
+
+const TEMPLE_HIERARCHY_TERMS: Record<string, string> = {
+  'master monk': 'Master',
+  'elder monk': 'Elder',
+  'temple master': 'Temple Master',
+  'air nomad master': 'Air Nomad Master',
+  'spiritual master': 'Spiritual Master'
+};
+
+/**
+ * RITUAL DENSITY DETECTION - Identifies overly dense lore patterns
+ * Detects when cultural references become overwhelming and provides alternatives
+ */
+const DENSE_LORE_PATTERNS = [
+  /\b(ritual|ceremony|sacred|divine|mystical|spiritual|ancient|temple)\b/gi,
+  /\b(meditation|prayer|blessing|worship|reverence)\b/gi,
+  /\b(enlightenment|transcendence|awakening|harmony)\b/gi
+];
+
+const LORE_ALTERNATIVES = {
+  heavy: {
+    'sacred ritual': 'special tradition',
+    'divine ceremony': 'important gathering',
+    'mystical meditation': 'peaceful reflection',
+    'ancient blessing': 'time-honored practice',
+    'spiritual awakening': 'personal insight',
+    'transcendent harmony': 'perfect balance'
+  },
+  moderate: {
+    'sacred': 'treasured',
+    'divine': 'remarkable',
+    'mystical': 'unique',
+    'ancient': 'traditional',
+    'transcendent': 'elevated',
+    'enlightened': 'wise'
+  }
+};
+
+/**
+ * Applies Air Nomad-specific cultural cleanup and standardization
+ * Handles nation-specific ingredient names, cultural terms, and linguistic patterns
  */
 export function applyAirNomadCleanup(text: string): string {
+  let cleaned = text;
+  
+  // Apply ingredient name standardization
+  cleaned = fixAirNomadIngredientPlurals(cleaned);
+  
+  // Standardize cultural terminology
+  cleaned = standardizeAirNomadTerms(cleaned);
+  
+  // Fix temple hierarchy references
+  cleaned = standardizeTempleHierarchy(cleaned);
+  
+  // Apply festival name consistency
+  cleaned = standardizeFestivalNames(cleaned);
+  
+  // Detect and lighten overly dense lore if needed
+  cleaned = adjustLoreDensity(cleaned);
+  
+  return cleaned;
+}
+
+/**
+ * Fixes Air Nomad ingredient pluralization and possessive forms
+ * Handles cultural knowledge about specific ingredients and their proper forms
+ */
+function fixAirNomadIngredientPlurals(text: string): string {
+  let cleaned = text;
+  
+  // Apply specific ingredient fixes
+  for (const [incorrect, correct] of Object.entries(AIR_NOMAD_INGREDIENT_FIXES)) {
+    const regex = new RegExp(`\\b${incorrect}s?\\b`, 'gi');
+    cleaned = cleaned.replace(regex, correct);
+  }
+  
+  // Fix possessive forms for sacred ingredients
+  cleaned = cleaned
+    .replace(/Sky Bison Milk/gi, "Sky Bison's Milk")
+    .replace(/Avatar Yangchen Blessing/gi, "Avatar Yangchen's Blessing")
+    .replace(/Master Gyatso Recipe/gi, "Master Gyatso's Recipe")
+    .replace(/Temple Elder Wisdom/gi, "Temple Elder's Wisdom");
+  
+  return cleaned;
+}
+
+/**
+ * Standardizes Air Nomad cultural terminology and hyphenation
+ * Ensures consistent representation of cultural concepts
+ */
+function standardizeAirNomadTerms(text: string): string {
+  let cleaned = text;
+  
+  // Apply cultural standardizations
+  for (const [incorrect, correct] of Object.entries(AIR_NOMAD_CULTURAL_STANDARDIZATIONS)) {
+    const regex = new RegExp(`\\b${incorrect}\\b`, 'gi');
+    cleaned = cleaned.replace(regex, correct);
+  }
+  
+  // Standardize temple names
+  cleaned = cleaned
+    .replace(/eastern air temple/gi, 'Eastern Air Temple')
+    .replace(/western air temple/gi, 'Western Air Temple')
+    .replace(/northern air temple/gi, 'Northern Air Temple')
+    .replace(/southern air temple/gi, 'Southern Air Temple');
+  
+  return cleaned;
+}
+
+/**
+ * Standardizes temple hierarchy and title references
+ * Handles proper forms of monastic titles and temple positions
+ */
+function standardizeTempleHierarchy(text: string): string {
+  let cleaned = text;
+  
+  // Apply hierarchy standardizations
+  for (const [verbose, concise] of Object.entries(TEMPLE_HIERARCHY_TERMS)) {
+    const regex = new RegExp(`\\b${verbose}\\b`, 'gi');
+    cleaned = cleaned.replace(regex, concise);
+  }
+  
+  return cleaned;
+}
+
+/**
+ * Standardizes festival and celebration names
+ * Ensures consistent capitalization and naming of Air Nomad festivals
+ */
+function standardizeFestivalNames(text: string): string {
   return text
-    // Fix subject-verb agreement with plural Air Nomad ingredients
-    .replace(/Crystal Cave Minerals has been/g, 'Crystal Cave Minerals have been')
-    .replace(/Bamboo Shoots has been/g, 'Bamboo Shoots have been')
-    .replace(/Lychee Nuts has been/g, 'Lychee Nuts have been')
-    .replace(/Bell Peppers has been/g, 'Bell Peppers have been')
-    .replace(/Chrysanthemum Greens has been/g, 'Chrysanthemum Greens have been')
-    .replace(/Sacred Lotus Petals has been/g, 'Sacred Lotus Petals have been')
-    .replace(/Wind Flower Petals has been/g, 'Wind Flower Petals have been')
-    
-    // Fix Air Nomad technique-specific constructions
-    .replace(/steam-whipped with/gi, 'steam-whipped using')
-    .replace(/wind-dried through/gi, 'wind-dried with')
-    .replace(/cloud-braised in/gi, 'cloud-braised within')
-    
-    // Fix spiritual ingredient context patterns
-    .replace(/sacred ingredients chosen for/gi, 'sacred ingredients selected for')
-    .replace(/blessed ingredients picked for/gi, 'blessed ingredients gathered for')
-    .replace(/mystical ingredients used for/gi, 'mystical ingredients employed in')
-    
-    // Fix Air Nomad cultural context grammar
-    .replace(/temple preparation ritual/gi, 'temple preparation rituals')
-    .replace(/monk meditation technique/gi, 'monastic meditation techniques')
-    .replace(/sky bison feeding ceremony/gi, 'sky bison feeding ceremonies')
-    
-    // Fix ingredient pairing constructions
-    .replace(/([A-Z][a-z\s]+) and ([A-Z][a-z\s]+) chosen for their/gi, '$1 and $2, chosen for their')
-    .replace(/([A-Z][a-z\s]+), ([A-Z][a-z\s]+), and ([A-Z][a-z\s]+) selected for/gi, '$1, $2, and $3, selected for')
-    
-    // Fix festival and ceremony references
-    .replace(/Vow of Silence Retreat traditions/gi, 'Vow of Silence Retreat tradition')
-    .replace(/Sky Bison Appreciation Ceremony customs/gi, 'Sky Bison Appreciation Ceremony custom')
-    .replace(/Wind Walker's Pilgrimage practices/gi, "Wind Walker's Pilgrimage practice")
-    
-    // Fix Air Nomad title constructions
-    .replace(/Master ([A-Z][a-z]+) teaching/gi, 'Master $1 taught')
-    .replace(/Avatar ([A-Z][a-z]+) discovering/gi, 'Avatar $1 discovered')
-    .replace(/Guru ([A-Z][a-z]+) perfecting/gi, 'Guru $1 perfected');
+    .replace(/autumn festival/gi, 'Autumn Festival')
+    .replace(/harvest celebration/gi, 'Harvest Celebration')
+    .replace(/wind festival/gi, 'Wind Festival')
+    .replace(/meditation retreat/gi, 'Meditation Retreat')
+    .replace(/temple gathering/gi, 'Temple Gathering')
+    .replace(/spiritual ceremony/gi, 'Spiritual Ceremony');
 }
 
 /**
- * Validates Air Nomad dish name patterns and fixes common formatting issues
+ * ADVANCED: Detects and adjusts lore density for readability
+ * Identifies overly dense cultural language and provides lighter alternatives
  */
-export function cleanupAirNomadDishName(name: string): string {
-  return name
-    // Fix title case consistency
-    .replace(/([A-Z][a-z]+)'s ([a-z])/g, "$1's $2")
-    
-    // Fix technique descriptor consistency
-    .replace(/Steam-whipped/gi, 'Steam-Whipped')
-    .replace(/Wind-dried/gi, 'Wind-Dried')
-    .replace(/Cloud-braised/gi, 'Cloud-Braised')
-    .replace(/Air-dried/gi, 'Air-Dried')
-    
-    // Fix spiritual title consistency
-    .replace(/sacred ([A-Z])/gi, 'Sacred $1')
-    .replace(/blessed ([A-Z])/gi, 'Blessed $1')
-    .replace(/mystical ([A-Z])/gi, 'Mystical $1')
-    .replace(/celestial ([A-Z])/gi, 'Celestial $1')
-    
-    // Remove redundant words in titles
-    .replace(/Sacred Sacred/gi, 'Sacred')
-    .replace(/Master's Master's/gi, "Master's")
-    .replace(/Temple Temple/gi, 'Temple')
-    
-    // Fix capitalization after apostrophes
-    .replace(/'s ([a-z])/g, "'s $1")
-    .replace(/s' ([a-z])/g, "s' $1");
+function adjustLoreDensity(text: string): string {
+  // Count total lore density
+  let totalLoreWords = 0;
+  const wordCount = text.split(/\s+/).length;
+  
+  for (const pattern of DENSE_LORE_PATTERNS) {
+    const matches = text.match(pattern) || [];
+    totalLoreWords += matches.length;
+  }
+  
+  const loreDensity = totalLoreWords / wordCount;
+  
+  // If more than 20% of words are lore-heavy, apply lightening
+  if (loreDensity > 0.20) {
+    return lightenOverlyDenseLore(text);
+  }
+  
+  // If more than 15% but less than 20%, apply moderate lightening
+  if (loreDensity > 0.15) {
+    return moderatelyLightenLore(text);
+  }
+  
+  return text;
 }
 
 /**
- * Cleans up Air Nomad spiritual benefit descriptions
+ * Applies heavy lore lightening for very dense cultural language
  */
-export function cleanupSpiritualBenefit(benefit: string): string {
-  return benefit
-    // Fix spiritual terminology consistency
-    .replace(/chakra/gi, 'chakra')
-    .replace(/meditation/gi, 'meditation')
-    .replace(/enlightenment/gi, 'enlightenment')
-    .replace(/transcendence/gi, 'transcendence')
+function lightenOverlyDenseLore(text: string): string {
+  let lightened = text;
+  
+  // Apply heavy alternatives to reduce density
+  for (const [heavy, light] of Object.entries(LORE_ALTERNATIVES.heavy)) {
+    const regex = new RegExp(`\\b${heavy}\\b`, 'gi');
+    lightened = lightened.replace(regex, light);
+  }
+  
+  return lightened;
+}
+
+/**
+ * Applies moderate lore lightening for moderately dense cultural language
+ */
+function moderatelyLightenLore(text: string): string {
+  let lightened = text;
+  
+  // Count occurrences and only replace excess instances
+  for (const [heavy, light] of Object.entries(LORE_ALTERNATIVES.moderate)) {
+    const regex = new RegExp(`\\b${heavy}\\b`, 'gi');
+    const matches = text.match(regex) || [];
     
-    // Fix action verb patterns
-    .replace(/enhance/gi, 'enhances')
-    .replace(/promote/gi, 'promotes')
-    .replace(/stimulate/gi, 'stimulates')
-    .replace(/awaken/gi, 'awakens')
+    if (matches.length > 2) {
+      // Replace every third occurrence to reduce density gradually
+      let replacementCount = 0;
+      lightened = lightened.replace(regex, (match) => {
+        replacementCount++;
+        if (replacementCount % 3 === 0) {
+          return light;
+        }
+        return match;
+      });
+    }
+  }
+  
+  return lightened;
+}
+
+/**
+ * Detects excessive ritual language patterns for monitoring
+ * Returns density metrics for external analysis
+ */
+export function analyzeRitualDensity(text: string): {
+  density: number;
+  totalWords: number;
+  ritualWords: number;
+  needsLightening: boolean;
+} {
+  let totalRitualWords = 0;
+  const wordCount = text.split(/\s+/).length;
+  
+  for (const pattern of DENSE_LORE_PATTERNS) {
+    const matches = text.match(pattern) || [];
+    totalRitualWords += matches.length;
+  }
+  
+  const density = totalRitualWords / wordCount;
+  
+  return {
+    density,
+    totalWords: wordCount,
+    ritualWords: totalRitualWords,
+    needsLightening: density > 0.15
+  };
+}
+
+/**
+ * Applies specific Air Nomad contextual fixes based on common patterns
+ * Handles specific linguistic patterns unique to Air Nomad cuisine descriptions
+ */
+export function applyAirNomadContextualFixes(text: string): string {
+  return text
+    // Fix common Air Nomad phrase structures
+    .replace(/through the winds of/gi, 'through winds of')
+    .replace(/within the temples of/gi, 'within temples of')
+    .replace(/among the peaks of/gi, 'among peaks of')
+    .replace(/beneath the guidance of/gi, 'under guidance of')
     
-    // Fix spiritual benefit sentence structure
-    .replace(/^([a-z])/g, (match) => match.toUpperCase())
-    .replace(/\s+/g, ' ')
-    .trim();
+    // Fix meditation and spiritual context
+    .replace(/during moments of deep meditation/gi, 'during deep meditation')
+    .replace(/through practices of mindful/gi, 'through mindful')
+    .replace(/in states of spiritual/gi, 'in spiritual')
+    
+    // Fix ingredient context specifics
+    .replace(/gathered from the sacred/gi, 'gathered from sacred')
+    .replace(/blessed by the temple/gi, 'blessed by temple')
+    .replace(/prepared with the wisdom/gi, 'prepared with wisdom')
+    
+    // Simplify overly complex constructions
+    .replace(/in accordance with the ancient traditions of/gi, 'following ancient traditions of')
+    .replace(/through the application of traditional/gi, 'through traditional')
+    .replace(/by means of the sacred/gi, 'by sacred');
 } 

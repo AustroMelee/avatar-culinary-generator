@@ -5,6 +5,7 @@ import {
   AirNomadIngredient, 
   IngredientRarity 
 } from '../types.js';
+import { RARITY_CURVES, TECHNIQUE_IDS } from './composition-constants.js';
 
 /**
  * Universal dish composition constants applicable across all nations
@@ -187,237 +188,292 @@ export const NATION_CULINARY_PROFILES: Record<string, NationCulinaryProfile> = {
 } as const;
 
 /**
+ * ENHANCED: Rarity distribution system with dynamic curves
+ * Selects random rarity patterns to vary dish composition across generations
+ */
+export function selectRarityCurve(): [number, number, number, number] {
+  const randomIndex = Math.floor(Math.random() * RARITY_CURVES.length);
+  return [...RARITY_CURVES[randomIndex]] as [number, number, number, number];
+}
+
+/**
+ * ENHANCED: Applies dynamic rarity curve to ingredient selection
+ * Uses selected curve to weight ingredient rarity distribution
+ */
+export function applyRarityCurveWeighting<T extends AirNomadIngredient>(
+  ingredients: T[], 
+  curve: [number, number, number, number]
+): T[] {
+  const [commonWeight, uncommonWeight, rareWeight, legendaryWeight] = curve;
+  
+  // Create weighted pool based on the curve
+  const weightedPool: T[] = [];
+  
+  for (const ingredient of ingredients) {
+    let weight = 0;
+    switch (ingredient.rarity) {
+      case 'common':
+        weight = commonWeight;
+        break;
+      case 'uncommon':
+        weight = uncommonWeight;
+        break;
+      case 'rare':
+        weight = rareWeight;
+        break;
+      case 'legendary':
+        weight = legendaryWeight;
+        break;
+    }
+    
+    // Add ingredient to pool based on its weight
+    for (let i = 0; i < weight; i++) {
+      weightedPool.push(ingredient);
+    }
+  }
+  
+  return weightedPool;
+}
+
+/**
+ * ENHANCED: Technique selection with expanded pool
+ * Includes new techniques from the expanded TECHNIQUE_IDS list
+ */
+export function selectTechniqueFromExpandedPool<TTechnique extends { name: string }>(
+  techniques: TTechnique[]
+): TTechnique {
+  // Filter techniques to include only those in the expanded pool
+  const expandedTechniques = techniques.filter(technique => 
+    TECHNIQUE_IDS.some(id => 
+      technique.name.toLowerCase().replace(/[\s-]/g, '-') === id ||
+      technique.name.toLowerCase().includes(id.replace(/-/g, ' '))
+    )
+  );
+  
+  // If we have expanded techniques available, use them
+  if (expandedTechniques.length > 0) {
+    const randomIndex = Math.floor(Math.random() * expandedTechniques.length);
+    return expandedTechniques[randomIndex];
+  }
+  
+  // Fallback to original pool if expanded techniques not available
+  const randomIndex = Math.floor(Math.random() * techniques.length);
+  return techniques[randomIndex];
+}
+
+/**
  * Factory for creating nation and dish-type specific composition rules
  * Provides standardized rule generation with customization options
  */
 export class DishCompositionRuleFactory {
   /**
-   * Creates composition rules for a specific nation and dish type
-   * Combines universal templates with nation-specific preferences
+   * ENHANCED: Creates composition rules with dynamic rarity curves
+   * Combines universal templates with nation-specific preferences and rarity variation
    */
   static createRulesForNationAndDishType(
     nationKey: string, 
     dishType: DishType,
-    customOverrides?: Partial<DishCompositionRules>
+    useVariedRarity: boolean = true
   ): DishCompositionRules {
     const profile = NATION_CULINARY_PROFILES[nationKey];
     if (!profile) {
-      throw new Error(`DishCompositionRuleFactory: Unknown nation key '${nationKey}'`);
+      throw new Error(`Unknown nation profile: ${nationKey}`);
     }
 
     const template = UNIVERSAL_DISH_TEMPLATES[dishType];
     if (!template) {
-      throw new Error(`DishCompositionRuleFactory: Unknown dish type '${dishType}'`);
+      throw new Error(`Unknown dish type: ${dishType}`);
     }
 
-    // Determine sacred/legendary limits based on dish type
-    const isSpecialOccasion = dishType === 'ceremonial_offering';
-    const sacredLimit = isSpecialOccasion 
-      ? profile.sacredIngredientLimits.ceremonial 
-      : profile.sacredIngredientLimits.regular;
-    const legendaryLimit = isSpecialOccasion 
-      ? profile.legendaryIngredientLimits.ceremonial 
-      : profile.legendaryIngredientLimits.regular;
+    const ingredientCounts = UNIVERSAL_COMPOSITION_CONSTANTS.INGREDIENT_COUNTS[dishType];
+    
+    // Select rarity curve for this dish if variation is enabled
+    const selectedCurve = useVariedRarity ? selectRarityCurve() : [1, 1, 1, 1] as [number, number, number, number];
 
-    const baseRules: DishCompositionRules = {
+    return {
       requiredRoles: template.requiredRoles,
       optionalRoles: template.optionalRoles,
       maxIngredientsPerRole: template.maxIngredientsPerRole,
-      maxSacredIngredients: sacredLimit,
-      maxLegendaryIngredients: legendaryLimit,
+      maxSacredIngredients: profile.sacredIngredientLimits.regular,
+      maxLegendaryIngredients: profile.legendaryIngredientLimits.regular,
+      enforceVegetarian: profile.enforceVegetarian,
       culturalWeightThreshold: profile.culturalWeightThreshold,
-      enforceVegetarian: profile.enforceVegetarian
+      ingredientCount: ingredientCounts,
+      rarityDistribution: {
+        common: selectedCurve[0],
+        uncommon: selectedCurve[1], 
+        rare: selectedCurve[2],
+        legendary: selectedCurve[3]
+      },
+      culturalWeightBias: profile.culturalWeightBias,
+      allowedRarities: profile.allowedRarities,
+      sacredIngredientLimits: profile.sacredIngredientLimits,
+      legendaryIngredientLimits: profile.legendaryIngredientLimits,
+      excludedIngredients: profile.excludedIngredients || [],
+      preferredRoles: profile.preferredRoles
     };
-
-    // Apply any custom overrides
-    return customOverrides ? { ...baseRules, ...customOverrides } : baseRules;
   }
 
   /**
-   * Creates Air Nomad specific composition rules
-   * Enforces vegetarian restrictions and high cultural standards
+   * Creates Air Nomad specific rules with enhanced rarity variation
    */
-  static createAirNomadRules(dishType: DishType): DishCompositionRules {
-    return this.createRulesForNationAndDishType('air_nomads', dishType);
+  static createAirNomadRules(dishType: DishType, useVariedRarity: boolean = true): DishCompositionRules {
+    return this.createRulesForNationAndDishType('air_nomads', dishType, useVariedRarity);
   }
 }
 
-/**
- * Utility class for filtering ingredients based on composition rules
- * Provides consistent filtering logic across all generators
- */
 export class IngredientFilterUtils {
   /**
-   * Filters ingredients based on nation profile and dish type requirements
-   * Applies dietary restrictions, cultural thresholds, and rarity limits
+   * ENHANCED: Filters ingredients by nation profile with rarity curve support
    */
   static filterByNationProfile<T extends AirNomadIngredient>(
     ingredients: T[], 
-    nationKey: string
+    nationKey: string,
+    applyCurve: boolean = false,
+    selectedCurve?: [number, number, number, number]
     // dishType: DishType = 'main_course' // Available for future dish-type specific filtering
   ): T[] {
     const profile = NATION_CULINARY_PROFILES[nationKey];
     if (!profile) {
-      throw new Error(`IngredientFilterUtils: Unknown nation key '${nationKey}'`);
+      throw new Error(`Unknown nation profile: ${nationKey}`);
     }
 
-    let filtered = [...ingredients];
+    let filtered = ingredients.filter(ingredient => {
+      // Apply vegetarian filter if enforced
+      if (profile.enforceVegetarian && this.isMeatProduct(ingredient)) {
+        return false;
+      }
 
-    // Apply dietary restrictions
-    if (profile.enforceVegetarian && profile.excludedIngredients) {
-      filtered = filtered.filter(ingredient => 
-        !profile.excludedIngredients!.includes(ingredient.name)
-      );
+      // Apply excluded ingredients filter
+      if (profile.excludedIngredients?.includes(ingredient.name)) {
+        return false;
+      }
+
+      // Apply rarity filter
+      if (!profile.allowedRarities.includes(ingredient.rarity)) {
+        return false;
+      }
+
+      return true;
+    });
+
+    // Apply cultural weight bias
+    filtered = this.applyCulturalWeightBias(filtered, profile.culturalWeightBias);
+
+    // Apply rarity curve if requested
+    if (applyCurve && selectedCurve) {
+      filtered = applyRarityCurveWeighting(filtered, selectedCurve);
     }
-
-    // Apply cultural weight threshold
-    filtered = filtered.filter(ingredient => 
-      ingredient.culturalWeight >= profile.culturalWeightThreshold
-    );
-
-    // Apply rarity restrictions
-    filtered = filtered.filter(ingredient => 
-      profile.allowedRarities.includes(ingredient.rarity)
-    );
-
-    // Note: Role preferences are available for future implementation
-    // Currently, all roles are needed for balanced dish composition
-    // The preferredRoles setting could be used for weighted selection in the future
 
     return filtered;
   }
 
   /**
-   * Applies cultural weight bias to ingredient selection probability
-   * Higher cultural weight ingredients become more likely to be selected
+   * Determines if an ingredient is a meat product for vegetarian filtering
+   */
+  private static isMeatProduct<T extends AirNomadIngredient>(ingredient: T): boolean {
+    const meatKeywords = ['meat', 'fish', 'chicken', 'beef', 'pork', 'lamb', 'seafood', 'egg'];
+    const ingredientName = ingredient.name.toLowerCase();
+    
+    return meatKeywords.some(keyword => ingredientName.includes(keyword));
+  }
+
+  /**
+   * Applies cultural weight bias to ingredient selection
+   * Enhances probability of selecting culturally appropriate ingredients
    */
   static applyCulturalWeightBias<T extends AirNomadIngredient>(
     ingredients: T[], 
     biasMultiplier: number
   ): T[] {
-    if (biasMultiplier === 1.0) {
-      return ingredients; // No bias applied
+    if (biasMultiplier <= 1.0) {
+      return ingredients;
     }
 
-    const biased: T[] = [];
+    const biasedPool: T[] = [...ingredients];
     
-    for (const ingredient of ingredients) {
-      const weight = ingredient.culturalWeight;
-      const normalizedWeight = weight / 10; // Normalize to 0-1 range
-      const biasMultiplier_actual = Math.pow(normalizedWeight, biasMultiplier - 1);
-      const copies = Math.max(1, Math.round(biasMultiplier_actual * 3)); // 1-3 copies
-      
-      for (let i = 0; i < copies; i++) {
-        biased.push(ingredient);
+    // Add extra copies of high cultural weight ingredients
+    ingredients.forEach(ingredient => {
+      if (ingredient.culturalWeight >= 7.0) {
+        const extraCopies = Math.floor(biasMultiplier);
+        for (let i = 0; i < extraCopies; i++) {
+          biasedPool.push(ingredient);
+        }
       }
-    }
+    });
 
-    return biased;
+    return biasedPool;
   }
 
   /**
-   * Validates ingredient against composition constraints
-   * Checks sacred/legendary limits and compatibility
+   * ENHANCED: Validates ingredient constraints with rarity curve awareness
    */
   static validateIngredientConstraints<T extends AirNomadIngredient>(
     ingredient: T,
     currentSelection: T[],
     rules: DishCompositionRules,
-    allowLegendaryIngredients: boolean
+    allowLegendaryIngredients: boolean,
+    respectRarityCurve: boolean = false
   ): boolean {
-    // Check legendary ingredient limit
-    if (ingredient.rarity === 'legendary') {
-      if (!allowLegendaryIngredients) return false;
-      
-      const currentLegendaryCount = currentSelection.filter(ing => ing.rarity === 'legendary').length;
-      if (currentLegendaryCount >= rules.maxLegendaryIngredients) {
-        return false;
-      }
+    // Basic role constraint validation
+    const currentRoleCount = currentSelection.filter(ing => ing.role === ingredient.role).length;
+    const maxForRole = rules.maxIngredientsPerRole[ingredient.role] || 0;
+    
+    if (currentRoleCount >= maxForRole) {
+      return false;
     }
 
-    // Check sacred ingredient limit
+    // Sacred ingredient limits
     if (ingredient.isSacred) {
       const currentSacredCount = currentSelection.filter(ing => ing.isSacred).length;
-      if (currentSacredCount >= rules.maxSacredIngredients) {
+      if (currentSacredCount >= rules.sacredIngredientLimits.regular) {
         return false;
       }
     }
 
-    // Check for duplicates
-    if (currentSelection.some(existing => existing.name === ingredient.name)) {
-      return false;
+    // Legendary ingredient limits
+    if (ingredient.rarity === 'legendary') {
+      if (!allowLegendaryIngredients) {
+        return false;
+      }
+      
+      const currentLegendaryCount = currentSelection.filter(ing => ing.rarity === 'legendary').length;
+      if (currentLegendaryCount >= rules.legendaryIngredientLimits.regular) {
+        return false;
+      }
+    }
+
+    // Rarity curve constraints (if enabled)
+    if (respectRarityCurve && rules.rarityDistribution) {
+      const rarityWeight = rules.rarityDistribution[ingredient.rarity];
+      if (rarityWeight === 0) {
+        return false; // This rarity is not allowed in the current curve
+      }
     }
 
     return true;
   }
 }
 
-/**
- * Validation utility for dish composition analysis
- * Provides comprehensive validation and analysis tools
- */
 export class DishCompositionValidator {
   /**
-   * Validates a complete dish composition against composition rules
-   * Throws descriptive errors if validation fails
+   * Validates complete dish composition against rules
    */
   static validateComposition<T extends AirNomadIngredient>(
     ingredients: T[],
     rules: DishCompositionRules,
     dishName: string = 'dish'
   ): void {
-    // Check required roles
-    for (const requiredRole of rules.requiredRoles) {
-      const hasRole = ingredients.some(ingredient => ingredient.role === requiredRole);
-      if (!hasRole) {
-        throw new Error(`${dishName}: Missing required ingredient role '${requiredRole}'`);
-      }
-    }
-
-    // Check role limits
-    const roleCounts: Partial<Record<IngredientRole, number>> = {};
-    for (const ingredient of ingredients) {
-      roleCounts[ingredient.role] = (roleCounts[ingredient.role] || 0) + 1;
-    }
-
-    for (const [role, count] of Object.entries(roleCounts)) {
-      const maxAllowed = rules.maxIngredientsPerRole[role as IngredientRole];
-      if (count > maxAllowed) {
-        throw new Error(`${dishName}: Too many '${role}' ingredients (${count}), maximum allowed is ${maxAllowed}`);
-      }
-    }
-
-    // Check sacred ingredient limit
-    const sacredCount = ingredients.filter(ingredient => ingredient.isSacred).length;
-    if (sacredCount > rules.maxSacredIngredients) {
-      throw new Error(`${dishName}: Too many sacred ingredients (${sacredCount}), maximum allowed is ${rules.maxSacredIngredients}`);
-    }
-
-    // Check legendary ingredient limit
-    const legendaryCount = ingredients.filter(ingredient => ingredient.rarity === 'legendary').length;
-    if (legendaryCount > rules.maxLegendaryIngredients) {
-      throw new Error(`${dishName}: Too many legendary ingredients (${legendaryCount}), maximum allowed is ${rules.maxLegendaryIngredients}`);
-    }
-
-    // Check cultural weight threshold
-    const averageCulturalWeight = ingredients.reduce((sum, ingredient) => sum + ingredient.culturalWeight, 0) / ingredients.length;
-    if (averageCulturalWeight < rules.culturalWeightThreshold) {
-      throw new Error(`${dishName}: Average cultural weight (${averageCulturalWeight.toFixed(1)}) below threshold (${rules.culturalWeightThreshold})`);
-    }
-
-    // Check vegetarian enforcement
-    if (rules.enforceVegetarian) {
-      const nonVegetarianItems = ['Eggs', 'Egg Whites', 'Butter', 'Milk', 'Cream', 'Creamy Sauce', 'Milk Powder'];
-      const hasNonVegetarian = ingredients.some(ingredient => nonVegetarianItems.includes(ingredient.name));
-      if (hasNonVegetarian) {
-        throw new Error(`${dishName}: Non-vegetarian ingredients found with vegetarian enforcement enabled`);
-      }
+    const analysis = this.analyzeComposition(ingredients, rules);
+    
+    if (!analysis.isValid) {
+      const violations = analysis.violations.join('; ');
+      throw new Error(`Invalid dish composition for "${dishName}": ${violations}`);
     }
   }
 
   /**
-   * Analyzes dish composition and returns detailed metrics
-   * Provides insights into role distribution, cultural weight, and constraint adherence
+   * ENHANCED: Analyzes composition with rarity curve awareness
    */
   static analyzeComposition<T extends AirNomadIngredient>(
     ingredients: T[],
@@ -428,59 +484,64 @@ export class DishCompositionValidator {
     culturalWeightAverage: number;
     sacredCount: number;
     legendaryCount: number;
+    rarityDistribution: Record<IngredientRarity, number>;
     violations: string[];
   } {
     const violations: string[] = [];
-    
-    // Analyze role distribution
-    const roleDistribution: Record<IngredientRole, number> = {
-      main: 0,
-      vegetable: 0,
-      seasoning: 0,
-      sauce: 0,
-      garnish: 0,
-      base: 0,
-      protein: 0,
-      spice: 0,
-      fruit: 0,
-      liquid: 0
+    const roleDistribution: Record<IngredientRole, number> = {} as Record<IngredientRole, number>;
+    const rarityDistribution: Record<IngredientRarity, number> = {
+      common: 0,
+      uncommon: 0,
+      rare: 0,
+      legendary: 0
     };
-    
-    for (const ingredient of ingredients) {
+
+    // Initialize role counts
+    const allRoles: IngredientRole[] = ['main', 'vegetable', 'seasoning', 'sauce', 'garnish', 'base', 'protein', 'spice', 'fruit', 'liquid'];
+    allRoles.forEach(role => {
+      roleDistribution[role] = 0;
+    });
+
+    // Count ingredients by role and rarity
+    ingredients.forEach(ingredient => {
       roleDistribution[ingredient.role]++;
-    }
+      rarityDistribution[ingredient.rarity]++;
+    });
 
-    // Check required roles
-    for (const requiredRole of rules.requiredRoles) {
-      if (roleDistribution[requiredRole] === 0) {
-        violations.push(`Missing required role: ${requiredRole}`);
+    // Validate required roles
+    rules.requiredRoles.forEach(role => {
+      if (roleDistribution[role] === 0) {
+        violations.push(`Missing required role: ${role}`);
       }
-    }
+    });
 
-    // Check role limits
-    for (const [role, count] of Object.entries(roleDistribution)) {
-      const maxAllowed = rules.maxIngredientsPerRole[role as IngredientRole];
-      if (count > maxAllowed) {
-        violations.push(`Too many ${role} ingredients: ${count} (max: ${maxAllowed})`);
+    // Validate role limits
+    Object.entries(rules.maxIngredientsPerRole).forEach(([role, maxCount]) => {
+      const currentCount = roleDistribution[role as IngredientRole];
+      if (currentCount > maxCount) {
+        violations.push(`Too many ${role} ingredients: ${currentCount} > ${maxCount}`);
       }
-    }
+    });
 
     // Calculate metrics
-    const culturalWeightAverage = ingredients.reduce((sum, ing) => sum + ing.culturalWeight, 0) / ingredients.length;
+    const culturalWeightSum = ingredients.reduce((sum, ing) => sum + ing.culturalWeight, 0);
+    const culturalWeightAverage = ingredients.length > 0 ? culturalWeightSum / ingredients.length : 0;
     const sacredCount = ingredients.filter(ing => ing.isSacred).length;
     const legendaryCount = ingredients.filter(ing => ing.rarity === 'legendary').length;
 
-    // Check constraints
-    if (sacredCount > rules.maxSacredIngredients) {
-      violations.push(`Too many sacred ingredients: ${sacredCount} (max: ${rules.maxSacredIngredients})`);
-    }
-
-    if (legendaryCount > rules.maxLegendaryIngredients) {
-      violations.push(`Too many legendary ingredients: ${legendaryCount} (max: ${rules.maxLegendaryIngredients})`);
-    }
-
+    // Validate cultural weight threshold
     if (culturalWeightAverage < rules.culturalWeightThreshold) {
-      violations.push(`Cultural weight below threshold: ${culturalWeightAverage.toFixed(1)} (min: ${rules.culturalWeightThreshold})`);
+      violations.push(`Cultural weight too low: ${culturalWeightAverage.toFixed(1)} < ${rules.culturalWeightThreshold}`);
+    }
+
+    // Validate sacred limits
+    if (sacredCount > rules.sacredIngredientLimits.regular) {
+      violations.push(`Too many sacred ingredients: ${sacredCount} > ${rules.sacredIngredientLimits.regular}`);
+    }
+
+    // Validate legendary limits
+    if (legendaryCount > rules.legendaryIngredientLimits.regular) {
+      violations.push(`Too many legendary ingredients: ${legendaryCount} > ${rules.legendaryIngredientLimits.regular}`);
     }
 
     return {
@@ -489,6 +550,7 @@ export class DishCompositionValidator {
       culturalWeightAverage,
       sacredCount,
       legendaryCount,
+      rarityDistribution,
       violations
     };
   }

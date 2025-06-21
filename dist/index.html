@@ -4,29 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avatar Culinary Dish Generator</title>
-  <script type="module" crossorigin src="/assets/index-boiZRPss.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BKrroOZU.css">
+  <script type="module" crossorigin src="/assets/index-Col34jFF.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-By0QerIm.css">
 </head>
 <body>
     <div class="app">
         <header class="app-header">
-            <h1>🌪️ Avatar Culinary Dish Generator</h1>
-            <p>Culinary Dash Generator - Air Nomad Cuisine</p>
+            <img src="/assets/food-banner-DsYXXdgY.jpg" alt="Avatar Food Banner" class="food-banner">
+            <h1>Avatar Culinary Dish Generator</h1>
         </header>
         
+        <button id="theme-toggle" class="theme-icon">🌙</button>
+        
         <main class="app-main">
-            <div class="theme-controls">
-                <button id="theme-toggle" class="theme-button">🌙 Dark Theme</button>
-                <select id="nation-selector" class="nation-selector">
-                    <option value="air-nomads">🌿 Air Nomads</option>
-                    <option value="water-tribe">🌊 Water Tribe</option>
-                    <option value="earth-kingdom">🏔️ Earth Kingdom</option>
-                    <option value="fire-nation">🔥 Fire Nation</option>
-                </select>
+            <div class="nation-controls">
+                <div class="nation-symbols-left">
+                    <img src="/assets/air_nation-B2k_nS_3.png" alt="Air Nomads" class="decorative-symbol">
+                    <img src="/assets/air_nation-B2k_nS_3.png" alt="Air Nomads" class="decorative-symbol">
+                </div>
+                
+                <div class="custom-select-container">
+                    <div id="nation-selector" class="custom-nation-selector" data-value="air-nomads">
+                        <div class="selected-option">
+                            <div class="selected-option-content">
+                                <img src="/assets/air_nation-B2k_nS_3.png" alt="Air Nomads" class="nation-icon">
+                                <span>Air Nomads</span>
+                            </div>
+                            <div class="dropdown-arrow"></div>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="option" data-value="air-nomads">
+                                <img src="/assets/air_nation-B2k_nS_3.png" alt="Air Nomads" class="nation-icon">
+                                <span>Air Nomads</span>
+                            </div>
+                            <div class="option" data-value="water-tribe">
+                                <img src="/assets/water_nation-B7rWlJEQ.png" alt="Water Tribe" class="nation-icon">
+                                <span>Water Tribe</span>
+                            </div>
+                            <div class="option" data-value="earth-kingdom">
+                                <img src="/assets/earth_nation-C3FaE_j9.png" alt="Earth Kingdom" class="nation-icon">
+                                <span>Earth Kingdom</span>
+                            </div>
+                            <div class="option" data-value="fire-nation">
+                                <img src="/assets/fire_nation-BClEM4ky.png" alt="Fire Nation" class="nation-icon">
+                                <span>Fire Nation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nation-symbols-right">
+                    <img src="/assets/air_nation-B2k_nS_3.png" alt="Air Nomads" class="decorative-symbol">
+                    <img src="/assets/air_nation-B2k_nS_3.png" alt="Air Nomads" class="decorative-symbol">
+                </div>
             </div>
             
             <button id="generate-button" class="generator-button">
-                Generate Air Nomad Dish
+                Generate
+                <span class="ingredient-emoji-1">🥕</span>
+                <span class="ingredient-emoji-2">🍄</span>
+                <span class="ingredient-emoji-3">🌿</span>
+                <span class="ingredient-emoji-4">🥜</span>
+                <span class="ingredient-emoji-5">🫐</span>
+                <span class="ingredient-emoji-6">🍯</span>
             </button>
             
             <div id="dish-container"></div>

@@ -4,6 +4,29 @@ import type {
 } from '../types.js';
 
 /**
+ * ENHANCED NAMING CONSTANTS - Expanded thematic naming elements
+ * Provides rich vocabulary for varied and meaningful dish names
+ */
+const THEMATIC_PREFIXES = [
+  'Whispering', 'Celestial', 'Moonlit', 'Sky-borne', 'Sacred', 'Ancient', 
+  'Floating', 'Temple', 'Mountain', 'Wind-kissed', 'Spirit', 'Tranquil',
+  'Mystical', 'Ethereal', 'Divine', 'Blessed', 'Serene', 'Harmonious',
+  'Enlightened', 'Peaceful', 'Pure', 'Radiant', 'Golden', 'Silver'
+];
+
+const THEMATIC_SUFFIXES = [
+  'Harmony', 'Tranquility', 'Embrace', 'Zephyr', 'Serenity', 'Wisdom',
+  'Blessing', 'Meditation', 'Prayer', 'Reverie', 'Grace', 'Enlightenment',
+  'Sanctuary', 'Haven', 'Refuge', 'Journey', 'Path', 'Awakening',
+  'Balance', 'Unity', 'Peace', 'Clarity', 'Truth', 'Spirit'
+];
+
+const MIDDLE_WORDS = [
+  'Mountain', 'Cloud', 'Wind', 'Temple', 'Spirit', 'Sacred', 'Ancient',
+  'Mystic', 'Divine', 'Eternal', 'Flowing', 'Dancing', 'Soaring', 'Floating'
+];
+
+/**
  * Composes simple, canonical Avatar-style dish names that reflect the actual ingredients
  * Examples: "Pine Nut Noodles", "Fire Flakes", "Mushroom Carrot Stew"
  * Focuses on concise, memorable names that describe the unique dish composition
@@ -20,6 +43,12 @@ export function composeDishName(
   const legendaryIngredient = ingredients.find(ing => ing.rarity === 'legendary');
   if (legendaryIngredient) {
     return composeLegendaryName(legendaryIngredient, featuredIngredients, technique, dishType);
+  }
+  
+  // Check for rare ingredients for enhanced naming
+  const rareIngredient = ingredients.find(ing => ing.rarity === 'rare');
+  if (rareIngredient) {
+    return composeEnhancedName(featuredIngredients, technique, dishType);
   }
   
   // Create meaningful names based on the featured ingredients
@@ -62,6 +91,7 @@ function selectFeaturedIngredients(ingredients: AirNomadIngredient[]): AirNomadI
 
 /**
  * Creates legendary dish names with mystical touch but still descriptive
+ * Uses three-part naming: prefix + middle + base + suffix for epic feel
  */
 function composeLegendaryName(
   legendaryIngredient: AirNomadIngredient,
@@ -73,12 +103,43 @@ function composeLegendaryName(
   const otherIngredient = featuredIngredients.find(ing => ing !== legendaryIngredient);
   const otherName = otherIngredient ? getSimpleIngredientName(otherIngredient.name) : null;
   
+  // Use three-part epic naming for legendary dishes
+  const prefix = randomChoice(THEMATIC_PREFIXES);
+  const middle = randomChoice(MIDDLE_WORDS);
+  const suffix = randomChoice(THEMATIC_SUFFIXES);
+  
   const patterns = [
-    `Sacred ${legendaryName} ${dishType}`,
-    `Spirit ${legendaryName} ${otherName ? otherName + ' ' : ''}${dishType}`,
-    `Mystic ${legendaryName}${otherName ? ' ' + otherName : ''} ${dishType}`,
-    `Ancient ${legendaryName} ${dishType}`,
-    `Celestial ${dishType}`
+    `${prefix} ${middle} ${legendaryName} of ${suffix}`,
+    `${legendaryName} of ${prefix} ${suffix}`,
+    `${prefix} ${legendaryName} ${middle} ${dishType}`,
+    `Sacred ${legendaryName}${otherName ? ' ' + middle + ' ' + otherName : ''} of ${suffix}`,
+    `${prefix} ${middle} ${dishType} of ${suffix}`
+  ];
+  
+  return randomChoice(patterns);
+}
+
+/**
+ * Creates enhanced dish names for rare ingredients with moderate theming
+ */
+function composeEnhancedName(
+  featuredIngredients: AirNomadIngredient[],
+  technique: AirNomadCookingTechnique,
+  dishType: string
+): string {
+  const primaryName = getSimpleIngredientName(featuredIngredients[0].name);
+  const secondaryName = featuredIngredients.length > 1 ? getSimpleIngredientName(featuredIngredients[1].name) : null;
+  
+  // Add light theming for rare dishes
+  const prefix = randomChoice(THEMATIC_PREFIXES.slice(0, 12)); // Use first half for subtlety
+  const suffix = randomChoice(THEMATIC_SUFFIXES.slice(0, 12));
+  
+  const patterns = [
+    `${prefix} ${primaryName} ${dishType}`,
+    `${primaryName} of ${suffix}`,
+    `${prefix} ${primaryName}${secondaryName ? ' ' + secondaryName : ''}`,
+    `Temple ${primaryName}${secondaryName ? ' ' + secondaryName : ''} ${dishType}`,
+    `Mountain ${primaryName} ${dishType}`
   ];
   
   return randomChoice(patterns);
@@ -191,32 +252,44 @@ function getDishTypeFromTechnique(technique: AirNomadCookingTechnique): string {
     'Wind-Drying': ['Chips', 'Flakes', 'Crisps', 'Jerky'],
     'Float-Boiling': ['Soup', 'Broth', 'Stew', 'Porridge'],
     'Meditation Brewing': ['Tea', 'Brew', 'Elixir'],
-    'Sky-Roasting': ['Roast', 'Nuts', 'Crisps', 'Toast']
+    'Sky-Roasting': ['Roast', 'Nuts', 'Crisps', 'Toast'],
+    
+    // New technique mappings
+    'Wind-Roasted': ['Roast', 'Crisps', 'Toast'],
+    'Cloud-Fermented': ['Preserve', 'Ferment', 'Aged Dish'],
+    'Sun-Basked': ['Dried Dish', 'Concentrate', 'Essence'],
+    'Mist-Infused': ['Infusion', 'Tea', 'Elixir'],
+    'Temple-Smoked': ['Smoked Dish', 'Preserve', 'Jerky'],
+    'Prayer-Blessed': ['Blessed Dish', 'Offering', 'Sacred Meal'],
+    'Mountain-Cured': ['Cured Dish', 'Preserve', 'Aged Food'],
+    'Spirit-Touched': ['Sacred Dish', 'Spiritual Meal', 'Blessed Food']
   };
   
   const dishTypes = techniqueMap[technique.name] || ['Bowl', 'Dish', 'Meal'];
   return randomChoice(dishTypes);
 }
 
-/**
- * Gets simple technique names for dish naming
- */
 function getSimpleTechniqueName(technique: AirNomadCookingTechnique): string {
   const techniqueMap: Record<string, string> = {
-    'Steam-Whipping': 'Whipped',
-    'Whisper-Steaming': 'Steamed',
-    'Wind-Drying': 'Dried',
-    'Float-Boiling': 'Boiled',
+    'Steam-Whipping': 'Steamed',
+    'Whisper-Steaming': 'Gently Steamed',
+    'Wind-Drying': 'Wind-Dried',
+    'Float-Boiling': 'Simmered',
     'Meditation Brewing': 'Brewed',
-    'Sky-Roasting': 'Roasted'
+    'Sky-Roasting': 'Roasted',
+    'Wind-Roasted': 'Wind-Roasted',
+    'Cloud-Fermented': 'Fermented',
+    'Sun-Basked': 'Sun-Dried',
+    'Mist-Infused': 'Infused',
+    'Temple-Smoked': 'Smoked',
+    'Prayer-Blessed': 'Blessed',
+    'Mountain-Cured': 'Cured',
+    'Spirit-Touched': 'Spirit-Touched'
   };
   
   return techniqueMap[technique.name] || 'Prepared';
 }
 
-/**
- * Simple random choice helper
- */
 function randomChoice<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)];
 } 
