@@ -155,8 +155,8 @@ export class ProseComposer {
   }
 
   /**
-   * NEW: Generates enhanced descriptions using expanded fragment sets
-   * Rotates between texture, aroma, temperature, visual, sound, and emotional focus
+   * Generates enhanced description with sophisticated patterns for 5-star quality
+   * Eliminates repetitive structures and adds cultural depth
    */
   private generateEnhancedDescription(
     ingredients: AirNomadIngredient[], 
@@ -165,39 +165,129 @@ export class ProseComposer {
     const mainIngredient = ingredients.find(ing => ing.role === 'base') || ingredients[0];
     const rareIngredient = ingredients.find(ing => ing.rarity === 'legendary' || ing.rarity === 'rare');
     
-    // Rotate focus types to ensure variety
-    const focusTypes = ['texture', 'aroma', 'temperature', 'visual', 'sound', 'emotional'];
-    const selectedFocus = this.randomChoice(focusTypes);
+    // Enhanced focus fragments with cultural depth
+    const focusFragments = [
+      'each morsel flows like wind through prayer flags, light and meaningful',
+      'the preparation creates moments of perfect presence and mindful awareness',
+      'cooking creates a symphony like rain on temple roof tiles',
+      'the technique reveals hidden flavors that dance on the palate',
+      'each ingredient finds its perfect place in the harmonious whole',
+      'the process awakens natural flavors that nourish the soul',
+      'the method transforms simple elements into something transcendent',
+      'the preparation honors the spiritual path of nourishment',
+      'the technique embodies the wisdom of ancient culinary traditions',
+      'the process creates a bridge between earthly sustenance and spiritual nourishment',
+      'the cooking method reveals the hidden potential within each component',
+      'the technique ensures every bite carries the essence of mindful preparation',
+      'the process transforms ordinary ingredients into extraordinary experiences',
+      'the method celebrates the harmony between technique and intuition',
+      'the technique honors the natural properties of each element',
+      'the preparation creates a perfect balance of flavors and textures',
+      'the method demonstrates the art of mindful food preparation',
+      'the technique reveals the wisdom embedded in ancient practices',
+      'the process honors the sacred nature of nourishment',
+      'the method creates harmony between tradition and innovation',
+      'the technique ensures every element works in perfect harmony',
+      'the preparation reveals the hidden beauty of simple ingredients',
+      'the method creates moments of perfect culinary balance',
+      'the technique honors the sacred art of food preparation',
+      'the process transforms humble ingredients into divine nourishment',
+      'the technique reveals the hidden potential of each ingredient',
+      'the method creates a symphony of flavors and textures',
+      'the process honors the wisdom of ancient cooking methods',
+      'the technique ensures perfect balance in every aspect',
+      'the method reveals the essence of mindful preparation'
+    ];
     
-    let focusFragment = '';
-    switch (selectedFocus) {
-      case 'texture':
-        focusFragment = this.fragmentCache.selectUniqueFragment(TEXTURE_FOCUSED_FRAGMENTS);
-        break;
-      case 'aroma':
-        focusFragment = this.fragmentCache.selectUniqueFragment(AROMA_FOCUSED_FRAGMENTS);
-        break;
-      case 'temperature':
-        focusFragment = this.fragmentCache.selectUniqueFragment(TEMPERATURE_FOCUSED_FRAGMENTS);
-        break;
-      case 'visual':
-        focusFragment = this.fragmentCache.selectUniqueFragment(VISUAL_FOCUSED_FRAGMENTS);
-        break;
-      case 'sound':
-        focusFragment = this.fragmentCache.selectUniqueFragment(SOUND_FOCUSED_FRAGMENTS);
-        break;
-      case 'emotional':
-        focusFragment = this.fragmentCache.selectUniqueFragment(EMOTIONAL_FOCUSED_FRAGMENTS);
-        break;
-    }
+    const focusFragment = this.fragmentCache.selectUniqueFragment(focusFragments);
     
-    // First sentence: ingredient introduction with focus element
-    const firstSentence = rareIngredient 
-      ? `This sacred creation features ${rareIngredient.name}, where ${focusFragment}.`
-      : `A masterful blend of ${mainIngredient.name} and complementary ingredients creates a dish where ${focusFragment}.`;
+    // SOPHISTICATED FIRST SENTENCE PATTERNS for 5-star quality
+    const firstSentencePatterns = rareIngredient 
+      ? [
+          `This sacred creation features ${rareIngredient.name}, where ${focusFragment}.`,
+          `A transcendent dish showcases the mystical ${rareIngredient.name}, where ${focusFragment}.`,
+          `The legendary ${rareIngredient.name} takes center stage in this dish, where ${focusFragment}.`,
+          `This divine offering highlights the rare ${rareIngredient.name}, where ${focusFragment}.`,
+          `A blessed preparation celebrates the extraordinary ${rareIngredient.name}, where ${focusFragment}.`,
+          `This holy creation honors the sacred ${rareIngredient.name}, where ${focusFragment}.`,
+          `A spiritual dish reveals the mystical ${rareIngredient.name}, where ${focusFragment}.`,
+          `This consecrated preparation features the divine ${rareIngredient.name}, where ${focusFragment}.`,
+          `This sacred dish showcases the legendary ${rareIngredient.name}, where ${focusFragment}.`,
+          `A divine creation honors the mystical ${rareIngredient.name}, where ${focusFragment}.`
+        ]
+      : [
+          `A masterful blend of ${mainIngredient.name} and complementary ingredients creates a dish where ${focusFragment}.`,
+          `This harmonious preparation combines ${mainIngredient.name} with carefully selected companions, where ${focusFragment}.`,
+          `The gentle art of combining ${mainIngredient.name} with supporting elements yields a dish where ${focusFragment}.`,
+          `Through mindful selection, ${mainIngredient.name} joins with other ingredients to create a dish where ${focusFragment}.`,
+          `This carefully crafted dish brings together ${mainIngredient.name} and complementary flavors, where ${focusFragment}.`,
+          `A thoughtful composition of ${mainIngredient.name} and harmonious elements produces a dish where ${focusFragment}.`,
+          `The sacred practice of combining ${mainIngredient.name} with other ingredients results in a dish where ${focusFragment}.`,
+          `This mindful creation unites ${mainIngredient.name} with carefully chosen companions, where ${focusFragment}.`,
+          `A balanced preparation of ${mainIngredient.name} and supporting ingredients creates a dish where ${focusFragment}.`,
+          `This refined combination of ${mainIngredient.name} and complementary elements forms a dish where ${focusFragment}.`,
+          `A skillful blend of ${mainIngredient.name} and other ingredients creates a dish where ${focusFragment}.`,
+          `This elegant preparation of ${mainIngredient.name} with supporting elements produces a dish where ${focusFragment}.`,
+          `A mindful combination of ${mainIngredient.name} and harmonious ingredients creates a dish where ${focusFragment}.`,
+          `This artful blend of ${mainIngredient.name} with complementary elements forms a dish where ${focusFragment}.`,
+          `A careful selection of ${mainIngredient.name} and supporting ingredients creates a dish where ${focusFragment}.`,
+          `This spiritual preparation of ${mainIngredient.name} with sacred elements creates a dish where ${focusFragment}.`,
+          `A divine combination of ${mainIngredient.name} and blessed ingredients creates a dish where ${focusFragment}.`,
+          `This holy blend of ${mainIngredient.name} with consecrated elements forms a dish where ${focusFragment}.`,
+          `This sacred preparation of ${mainIngredient.name} with spiritual elements creates a dish where ${focusFragment}.`,
+          `A blessed combination of ${mainIngredient.name} and divine ingredients creates a dish where ${focusFragment}.`
+        ];
     
-    // Second sentence: technique and result
-    const secondSentence = `Through ${technique.name.toLowerCase()}, the harmony achieves perfect balance, nourishing both body and spirit.`;
+    const firstSentence = this.randomChoice(firstSentencePatterns);
+    
+    // SOPHISTICATED SECOND SENTENCE PATTERNS for 5-star quality
+    const secondSentencePatterns = [
+      `Through ${technique.name.toLowerCase()}, the harmony achieves perfect balance, nourishing both body and spirit.`,
+      `The ${technique.name.toLowerCase()} method transforms these ingredients into a harmonious whole that sustains the soul.`,
+      `Using the ancient ${technique.name.toLowerCase()} technique, each element finds its perfect place in the final creation.`,
+      `The ${technique.name.toLowerCase()} process awakens the natural flavors, creating a dish that feeds both hunger and spirit.`,
+      `Through careful ${technique.name.toLowerCase()}, the ingredients unite in a symphony of taste and texture.`,
+      `The ${technique.name.toLowerCase()} method reveals the hidden potential within each component.`,
+      `Applying the ${technique.name.toLowerCase()} technique, the dish emerges as a testament to Air Nomad culinary wisdom.`,
+      `The ${technique.name.toLowerCase()} process ensures every bite carries the essence of mindful preparation.`,
+      `Through the ${technique.name.toLowerCase()} method, simple ingredients become something transcendent.`,
+      `The ${technique.name.toLowerCase()} technique honors the natural properties of each element.`,
+      `This ${technique.name.toLowerCase()} approach creates a bridge between tradition and innovation.`,
+      `The ${technique.name.toLowerCase()} method embodies the patience and precision of monastic cooking.`,
+      `Through ${technique.name.toLowerCase()}, the dish becomes a meditation on the art of nourishment.`,
+      `The ${technique.name.toLowerCase()} technique transforms ordinary ingredients into extraordinary experiences.`,
+      `This ${technique.name.toLowerCase()} process celebrates the harmony between technique and intuition.`,
+      `The ${technique.name.toLowerCase()} method reveals the wisdom embedded in ancient culinary practices.`,
+      `Through ${technique.name.toLowerCase()}, each ingredient contributes to a greater whole.`,
+      `The ${technique.name.toLowerCase()} technique demonstrates the art of mindful food preparation.`,
+      `This ${technique.name.toLowerCase()} process honors the sacred nature of nourishment.`,
+      `The ${technique.name.toLowerCase()} method creates a perfect balance of flavors and textures.`,
+      `The ${technique.name.toLowerCase()} technique ensures every element works in perfect harmony.`,
+      `Through ${technique.name.toLowerCase()}, the dish achieves its full potential.`,
+      `The ${technique.name.toLowerCase()} method creates a symphony of flavors and textures.`,
+      `This ${technique.name.toLowerCase()} process transforms simple ingredients into culinary art.`,
+      `The ${technique.name.toLowerCase()} technique honors the wisdom of ancient cooking methods.`,
+      `The ${technique.name.toLowerCase()} method reveals the sacred nature of food preparation.`,
+      `Through ${technique.name.toLowerCase()}, the dish becomes a celebration of culinary wisdom.`,
+      `The ${technique.name.toLowerCase()} technique creates harmony between all elements.`,
+      `This ${technique.name.toLowerCase()} process honors the divine nature of nourishment.`,
+      `The ${technique.name.toLowerCase()} method ensures perfect balance in every aspect.`,
+      `Through ${technique.name.toLowerCase()}, the dish embodies culinary excellence.`,
+      `The ${technique.name.toLowerCase()} technique reveals the hidden potential of ingredients.`,
+      `This ${technique.name.toLowerCase()} process creates moments of perfect harmony.`,
+      `The ${technique.name.toLowerCase()} method honors the sacred art of cooking.`,
+      `Through ${technique.name.toLowerCase()}, the dish becomes a work of culinary art.`,
+      `The ${technique.name.toLowerCase()} technique ensures every bite is perfect.`,
+      `This ${technique.name.toLowerCase()} process creates a symphony of flavors.`,
+      `The ${technique.name.toLowerCase()} method reveals the essence of mindful cooking.`,
+      `The ${technique.name.toLowerCase()} technique creates perfect harmony in every element.`,
+      `Through ${technique.name.toLowerCase()}, the dish achieves culinary perfection.`,
+      `The ${technique.name.toLowerCase()} method honors the wisdom of ancient traditions.`,
+      `This ${technique.name.toLowerCase()} process creates divine nourishment.`,
+      `The ${technique.name.toLowerCase()} technique reveals the sacred nature of ingredients.`
+    ];
+    
+    const secondSentence = this.randomChoice(secondSentencePatterns);
     
     return `${firstSentence} ${secondSentence}`;
   }
@@ -246,6 +336,7 @@ export class ProseComposer {
 
   /**
    * Generates moderate lore (15-25 words) for balanced cultural context
+   * Enhanced with sophisticated cultural patterns for 5-star quality
    */
   private generateModerateLore(
     ingredients: AirNomadIngredient[], 
@@ -261,7 +352,51 @@ export class ProseComposer {
     const temples = ['Eastern Air Temple', 'Western Air Temple', 'Northern Air Temple', 'Southern Air Temple'];
     const selectedTemple = this.randomChoice(temples);
     
-    return `${baseFragment} At the ${selectedTemple}, this dish strengthens community bonds and honors tradition.`;
+    // SOPHISTICATED LORE ENDINGS for 5-star cultural depth
+    const loreEndings = [
+      `At the ${selectedTemple}, this dish strengthens community bonds and honors tradition.`,
+      `This recipe connects generations of Air Nomad wisdom at the ${selectedTemple}.`,
+      `The ${selectedTemple} preserves this preparation as a form of active meditation.`,
+      `Monks at the ${selectedTemple} cherish this dish for its spiritual significance.`,
+      `The ${selectedTemple} tradition holds this recipe as a bridge between past and present.`,
+      `This dish embodies the ${selectedTemple}'s commitment to mindful nourishment.`,
+      `The ${selectedTemple} serves this preparation during moments of spiritual reflection.`,
+      `This recipe represents the ${selectedTemple}'s dedication to culinary wisdom.`,
+      `The ${selectedTemple} tradition celebrates this dish as a symbol of harmony.`,
+      `This preparation honors the ${selectedTemple}'s ancient culinary heritage.`,
+      `The ${selectedTemple} monks prepare this dish as an offering to spiritual growth.`,
+      `This recipe reflects the ${selectedTemple}'s philosophy of mindful living.`,
+      `The ${selectedTemple} tradition views this dish as a meditation on nourishment.`,
+      `This preparation embodies the ${selectedTemple}'s reverence for natural ingredients.`,
+      `The ${selectedTemple} serves this dish as a reminder of life's simple pleasures.`,
+      `Monastic gatherings at the ${selectedTemple} strengthen bonds during shared meals.`,
+      `The ${selectedTemple} tradition of celebrating this dish honors ancient wisdom.`,
+      `This recipe represents the ${selectedTemple}'s time-honored custom of mindful preparation.`,
+      `The ${selectedTemple} preserves this dish as a testament to spiritual nourishment.`,
+      `This preparation reflects the ${selectedTemple}'s commitment to culinary excellence.`,
+      `The ${selectedTemple} tradition honors this dish as a symbol of peace and harmony.`,
+      `This recipe embodies the ${selectedTemple}'s dedication to mindful cooking.`,
+      `The ${selectedTemple} serves this preparation as a celebration of culinary art.`,
+      `This dish represents the ${selectedTemple}'s wisdom in food preparation.`,
+      `The ${selectedTemple} tradition cherishes this recipe as a gift of nourishment.`,
+      `This preparation honors the ${selectedTemple}'s commitment to spiritual growth.`,
+      `The ${selectedTemple} monks view this dish as a meditation on sustenance.`,
+      `This recipe reflects the ${selectedTemple}'s reverence for natural ingredients.`,
+      `Temple family gatherings at the ${selectedTemple} strengthen community bonds.`,
+      `The ${selectedTemple} tradition honors this dish as a symbol of unity.`,
+      `This recipe represents the ${selectedTemple}'s dedication to spiritual nourishment.`,
+      `The ${selectedTemple} monks celebrate this dish as a gift of wisdom.`,
+      `This preparation embodies the ${selectedTemple}'s commitment to harmony.`,
+      `The ${selectedTemple} tradition views this dish as a meditation on community.`,
+      `This recipe honors the ${selectedTemple}'s ancient culinary wisdom.`,
+      `The ${selectedTemple} serves this dish as a celebration of spiritual growth.`,
+      `This preparation reflects the ${selectedTemple}'s reverence for mindful cooking.`,
+      `The ${selectedTemple} tradition cherishes this dish as a symbol of peace.`
+    ];
+    
+    const selectedEnding = this.randomChoice(loreEndings);
+    
+    return `${baseFragment} ${selectedEnding}`;
   }
 
   /**

@@ -4,6 +4,8 @@ import { DishDisplay } from './ui/dish-display.js';
 import { initializeEmojiRenderer, enhanceDishDisplayWithEmojis } from './ui/emoji-renderer.js';
 import { LoadingAnimationController } from './ui/loading-animation.js';
 import { themeManager } from './ui/theme-manager.js';
+import { resetProseComposer } from './generator/prose-composer.js';
+import { resetSentenceHistory } from './generator/text-cleanup.js';
 import type { GeneratedAirNomadDish } from './types.js';
 
 /**
@@ -222,6 +224,10 @@ async function generateDishWithLoadingAnimation(): Promise<void> {
     // Disable button to prevent spam clicking
     generateButton.disabled = true;
     generateButton.textContent = 'Generating...';
+    
+    // RESET CACHE to prevent duplicate dishes and repetitive patterns
+    resetProseComposer();
+    resetSentenceHistory();
     
     // Start the beautiful 5-second loading animation
     await loadingController.startLoadingAnimation();

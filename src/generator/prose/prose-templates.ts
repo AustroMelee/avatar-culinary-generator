@@ -353,4 +353,110 @@ export class ProseTemplates {
     
     return cache.selectUniqueFragment(compositionPatterns);
   }
-} 
+}
+
+/**
+ * Enhanced focus fragments with cultural depth for 5-star quality
+ * Each category provides sophisticated, varied patterns that feel natural and authentic
+ */
+
+export const TEXTURE_FOCUSED_FRAGMENTS = [
+  'each morsel flows like wind through prayer flags, light and meaningful',
+  'the texture creates moments of perfect presence and mindful awareness',
+  'every bite carries the essence of mindful preparation',
+  'the mouthfeel embodies the wisdom of ancient culinary traditions',
+  'each component finds its perfect place in the harmonious whole',
+  'the texture awakens natural sensations that nourish the soul',
+  'the consistency transforms simple elements into something transcendent',
+  'the feel honors the spiritual path of nourishment',
+  'the texture creates a bridge between earthly sustenance and spiritual nourishment',
+  'each mouthful reveals hidden dimensions that dance on the palate'
+];
+
+export const AROMA_FOCUSED_FRAGMENTS = [
+  'fragrant vapors drift like morning mist across temple courtyards',
+  'aromatic essences awaken the senses with their mystical presence',
+  'the bouquet creates moments of perfect olfactory awareness',
+  'scented notes flow like wind through ancient meditation halls',
+  'fragrant aromas embody the wisdom of natural ingredients',
+  'the perfume awakens memories of peaceful mountain retreats',
+  'aromatic complexity reveals hidden dimensions of flavor',
+  'the fragrance honors the spiritual significance of nourishment',
+  'scented vapors create a bridge between physical and spiritual realms',
+  'the aroma transforms simple ingredients into transcendent experiences'
+];
+
+export const TEMPERATURE_FOCUSED_FRAGMENTS = [
+  'warmth spreads like gentle sunlight through the body',
+  'cooling sensations wash like mountain streams over the spirit',
+  'temperature creates moments of perfect thermal harmony',
+  'heat awakens natural flavors that dance on the palate',
+  'warmth embodies the comfort of ancient temple kitchens',
+  'coolness refreshes like morning dew on meditation gardens',
+  'temperature reveals hidden dimensions of ingredient potential',
+  'warmth honors the nurturing aspect of spiritual nourishment',
+  'thermal balance creates harmony between body and environment',
+  'temperature transforms simple sensations into profound experiences'
+];
+
+export const VISUAL_FOCUSED_FRAGMENTS = [
+  'golden hues shimmer like sunlight through temple windows',
+  'pristine presentation reflects the purity of monastic life',
+  'visual beauty creates moments of perfect aesthetic awareness',
+  'radiant appearance embodies the wisdom of natural harmony',
+  'each element finds its perfect place in the visual composition',
+  'beauty awakens appreciation for the artistry of nourishment',
+  'appearance transforms simple ingredients into visual poetry',
+  'the presentation honors the sacred nature of food preparation',
+  'visual harmony creates a bridge between art and sustenance',
+  'beauty reveals the hidden elegance of mindful cooking'
+];
+
+export const SOUND_FOCUSED_FRAGMENTS = [
+  'gentle sounds accompany preparation like wind through bamboo',
+  'cooking creates a symphony like rain on temple roof tiles',
+  'sounds create moments of perfect auditory awareness',
+  'acoustic elements embody the rhythm of monastic life',
+  'each sound finds its perfect place in the culinary orchestra',
+  'auditory cues awaken awareness of the cooking process',
+  'sounds transform simple preparation into musical meditation',
+  'acoustics honor the harmony of natural cooking methods',
+  'sound creates a bridge between technique and mindfulness',
+  'auditory elements reveal the hidden music of nourishment'
+];
+
+export const EMOTIONAL_FOCUSED_FRAGMENTS = [
+  'each bite creates moments of perfect emotional presence',
+  'flavors awaken feelings of peace and spiritual connection',
+  'the experience embodies the wisdom of mindful consumption',
+  'emotions flow like gentle streams through the consciousness',
+  'each morsel finds its perfect place in the emotional landscape',
+  'feelings awaken appreciation for the gift of nourishment',
+  'emotions transform simple eating into spiritual practice',
+  'the experience honors the sacred nature of food sharing',
+  'feelings create a bridge between physical and emotional nourishment',
+  'emotions reveal the hidden depths of culinary wisdom'
+];
+
+/**
+ * Enhanced moderate lore fragments with cultural depth
+ * Provides sophisticated base fragments for lore generation
+ */
+
+export const MODERATE_LORE_FRAGMENTS = [
+  'Sacred cooking methods honor the spiritual path of nourishment',
+  'Ancient traditions live on in temple kitchen practices',
+  'Meditation and mindfulness guide every step of preparation',
+  'Traditional wisdom shapes the art of ingredient selection',
+  'Spiritual practices inform the cooking process',
+  'Monastic heritage influences culinary techniques',
+  'Sacred knowledge guides the preparation methods',
+  'Ancient customs preserve the art of mindful cooking',
+  'Spiritual traditions enhance the cooking experience',
+  'Temple wisdom illuminates the path of nourishment',
+  'Sacred practices honor the natural properties of ingredients',
+  'Ancient methods celebrate the harmony of preparation',
+  'Spiritual guidance shapes the culinary journey',
+  'Traditional knowledge preserves the art of cooking',
+  'Sacred wisdom enhances the nourishment experience'
+]; 
