@@ -41,6 +41,7 @@ export interface DescriptionRule {
 export interface NamingRule {
     id: string;
     title: (context: DishContext) => string;
+    description: string; // Description of what this naming rule represents
     weighting: {
         fusion: boolean;
         minNations?: number;
