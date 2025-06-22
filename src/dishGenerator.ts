@@ -5,6 +5,10 @@ import { airNomadData, airNomadCookingStyles } from './airNomadData';
 import { airNomadIngredients } from './airNomadIngredients';
 import { waterTribeData, waterTribeCookingStyles } from './waterTribeData';
 import { waterTribeIngredients } from './waterTribeIngredients';
+import { earthKingdomData, earthKingdomCookingStyles } from './earthKingdomData';
+import { earthKingdomIngredients } from './earthKingdomIngredients';
+import { fireNationData, fireNationCookingStyles } from './fireNationData';
+import { fireNationIngredients } from './fireNationIngredients';
 import { TextGenerator } from './textGenerator';
 
 // A type for our recipe skeletons
@@ -21,8 +25,7 @@ const RECIPE_BLUEPRINTS: Record<DishType, RecipeSkeleton> = {
     'beverage': { fruit: 1, flavoring: 1 },
 };
 
-// *** NATION-AWARE ARCHITECTURE ***
-// This master map holds the specific culinary rules for each nation.
+// *** THE COMPLETED FOUR NATIONS CULINARY MAP ***
 const NATION_CULINARY_MAP: Record<Nation, Record<DishType, string[]>> = {
     'air-nomads': {
         'main-course': ['Baking', 'Steaming', 'Light Sauté', 'Simmering', 'Piemaking'],
@@ -42,24 +45,23 @@ const NATION_CULINARY_MAP: Record<Nation, Record<DishType, string[]>> = {
         'salad': ['Minimalist Assembly'], // For seaweed salads
         'beverage': ['Brewing'],
     },
-    // Future nations will be added here
     'earth-kingdom': {
-        'main-course': [],
-        'side-dish': [],
-        'snack': [],
-        'dessert': [],
-        'soup-stew': [],
-        'salad': [],
-        'beverage': [],
-    }, 
+        'main-course': ['Roasting', 'Stir-frying', 'Braising'],
+        'side-dish': ['Stir-frying', 'Pickling', 'Steaming'],
+        'snack': ['Dumpling Making', 'Steaming'], // Buns and dumplings
+        'dessert': ['Baking'], // Tarts and cakes
+        'soup-stew': ['Congee Making', 'Braising'],
+        'salad': ['Minimalist Assembly'],
+        'beverage': ['Brewing'], // Teas
+    },
     'fire-nation': {
-        'main-course': [],
-        'side-dish': [],
-        'snack': [],
-        'dessert': [],
-        'soup-stew': [],
-        'salad': [],
-        'beverage': [],
+        'main-course': ['Grilling', 'Roasting', 'Wok-frying'],
+        'side-dish': ['Steaming', 'Wok-frying'],
+        'snack': ['Grilling', 'Roasting'], // For skewers and flakes
+        'dessert': ['Baking'], // For tarts
+        'soup-stew': ['Simmering'],
+        'salad': ['Minimalist Assembly'], // Spicy salads
+        'beverage': ['Brewing'], // Spiced teas/drinks
     },
 };
 
@@ -114,6 +116,16 @@ export class DishGenerator {
                 this.nationData = waterTribeData;
                 this.ingredients = waterTribeIngredients;
                 this.cookingStyles = waterTribeCookingStyles;
+                break;
+            case 'earth-kingdom':
+                this.nationData = earthKingdomData;
+                this.ingredients = earthKingdomIngredients;
+                this.cookingStyles = earthKingdomCookingStyles;
+                break;
+            case 'fire-nation':
+                this.nationData = fireNationData;
+                this.ingredients = fireNationIngredients;
+                this.cookingStyles = fireNationCookingStyles;
                 break;
             default:
                 console.warn(`Data for nation "${nation}" not found, defaulting to Air Nomads.`);

@@ -44,19 +44,20 @@ export class UIManager {
    */
   private static attachEventListeners(): void {
     this.generateButton.addEventListener('click', this.handleGenerateClick.bind(this));
-    
-    // The toggle button now correctly calls the ThemeManager
     this.themeToggleButton.addEventListener('click', () => {
-        ThemeManager.toggleLightDark();
-        this.updateThemeUI();
+      ThemeManager.toggleLightDark();
+      this.updateThemeUI();
     });
-
-    // Add ONE global click listener to close all dropdowns when clicking outside
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.custom-nation-selector, .custom-dish-type-selector').forEach(el => {
-            el.querySelector('.selected-option')?.classList.remove('open');
-            el.querySelector('.dropdown-options')?.classList.remove('show');
+    // Only one global click handler for closing dropdowns
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const isDropdownClick = target.closest('.custom-nation-selector, .custom-dish-type-selector');
+      if (!isDropdownClick) {
+        document.querySelectorAll('.dropdown-options.show').forEach(el => {
+          el.classList.remove('show');
+          el.previousElementSibling?.classList.remove('open');
         });
+      }
     });
   }
 
@@ -191,7 +192,7 @@ export class UIManager {
     this.dishContainer.innerHTML = errorHTML;
   }
 
-  // --- REWRITTEN AND SIMPLIFIED DROPDOWN LOGIC ---
+  // --- BULLETPROOF DROPDOWN LOGIC ---
   private static setupCustomSelect(container: HTMLDivElement, onChange: (value: string) => void): void {
     const selectedOption = container.querySelector('.selected-option') as HTMLDivElement;
     const dropdownOptions = container.querySelector('.dropdown-options') as HTMLDivElement;
@@ -200,41 +201,46 @@ export class UIManager {
 
     if (!selectedOption || !dropdownOptions || !selectedContent) return;
 
-    // Handles OPENING the dropdown
+    // On init: set UI to match current value
+    const initialValue = container.dataset.value;
+    const initialOption = options.find(opt => opt.dataset.value === initialValue);
+    if (initialOption) {
+      selectedContent.innerHTML = initialOption.innerHTML;
+    }
+
+    // Open/close dropdown on click
     selectedOption.addEventListener('click', (e) => {
-        e.stopPropagation(); // Stop this click from reaching the document and closing the dropdown immediately
-        const isOpen = dropdownOptions.classList.contains('show');
-        
-        // First, close all other dropdowns
-        document.querySelectorAll('.dropdown-options.show').forEach(el => {
-            if (el !== dropdownOptions) {
-                el.classList.remove('show');
-                el.previousElementSibling?.classList.remove('open');
-            }
-        });
-
-        // Then, toggle the current one
-        selectedOption.classList.toggle('open');
-        dropdownOptions.classList.toggle('show');
+      e.stopPropagation();
+      // Close all other dropdowns
+      document.querySelectorAll('.dropdown-options.show').forEach(el => {
+        if (el !== dropdownOptions) {
+          el.classList.remove('show');
+          el.previousElementSibling?.classList.remove('open');
+        }
+      });
+      // Toggle this dropdown
+      selectedOption.classList.toggle('open');
+      dropdownOptions.classList.toggle('show');
     });
 
-    // Handles SELECTING an option
+    // Only update value/UI on option click
     options.forEach(option => {
-        option.addEventListener('click', (e) => {
-            e.stopPropagation(); // Crucial: Stop the click from bubbling up further
-            const newValue = option.dataset.value!;
-
-            // Update display and state only if the value has changed
-            if (container.dataset.value !== newValue) {
-                selectedContent.innerHTML = option.innerHTML;
-                container.dataset.value = newValue;
-                onChange(newValue);
-            }
-
-            // Close the dropdown
-            selectedOption.classList.remove('open');
-            dropdownOptions.classList.remove('show');
-        });
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const newValue = option.dataset.value!;
+        if (container.dataset.value !== newValue) {
+          selectedContent.innerHTML = option.innerHTML;
+          container.dataset.value = newValue;
+          onChange(newValue);
+        }
+        // Always close dropdown after selection
+        selectedOption.classList.remove('open');
+        dropdownOptions.classList.remove('show');
+      });
     });
+
+    // Prevent bubbling from dropdown content
+    dropdownOptions.addEventListener('click', (e) => e.stopPropagation());
+    selectedContent.addEventListener('click', (e) => e.stopPropagation());
   }
 }
