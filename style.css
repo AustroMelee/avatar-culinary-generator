@@ -163,13 +163,13 @@ body {
   box-shadow: var(--theme-shadow-heavy);
 }
 
-/* Dark mode theme icon styling - only when showing moon icon */
-body.theme-air-nomads.theme-light .theme-icon {
+/* Updated theme icon styling to work with data-theme attribute */
+body[data-theme='dark'] .theme-icon {
   background: linear-gradient(45deg, #000000, #1a1a2e);
   color: #FFD54F;
 }
 
-body.theme-air-nomads.theme-light .theme-icon:hover {
+body[data-theme='dark'] .theme-icon:hover {
   background: linear-gradient(45deg, #1a1a2e, #2d2d5a);
 }
 
@@ -192,8 +192,6 @@ body.theme-air-nomads.theme-light .theme-icon:hover {
   z-index: 2001;
   isolation: isolate;
 }
-
-
 
 /* Decorative Nation Symbols */
 .nation-symbols-left,
@@ -583,8 +581,6 @@ body.theme-air-nomads.theme-light .theme-icon:hover {
 .generator-button:hover:not(:disabled) .ingredient-emoji-6 {
   display: block;
 }
-
-
 
 .generator-button .ingredient-emoji-1,
 .generator-button .ingredient-emoji-2,
@@ -1438,4 +1434,71 @@ body.screenshot-mode .dish-details {
 body.screenshot-mode .dish-display .technique,
 body.screenshot-mode .dish-display .ingredients {
   grid-column: auto !important;
+}
+
+/* Error message styling */
+.error-message {
+  background: var(--theme-bg-card);
+  border: 2px solid #e74c3c;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--theme-shadow-medium);
+  margin: 2rem 0;
+}
+
+.error-message h3 {
+  color: #e74c3c;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.error-message p {
+  color: var(--theme-text-secondary);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.error-message small {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.retry-button {
+  background: var(--theme-gradient-button);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--theme-shadow-light);
+  margin-top: 1rem;
+}
+
+.retry-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--theme-shadow-medium);
+  background: linear-gradient(45deg, #357abd, #4a90e2);
+}
+
+.retry-button:active {
+  transform: translateY(0);
+  box-shadow: var(--theme-shadow-light);
+}
+
+/* Rarity dot coloring for ingredient list */
+.rarity-dot.common { color: #bbb; }
+.rarity-dot.uncommon { color: #6c9; }
+.rarity-dot.rare { color: #cc9; }
+.rarity-dot.legendary { color: #fc0; font-weight: bold; text-shadow: 0 0 2px #fc0; }
+
+.ingredient-role {
+  color: #888;
+  font-size: 0.85em;
+  font-style: italic;
+  margin-left: 4px;
 } 

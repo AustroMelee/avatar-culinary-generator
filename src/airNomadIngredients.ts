@@ -1,0 +1,41 @@
+// src/airNomadIngredients.ts
+
+import { Ingredient } from './types';
+
+export const airNomadIngredients: Ingredient[] = [
+    { name: 'Apple', emoji: '🍎', rarity: 'Common', category: 'fruit', flavorProfile: 'sweet', isPlural: false, suitability: ['pie', 'bake', 'salad', 'juice'], description: 'A crisp, sweet fruit often used in Air Nomad desserts and meditation snacks.' },
+    { name: 'Banana', emoji: '🍌', rarity: 'Common', category: 'fruit', flavorProfile: 'sweet', isPlural: false, suitability: ['pie', 'bake', 'juice'], description: 'A soft, sweet fruit that provides quick energy for long meditation sessions.' },
+    { name: 'Moon Peach', emoji: '🍑', rarity: 'Rare', category: 'fruit', flavorProfile: 'sweet', isPlural: false, suitability: ['pie', 'salad', 'garnish'], description: 'A rare, mystical fruit said to bloom only under the full moon.' },
+    { name: 'Lychee Nuts', emoji: '🍓', rarity: 'Uncommon', category: 'fruit', flavorProfile: 'sweet', isPlural: true, suitability: ['pie', 'salad', 'juice', 'garnish'], description: 'Small, fragrant fruits with a delicate sweetness and floral aroma.' },
+    { name: 'Mango', emoji: '🥭', rarity: 'Uncommon', category: 'fruit', flavorProfile: 'sweet', isPlural: false, suitability: ['pie', 'curry', 'salad', 'juice'], description: 'A tropical fruit with rich, sweet flesh perfect for both sweet and savory dishes.' },
+    { name: 'Coconut', emoji: '🥥', rarity: 'Uncommon', category: 'fruit', flavorProfile: 'sweet', isPlural: false, suitability: ['pie', 'bake', 'curry'], description: 'A versatile fruit providing both meat and milk for various culinary uses.' },
+    { name: 'Plums', emoji: '🫐', rarity: 'Common', category: 'fruit', flavorProfile: 'sweet', isPlural: true, suitability: ['pie', 'bake', 'juice'], description: 'Sweet, juicy fruits that add natural sweetness to baked goods and beverages.' },
+
+    { name: 'Cabbage', emoji: '🥬', rarity: 'Common', category: 'vegetable', flavorProfile: 'savory', isPlural: false, suitability: ['steam', 'stir-fry', 'curry', 'salad', 'dumpling'], description: 'A hearty, leafy vegetable that forms the base of many Air Nomad dishes.' },
+    { name: 'Carrot', emoji: '🥕', rarity: 'Common', category: 'vegetable', flavorProfile: 'sweet', isPlural: false, suitability: ['steam', 'stir-fry', 'curry', 'salad', 'dumpling', 'bake', 'juice'], description: 'A sweet, crunchy root vegetable that adds color and nutrition to any dish.' },
+    { name: 'Bean Sprouts', emoji: '🌱', rarity: 'Common', category: 'vegetable', flavorProfile: 'neutral', isPlural: true, suitability: ['steam', 'stir-fry', 'salad'], description: 'Fresh, crisp sprouts that symbolize new life and growth in Air Nomad philosophy.' },
+    { name: 'Onion', emoji: '🧅', rarity: 'Common', category: 'vegetable', flavorProfile: 'pungent', isPlural: false, suitability: ['stir-fry', 'curry', 'dumpling', 'bake', 'pie'], description: 'A fundamental flavoring vegetable that adds depth and aroma to dishes.' },
+    { name: 'Potato', emoji: '🥔', rarity: 'Common', category: 'vegetable', flavorProfile: 'neutral', isPlural: false, suitability: ['steam', 'curry', 'bake', 'pie'], description: 'A versatile, starchy vegetable that provides substance and comfort to meals.' },
+    { name: 'Tomato', emoji: '🍅', rarity: 'Common', category: 'vegetable', flavorProfile: 'savory', isPlural: false, suitability: ['curry', 'salad', 'bake'], description: 'A juicy, savory fruit-vegetable that adds brightness and acidity to dishes.' },
+    { name: 'Pickles', emoji: '🥒', rarity: 'Common', category: 'vegetable', flavorProfile: 'savory', isPlural: true, suitability: ['salad', 'garnish'], description: 'Tangy, preserved vegetables that add a bright, acidic note to meals.' },
+    { name: 'Peppers', emoji: '🌶️', rarity: 'Common', category: 'vegetable', flavorProfile: 'savory', isPlural: true, suitability: ['steam', 'stir-fry', 'curry', 'salad'], description: 'Spicy vegetables that add heat and complexity to Air Nomad cuisine.' },
+
+    { name: 'Oyster Mushrooms', emoji: '🍄', rarity: 'Common', category: 'fungi', flavorProfile: 'umami', isPlural: true, suitability: ['steam', 'stir-fry', 'curry', 'pie'], description: 'Delicate mushrooms with a mild, earthy flavor and tender texture.' },
+    { name: 'Shiitake Mushrooms', emoji: '🍄', rarity: 'Uncommon', category: 'fungi', flavorProfile: 'umami', isPlural: true, suitability: ['steam', 'stir-fry', 'curry', 'pie', 'dumpling'], description: 'Rich, meaty mushrooms prized for their deep umami flavor and medicinal properties.' },
+
+    { name: 'Rice', emoji: '🍚', rarity: 'Common', category: 'base', flavorProfile: 'neutral', isPlural: false, suitability: ['steam', 'curry', 'stir-fry', 'salad', 'bake'], description: 'The staple grain of Air Nomad cuisine, symbolizing simplicity and sustenance.' },
+    { name: 'Barley', emoji: '🌾', rarity: 'Common', category: 'base', flavorProfile: 'neutral', isPlural: false, suitability: ['steam', 'curry', 'bake'], description: 'A hearty grain that provides warmth and nourishment during cold mountain nights.' },
+    { name: 'Flour', emoji: '🌾', rarity: 'Common', category: 'base', flavorProfile: 'neutral', isPlural: false, suitability: ['bake', 'pie', 'dumpling'], description: 'Ground grain used to create the foundation of breads, pastries, and dumplings.' },
+    { name: 'Mountain Noodles', emoji: '🍜', rarity: 'Common', category: 'base', flavorProfile: 'neutral', isPlural: true, suitability: ['steam', 'stir-fry', 'curry'], description: 'Hand-pulled noodles that represent the flowing, flexible nature of airbending.' },
+
+    { name: 'Tofu', emoji: '⬜', rarity: 'Common', category: 'protein', flavorProfile: 'neutral', isPlural: false, suitability: ['steam', 'stir-fry', 'curry', 'bake', 'salad', 'dumpling'], description: 'A versatile protein source made from soybeans, embodying the Air Nomad principle of adaptability.' },
+    { name: 'Mung Beans', emoji: '🫘', rarity: 'Common', category: 'protein', flavorProfile: 'savory', isPlural: true, suitability: ['curry', 'salad', 'steam'], description: 'Small, nutritious legumes that sprout easily and provide essential protein.' },
+    { name: 'Lentils of the Four Winds', emoji: '🫘', rarity: 'Common', category: 'protein', flavorProfile: 'savory', isPlural: true, suitability: ['curry', 'bake', 'pie'], description: 'Sacred legumes said to be blessed by the four winds, providing strength and wisdom.' },
+    { name: 'Temple Nuts', emoji: '🥜', rarity: 'Common', category: 'protein', flavorProfile: 'savory', isPlural: true, suitability: ['salad', 'bake', 'garnish'], description: 'Nuts harvested from the sacred trees surrounding Air Nomad temples.' },
+    
+    { name: 'Garlic', emoji: '🧄', rarity: 'Common', category: 'flavoring', flavorProfile: 'pungent', isPlural: false, suitability: ['steam', 'stir-fry', 'curry', 'bake', 'pie', 'dumpling'], description: 'A pungent bulb that adds depth and character to any dish.' },
+    { name: 'Ginger', emoji: '🍠', rarity: 'Common', category: 'flavoring', flavorProfile: 'pungent', isPlural: false, suitability: ['steam', 'stir-fry', 'curry', 'bake', 'pie', 'dumpling', 'juice'], description: 'A warming root that adds spice and aids digestion, valued for its medicinal properties.' },
+    { name: 'Vanilla', emoji: '🍦', rarity: 'Rare', category: 'flavoring', flavorProfile: 'sweet', isPlural: false, suitability: ['bake', 'pie', 'juice'], description: 'A rare, aromatic spice that adds subtle sweetness and complexity to desserts.' },
+    { name: "Monk's Honey", emoji: '🍯', rarity: 'Uncommon', category: 'flavoring', flavorProfile: 'sweet', isPlural: false, suitability: ['bake', 'pie', 'juice', 'garnish'], description: 'Pure honey collected by Air Nomad monks, said to contain the essence of mountain flowers.' },
+    { name: 'Bird\'s Eye Chili', emoji: '🌶️', rarity: 'Rare', category: 'flavoring', flavorProfile: 'pungent', isPlural: false, suitability: ['curry', 'stir-fry'], description: 'A small but intensely spicy chili that adds fire to Air Nomad dishes.' },
+];
