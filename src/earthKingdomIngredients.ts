@@ -68,7 +68,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         suitability: ['roast', 'braise', 'steam'], 
         description: 'A massive, revered fish from Kyoshi Island, its seared flesh is a gourmet delicacy.',
         nation: 'earth-kingdom',
-        location: 'Kyoshi Island'
+        location: 'Kyoshi Island',
+        loreSnippet: 'The Kyoshi Elephant Koi is said to be as old as the island itself, and catching one is considered a sign of great fortune and skill.',
+        synergies: { 'Soy Sauce': 8 }
     },
     { 
         name: 'Duck', 

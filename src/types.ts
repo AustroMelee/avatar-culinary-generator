@@ -41,7 +41,6 @@ export interface DescriptionRule {
 export interface NamingRule {
     id: string;
     title: (context: DishContext) => string;
-    text: string; // A short flavor text about the name's origin
     weighting: {
         fusion: boolean;
         minNations?: number;
@@ -51,27 +50,6 @@ export interface NamingRule {
         themes?: DishTheme[];
         nations?: Nation[];
         noMeat?: boolean;
-    };
-}
-
-// NEW: Define the structure for a lore entry
-export interface LoreEntry {
-    id: string;
-    title: string;
-    text: (context: DishContext) => string;
-    weighting: {
-        nations?: Partial<Record<Nation, number>>;
-        fusion?: number;
-        styles?: string[];
-        dishTypes?: DishType[];
-        ingredients?: string[];
-        categories?: IngredientCategory[];
-        themes?: DishTheme[];
-        minRarity?: Rarity;
-        minNations?: number;
-        minIngredients?: number;
-        noMeat?: boolean;
-        compatibleForms?: DishForm[];
     };
 }
 
@@ -90,6 +68,7 @@ export interface Ingredient {
   nation: Nation; // The nation this ingredient belongs to
   location: IngredientLocation; // The specific region it's from
   synergies?: Record<string, number>; // Maps ingredient names to a synergy score (e.g., { 'Pork Belly': 10 })
+  loreSnippet?: string; // Optional snippet of lore about this ingredient
 }
 
 export interface CookingStyle {
@@ -110,18 +89,12 @@ export interface DishContext {
 }
 
 export interface Dish {
-  name: {
-      title: string;
-      flavorText: string;
-  };
+  name: string;
   emoji: string;
   nations: Nation[];
   dishType: DishType;
   description: string;
-  lore: {
-    title: string;
-    text: string;
-  };
+  rationale: string[]; // An array of sentences explaining the dish
   ingredients: Ingredient[];
   cookingStyle: CookingStyle;
 }

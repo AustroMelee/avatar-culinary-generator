@@ -75,9 +75,9 @@ export class UIManager {
   }
 
   // NEW function to sync the UI icon with the current theme
-  private static updateThemeUI(): void {
+  public static updateThemeUI(): void {
     const isDark = document.body.dataset.theme === 'dark';
-    this.themeToggleButton.textContent = isDark ? '☀️' : '🌙';
+    this.themeToggleButton.textContent = isDark ? '🌙' : '☀️';
   }
 
   /**
@@ -159,18 +159,31 @@ export class UIManager {
       .filter(checkbox => checkbox.checked)
       .map(checkbox => checkbox.value as Nation);
     
+    // Ensure at least one nation is always selected
     if (this.selectedNations.length === 0) {
-      this.nationCheckboxes[0].checked = true;
-      this.selectedNations.push(this.nationCheckboxes[0].value as Nation);
+      // If user unchecks the last box, re-check it
+      const lastUnchecked = Array.from(this.nationCheckboxes).find(cb => !cb.checked);
+      if(lastUnchecked) {
+        lastUnchecked.checked = true;
+        this.selectedNations.push(lastUnchecked.value as Nation);
+      }
     }
+
+    // Disable checkboxes if only one is selected to prevent zero selection
+    this.nationCheckboxes.forEach(cb => { 
+      cb.disabled = (this.selectedNations.length === 1 && cb.checked); 
+    });
+
+    // Update the theme based on all selected nations
+    ThemeManager.setNations(this.selectedNations);
   }
 
   /**
    * Renders the generated dish data into the DOM.
    */
   private static renderDish(dish: Dish): void {
-    const ingredientsHTML = dish.ingredients.map(ing => `
-      <li class="ingredient-item">
+    const ingredientsHTML = dish.ingredients.map((ing, index) => `
+      <li class="ingredient-item reveal" style="--delay: ${index * 100}ms;">
         <span class="ingredient-emoji">${ing.emoji}</span>
         <span class="ingredient-name">${ing.name}</span>
         <span class="ingredient-separator">•</span>
@@ -183,39 +196,51 @@ export class UIManager {
         return `<span class="nation-pill nation-pill--${nation}">${nationName}</span>`;
     }).join('');
 
-    // --- UPDATED HTML STRUCTURE FOR THE NEW LAYOUT ---
+    // --- REDESIGNED HTML STRUCTURE WITH ANIMATIONS ---
     const dishHTML = `
       <div class="dish-display parchment-layout">
-        <div class="dish-header">
+        <div class="dish-header reveal" style="--delay: 0ms;">
           <span class="dish-emoji">${dish.emoji}</span>
-          <h2>${dish.name.title}</h2>
+          <div class="dish-title-container">
+            <h2>${dish.name}</h2>
+          </div>
         </div>
-        <div class="nation-pills-container">
+        <div class="nation-pills-container reveal" style="--delay: 50ms;">
           ${nationPillsHTML}
         </div>
-        <hr class="title-divider">
-
+        
         <div class="dish-main-content">
-          <div class="content-section description-section callout-box">
+          <div class="content-section description-section callout-box reveal" style="--delay: 150ms;">
             <h3>Description</h3>
             <p>${dish.description}</p>
           </div>
 
-          <div class="content-section lore-section callout-box">
-            <h3>Lore</h3>
-            <h4 class="lore-title">${dish.lore.title}</h4>
-            <p>${dish.lore.text}</p>
-          </div>
-
-          <div class="content-section ingredients-section">
+          <div class="content-section ingredients-section reveal" style="--delay: 200ms;">
             <h3>Ingredients</h3>
             <ul>${ingredientsHTML}</ul>
           </div>
 
-          <div class="content-section technique-section">
+          <div class="content-section technique-section callout-box reveal" style="--delay: 250ms;">
             <h3>Technique</h3>
             <p><strong>${dish.cookingStyle.name}:</strong> ${dish.cookingStyle.description}</p>
           </div>
+
+          <!-- CHEF'S NOTES / RATIONALE SECTION -->
+          ${dish.rationale.length > 0 ? `
+            <div class="content-section rationale-section reveal" style="--delay: 300ms;">
+              <div class="rationale-inner">
+                <h3>Chef's Notes</h3>
+                <ul>
+                  ${dish.rationale.map(note => {
+                    const formattedNote = note
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>');
+                    return `<li>${formattedNote}</li>`;
+                  }).join('')}
+                </ul>
+              </div>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;
@@ -312,40 +337,19 @@ export class UIManager {
   }
 
   private static setupNationChecklist(): void {
-    const checkboxes = this.nationChecklistContainer.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            this.selectedNations = Array.from(checkboxes)
-                .filter(i => i.checked)
-                .map(i => i.value as Nation);
-
-            if (this.selectedNations.length === 0) {
-                checkbox.checked = true;
-                this.selectedNations.push(checkbox.value as Nation);
-                return;
-            }
-            checkboxes.forEach(cb => { cb.disabled = (this.selectedNations.length === 1 && cb.checked); });
-            ThemeManager.setNation(this.selectedNations[0]);
-        });
-    });
-    checkboxes[0].disabled = true;
+    // Initial call to set the theme based on the default checked nation
+    this.handleNationChange();
   }
 
   // NEW function to trigger the reveal animations after a short delay
   private static triggerAnimations(): void {
-    const elementsToReveal = this.dishContainer.querySelectorAll('.reveal');
-    elementsToReveal.forEach(el => {
-      // By removing and re-adding the class, we ensure the animation re-triggers every time.
-      el.classList.remove('reveal');
-      void (el as HTMLElement).offsetWidth; // This is a trick to force a browser reflow
-      el.classList.add('reveal');
-    });
-
-    const ingredientItems = this.dishContainer.querySelectorAll('.ingredient-item');
-    ingredientItems.forEach(item => {
-        item.classList.remove('reveal');
-        void (item as HTMLElement).offsetWidth;
-        item.classList.add('reveal');
-    });
+    const elementsToReveal = this.dishContainer.querySelectorAll<HTMLElement>('.reveal');
+    
+    // A small delay to ensure elements are in the DOM before animating
+    setTimeout(() => {
+        elementsToReveal.forEach(el => {
+            el.classList.add('animate');
+        });
+    }, 100);
   }
 }

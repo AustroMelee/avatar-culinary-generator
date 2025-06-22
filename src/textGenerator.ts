@@ -1,6 +1,5 @@
 // src/textGenerator.ts
 
-import { LoreEngine } from './loreEngine';
 import { FusionNameEngine } from './fusionNameEngine';
 import { DescriptionEngine } from './descriptionEngine';
 import { DishContext, Ingredient, Nation } from './types';
@@ -16,12 +15,10 @@ const nationAdjectives: Record<Nation, string> = {
 const pick = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
 export class TextGenerator {
-    private loreEngine: LoreEngine;
     private nameEngine: FusionNameEngine;
     private descriptionEngine: DescriptionEngine;
 
     constructor() {
-        this.loreEngine = new LoreEngine();
         this.nameEngine = new FusionNameEngine();
         this.descriptionEngine = new DescriptionEngine();
     }
@@ -30,13 +27,12 @@ export class TextGenerator {
      * Generates a dynamic name for the dish using the nation's name parts.
      * This requires nationData to be present in the context.
      */
-    public generateName(context: DishContext): { title: string; flavorText: string } {
+    public generateName(context: DishContext): string {
         const { selectedNations } = context.fusionData;
 
         // If it's a fusion dish, use the new engine.
         if (selectedNations.length > 1) {
-            const result = this.nameEngine.getName(context);
-            return { title: result.title, flavorText: result.flavorText };
+            return this.nameEngine.getName(context);
         }
         
         // --- UPGRADED SINGLE-NATION NAME LOGIC ---
@@ -64,9 +60,7 @@ export class TextGenerator {
                 break;
         }
 
-        const title = `${prefix} ${primaryName} ${suffix}`;
-        
-        return { title, flavorText: '' }; // Single-nation dishes have no flavor text
+        return `${prefix} ${primaryName} ${suffix}`;
     }
 
     /**
@@ -78,9 +72,49 @@ export class TextGenerator {
     }
 
     /**
-     * Generates a lore sentence for the dish.
+     * Generates intelligent Chef's Notes that explain why the dish is cohesive.
+     * This makes the generator feel intelligent by providing culinary rationale.
      */
-    public generateLore(context: DishContext): { title: string; text: string } {
-        return this.loreEngine.getLore(context);
+    public generateRationale(context: DishContext): string[] {
+        const notes: string[] = [];
+        const { primaryIngredient, secondaryIngredient, cookingStyle, allIngredients, fusionData } = context;
+
+        // --- Note 1: Synergy Check ---
+        if (secondaryIngredient && primaryIngredient.synergies?.[secondaryIngredient.name]) {
+            notes.push(`The pairing of **${primaryIngredient.name}** and **${secondaryIngredient.name}** is a classic combination, creating a delightful harmony of flavors.`);
+        }
+
+        // --- Note 2: Technique Check ---
+        // Make the cooking style's description more generic for use here
+        const styleDesc = cookingStyle.description.toLowerCase()
+            .replace(/a |an |the /i, '') // remove leading articles
+            .replace(new RegExp(cookingStyle.name, 'ig'), 'this technique');
+        notes.push(`The choice of **${cookingStyle.name}** is key; ${styleDesc}, which perfectly suits the **${primaryIngredient.name}**.`);
+
+        // --- Note 3: Rarity/Theme Check ---
+        const rareIngredient = allIngredients.find(i => i.rarity === 'Rare' || i.rarity === 'Legendary');
+        if (rareIngredient && context.theme === 'Ceremonial & Celebratory') {
+            notes.push(`The inclusion of the prestigious **${rareIngredient.name}** marks this as a dish for special occasions, truly befitting a ceremonial feast.`);
+        }
+
+        // --- Note 4: Fusion Check ---
+        if (fusionData.selectedNations.length > 1) {
+            const nation1 = fusionData.selectedNations[0].split('-')[0].replace(/\b\w/g, l => l.toUpperCase());
+            const nation2 = fusionData.selectedNations[1].split('-')[0].replace(/\b\w/g, l => l.toUpperCase());
+            notes.push(`This modern fusion dish bravely combines the culinary traditions of the **${nation1}** and the **${nation2}**, creating an experience that is both new and familiar.`);
+        }
+
+        // --- Note 5: Lore Snippet Check ---
+        const ingredientsWithLore = allIngredients.filter(i => i.loreSnippet);
+        if (ingredientsWithLore.length > 0) {
+            // Pick one ingredient with lore to highlight
+            const ingredientToHighlight = pick(ingredientsWithLore);
+            if(ingredientToHighlight) {
+              notes.push(`On **${ingredientToHighlight.name}**: *"${ingredientToHighlight.loreSnippet}"*`);
+            }
+        }
+        
+        // Shuffle and return a maximum of 3 notes to keep it concise
+        return notes.sort(() => 0.5 - Math.random()).slice(0, 3);
     }
 }

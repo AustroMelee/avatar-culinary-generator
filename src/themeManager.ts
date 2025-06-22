@@ -48,6 +48,8 @@ const themes = {
       '--theme-shadow-heavy': '0 8px 32px rgba(251, 191, 36, 0.3)',
       '--theme-gradient-card': 'linear-gradient(145deg, #2A1C0A 0%, #4A2B0F 100%)',
       '--theme-gradient-button': 'linear-gradient(45deg, #FBBF24, #F59E0B)',
+      '--gradient-color-1': '#4A2B0F',
+      '--gradient-color-2': '#2A1C0A',
     }
   },
   'water-tribe': {
@@ -94,6 +96,8 @@ const themes = {
       '--theme-shadow-heavy': '0 8px 32px rgba(103, 232, 249, 0.3)',
       '--theme-gradient-card': 'linear-gradient(145deg, #082F49 0%, #1F2937 100%)',
       '--theme-gradient-button': 'linear-gradient(45deg, #67E8F9, #06B6D4)',
+      '--gradient-color-1': '#1F2937',
+      '--gradient-color-2': '#082F49',
     },
   },
   'earth-kingdom': {
@@ -140,6 +144,8 @@ const themes = {
         '--theme-shadow-heavy': '0 8px 32px rgba(74, 222, 128, 0.3)',
         '--theme-gradient-card': 'linear-gradient(145deg, #172513 0%, #1C1917 100%)',
         '--theme-gradient-button': 'linear-gradient(45deg, #4ADE80, #22C55E)',
+        '--gradient-color-1': '#1C1917',
+        '--gradient-color-2': '#172513',
       },
   },
   'fire-nation': {
@@ -186,12 +192,14 @@ const themes = {
         '--theme-shadow-heavy': '0 8px 32px rgba(248, 113, 113, 0.3)',
         '--theme-gradient-card': 'linear-gradient(145deg, #440a0a 0%, #171717 100%)',
         '--theme-gradient-button': 'linear-gradient(45deg, #F87171, #EF4444)',
+        '--gradient-color-1': '#171717',
+        '--gradient-color-2': '#440a0a',
       },
   },
 };
 
 export class ThemeManager {
-  private static currentNation: Nation = 'air-nomads';
+  private static currentNations: Nation[] = ['air-nomads'];
   private static currentMode: 'light' | 'dark' = 'light';
 
   /**
@@ -200,15 +208,21 @@ export class ThemeManager {
   public static initialize(): void {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     this.currentMode = prefersDark ? 'dark' : 'light';
-    this.applyCurrentTheme();
+    this.setNations(this.currentNations);
   }
   
   /**
-   * Sets the nation theme and reapplies the current light/dark mode.
+   * Sets the nation theme(s) and reapplies the current light/dark mode.
    */
-  public static setNation(nation: Nation): void {
-    this.currentNation = nation;
-    this.applyCurrentTheme();
+  public static setNations(nations: Nation[]): void {
+    if (nations.length === 0) {
+      // Default to air nomads if no nations are selected
+      this.currentNations = ['air-nomads'];
+    } else {
+      this.currentNations = nations;
+    }
+    const theme = this.generateDynamicTheme(this.currentNations, this.currentMode);
+    this.applyTheme(theme);
   }
 
   /**
@@ -216,30 +230,74 @@ export class ThemeManager {
    */
   public static toggleLightDark(): void {
     this.currentMode = this.currentMode === 'light' ? 'dark' : 'light';
-    this.applyCurrentTheme();
+    this.setNations(this.currentNations); // Re-apply theme with new mode
   }
 
   /**
-   * The single function to apply all theme variables based on current state.
+   * Applies a given theme object to the document.
+   * @param theme - A dictionary of CSS variable keys and their values.
    */
-  private static applyCurrentTheme(): void {
+  private static applyTheme(theme: Record<string, string>): void {
     const root = document.documentElement;
     const body = document.body;
 
-    // Get the correct theme object (e.g., themes['air-nomads']['dark'])
-    const nationThemes = themes[this.currentNation] || themes['air-nomads'];
-    const activeTheme = nationThemes[this.currentMode];
-
-    // Apply all CSS custom properties from the theme object
-    for (const [key, value] of Object.entries(activeTheme)) {
+    for (const [key, value] of Object.entries(theme)) {
       root.style.setProperty(key, value);
     }
     
-    // Set body class for the nation (for nation-specific icons, etc.)
-    body.className = ''; // Clear previous nation classes
-    body.classList.add(`theme-${this.currentNation}`);
+    body.className = ''; 
+    this.currentNations.forEach(nation => {
+      body.classList.add(`theme-${nation}`);
+    });
 
-    // Set data-attribute for light/dark mode (for CSS to target)
     body.dataset.theme = this.currentMode;
+  }
+
+  /**
+   * Generates a theme, blending colors if multiple nations are selected.
+   */
+  private static generateDynamicTheme(nations: Nation[], mode: 'light' | 'dark'): Record<string, string> {
+    if (nations.length <= 1) {
+      const nation = nations[0] || 'air-nomads';
+      return themes[nation][mode];
+    }
+
+    // --- Comprehensive Blending Logic ---
+    const blendedTheme = { ...themes[nations[0]][mode] };
+    
+    // 1. Generate blended gradients for different UI components
+    const bgGradientColors = mode === 'dark' 
+      ? nations.map(n => themes[n][mode]['--gradient-color-1'])
+      : nations.map(n => themes[n][mode]['--theme-primary']);
+
+    const buttonGradientColors = nations.map(n => themes[n][mode]['--theme-primary']);
+    
+    const cardGradientColors = mode === 'dark'
+      ? nations.map(n => themes[n][mode]['--gradient-color-2'])
+      : nations.map(n => themes[n][mode]['--theme-secondary']);
+
+    blendedTheme['--theme-gradient-background'] = `linear-gradient(135deg, ${bgGradientColors.join(', ')})`;
+    blendedTheme['--theme-gradient-button'] = `linear-gradient(45deg, ${buttonGradientColors.join(', ')})`;
+    // Apply a subtle, blended gradient to cards and dropdowns
+    blendedTheme['--theme-bg-card'] = `linear-gradient(145deg, ${cardGradientColors.join(', ')})`;
+    blendedTheme['--theme-bg-secondary'] = `linear-gradient(145deg, ${cardGradientColors.join(', ')})`;
+
+    // 2. Standardize text colors for readability
+    if (mode === 'dark') {
+      blendedTheme['--theme-text-primary'] = '#F0F9FF';
+      blendedTheme['--theme-text-secondary'] = '#A5F3FC';
+    } else {
+      blendedTheme['--theme-text-primary'] = '#164E63';
+      blendedTheme['--theme-text-secondary'] = '#0891B2';
+    }
+    
+    // 3. Set primary, secondary, and accent colors from the first 3 nations
+    const primaryColors = nations.map(n => themes[n][mode]['--theme-primary']);
+    blendedTheme['--theme-primary'] = primaryColors[0];
+    blendedTheme['--theme-secondary'] = primaryColors[1] || primaryColors[0];
+    blendedTheme['--theme-accent'] = primaryColors[2] || primaryColors[1] || primaryColors[0];
+    blendedTheme['--dropdown-arrow-color'] = primaryColors[0];
+
+    return blendedTheme;
   }
 }

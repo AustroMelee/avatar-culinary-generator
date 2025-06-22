@@ -14,5 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize the UI Manager, which handles all user interactions and rendering
   UIManager.initialize();
 
+  // Manually trigger a UI update to sync the theme icon on initial load
+  UIManager.updateThemeUI();
+
   console.log("Avatar Culinary Dish Generator Initialized!");
 });

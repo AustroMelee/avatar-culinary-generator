@@ -68,6 +68,12 @@
   
   /* Dropdown arrow color - will follow theme accent */
   --dropdown-arrow-color: var(--theme-accent);
+
+  /* Nation-specific Glow Colors */
+  --nation-color-air: #D97706;
+  --nation-color-water: #0E7490;
+  --nation-color-earth: #16A34A;
+  --nation-color-fire: #DC2626;
 }
 
 * {
@@ -144,8 +150,9 @@ body {
   right: 20px;
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, #0d1b2a 0%, #2a4b6b 100%);
-  color: #f0e68c;
+  /* Blue sky for day/sun icon */
+  background: linear-gradient(135deg, #87CEEB 0%, #1E90FF 100%);
+  color: #FFD54F; /* Sun color */
   border: 2px solid #e0e0e0;
   border-radius: 50%;
   font-size: 1.2rem;
@@ -161,17 +168,18 @@ body {
 .theme-icon:hover {
   transform: translateY(-2px) scale(1.1);
   box-shadow: var(--theme-shadow-heavy);
-  background: linear-gradient(45deg, #1c2e42, #3b5c7e);
+  background: linear-gradient(135deg, #97d7ee 0%, #2e9aff 100%);
 }
 
 /* Updated theme icon styling to work with data-theme attribute */
 body[data-theme='dark'] .theme-icon {
-  background: linear-gradient(135deg, #87CEEB 0%, #1E90FF 100%);
-  color: #FFD54F;
+  /* Dark sky for night/moon icon */
+  background: linear-gradient(135deg, #0d1b2a 0%, #2a4b6b 100%);
+  color: #f0e68c; /* Moon color */
 }
 
 body[data-theme='dark'] .theme-icon:hover {
-  background: linear-gradient(135deg, #97d7ee 0%, #2e9aff 100%);
+  background: linear-gradient(45deg, #1c2e42, #3b5c7e);
 }
 
 .nation-controls {
@@ -327,7 +335,7 @@ body[data-theme='dark'] .theme-icon:hover {
   transform: translateY(-10px);
   transition: all 0.3s ease;
   z-index: 2000;
-  max-height: 600px; /* Make the dropdown menu longer by default */
+  min-height: 340px; /* Make the dropdown menu longer */
   overflow-y: visible; /* Remove the vertical scrollbar */
 }
 
@@ -352,6 +360,9 @@ body[data-theme='dark'] .theme-icon:hover {
 .option:hover {
   background: var(--theme-bg-secondary);
   filter: brightness(160%);
+  color: var(--theme-accent);
+  font-weight: 600;
+  transform: translateX(5px);
 }
 
 .option.selected {
@@ -1525,6 +1536,12 @@ body.screenshot-mode .dish-display .ingredients {
   min-width: 60px;
 }
 
+/* Define nation-specific glow variables */
+.nation-checkbox.air-nomads { --nation-glow-color: var(--nation-color-air); }
+.nation-checkbox.water-tribe { --nation-glow-color: var(--nation-color-water); }
+.nation-checkbox.earth-kingdom { --nation-glow-color: var(--nation-color-earth); }
+.nation-checkbox.fire-nation { --nation-glow-color: var(--nation-color-fire); }
+
 /* Hide the default checkbox */
 .nation-checkbox input[type="checkbox"] {
   display: none;
@@ -1536,6 +1553,9 @@ body.screenshot-mode .dish-display .ingredients {
   transition: all 0.2s ease;
   filter: grayscale(80%); /* Make unselected icons gray */
   opacity: 0.7;
+  border: 3px solid transparent; /* Add space for the border */
+  border-radius: 12px; /* Match the aesthetic */
+  padding: 4px;
 }
 
 .nation-checkbox .nation-name {
@@ -1549,7 +1569,8 @@ body.screenshot-mode .dish-display .ingredients {
 .nation-checkbox input[type="checkbox"]:checked + .nation-icon {
   filter: grayscale(0%);
   opacity: 1;
-  transform: scale(1.1);
+  transform: scale(1); /* Reset scale */
+  border-color: var(--nation-glow-color); /* Solid border for selected */
 }
 
 .nation-checkbox input[type="checkbox"]:checked ~ .nation-name {
@@ -1557,15 +1578,18 @@ body.screenshot-mode .dish-display .ingredients {
   font-weight: 700;
 }
 
-/* Hover effect */
-.nation-checkbox:hover .nation-icon {
+/* Hover effect for UNCHECKED items */
+.nation-checkbox input[type="checkbox"]:not(:checked):hover + .nation-icon {
   opacity: 1;
+  transform: scale(1.1);
+  filter: grayscale(0%) drop-shadow(0 0 8px var(--nation-glow-color, var(--theme-accent)));
 }
 
-/* Style for disabled checkbox to prevent unselecting the last one */
+/* Style for disabled checkbox (the last selected item) */
 .nation-checkbox input[type="checkbox"]:disabled + .nation-icon {
   cursor: not-allowed;
-  filter: drop-shadow(0 0 3px var(--theme-accent));
+  border-color: var(--nation-glow-color); /* Stronger border to show it's locked */
+  box-shadow: 0 0 5px var(--nation-glow-color); /* A subtle inner glow */
 }
 
 /* Nation tag styling for dish display */
@@ -1582,25 +1606,8 @@ body.screenshot-mode .dish-display .ingredients {
 }
 
 .dish-title-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
   text-align: center;
   margin-bottom: 1rem;
-}
-
-.dish-name-flavor-text {
-  text-align: center;
-  font-style: italic;
-  color: var(--theme-text-secondary);
-  margin: -0.5rem 0 1rem 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  background: var(--theme-bg-overlay);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border-left: 3px solid var(--theme-accent);
 }
 
 /* Responsive adjustments for the checklist */
@@ -1763,7 +1770,6 @@ body.screenshot-mode .dish-display .ingredients {
 
 /* Stagger the animation for each element */
 .dish-display .dish-title-container { animation-delay: 0s; }
-.dish-display .dish-name-flavor-text { animation-delay: 0.1s; }
 .dish-display .dish-section { animation-delay: 0.2s; }
 .dish-display .dish-section:nth-child(2) { animation-delay: 0.3s; }
 .dish-display .dish-details .dish-section { animation-delay: 0.4s; }
@@ -1795,41 +1801,49 @@ body.screenshot-mode .dish-display .ingredients {
 /* Header and Title Styling */
 .dish-display.parchment-layout .dish-header {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  justify-content: center; /* Center the title container */
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  position: relative; /* Parent for absolute positioning */
 }
 
 .dish-display.parchment-layout .dish-header h2 {
-  margin: 0;
   color: var(--theme-text-primary);
+  font-family: 'Seagull', serif;
   font-size: 2.8rem;
   font-weight: 700;
-  text-shadow: 0 0 5px var(--theme-primary);
+  line-height: 1.2;
+  text-align: center;
+  /* No flex-grow needed, as its container is centered */
 }
 
 .dish-display.parchment-layout .dish-header .dish-emoji {
-  font-size: 2.5rem;
+  position: absolute; /* Take emoji out of flow */
+  left: 0;
+  top: 0;
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.dish-display.parchment-layout .dish-flavor-text {
+  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
+  color: var(--theme-text-secondary);
+  font-style: italic;
+  text-align: center;
+  opacity: 0.8;
 }
 
 .dish-display.parchment-layout .nation-tag {
-  background: rgba(0,0,0,0.3);
-  color: var(--theme-text-secondary);
+  display: inline-block;
   padding: 0.25rem 0.75rem;
-  border-radius: 999px;
+  background: var(--theme-gradient-button);
+  color: white;
+  border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  border: 1px solid var(--theme-border-primary);
-}
-
-.dish-display.parchment-layout .title-divider {
-  border: none;
-  height: 2px;
-  width: 80%;
-  margin: 0 auto 2rem auto;
-  background: linear-gradient(to right, transparent, var(--theme-primary), transparent);
-  opacity: 0.8;
+  margin: 0.5rem;
+  box-shadow: var(--theme-shadow-light);
 }
 
 /* 2x2 Grid Layout for Main Content */
@@ -1968,4 +1982,76 @@ body.screenshot-mode .dish-display .ingredients {
 
 .nation-pill--fire-nation {
   background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.dish-display.parchment-layout .title-divider {
+  border: none;
+  height: 2px;
+  width: 80%;
+  margin: 0 auto 2rem auto;
+  background: linear-gradient(to right, transparent, var(--theme-primary), transparent);
+  opacity: 0.8;
+}
+
+/* Animation Reveal Classes */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered animation for list items */
+.ingredient-item {
+    transition-delay: var(--delay);
+}
+
+/* Chef's Notes Section Styling */
+.rationale-section {
+    background: var(--theme-bg-overlay);
+    border-left: 4px solid var(--theme-primary);
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: var(--theme-shadow-light);
+}
+
+.rationale-section h3 {
+    color: var(--theme-primary);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.rationale-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.rationale-section li {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+    line-height: 1.6;
+    color: var(--theme-text-primary);
+    font-style: normal;
+    font-weight: 500;
+}
+
+.rationale-section li:last-child {
+    margin-bottom: 0;
+}
+
+/* Enhanced dish flavor text styling */
+.dish-flavor-text {
+    font-style: italic;
+    color: var(--theme-text-secondary);
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    opacity: 0.8;
 } 

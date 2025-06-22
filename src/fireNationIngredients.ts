@@ -17,7 +17,8 @@ export const fireNationIngredients: Ingredient[] = [
         description: 'A tough, powerful beast whose meat is often made into sausages or roasted for feasts.',
         nation: 'fire-nation',
         location: 'Fire Nation Capital',
-        synergies: { 'Fire Chili': 10 }
+        synergies: { 'Fire Chili': 10 },
+        loreSnippet: 'The Komodo Rhino is revered for its strength and resilience, qualities that are said to transfer to those who consume its meat.'
     },
     { 
         name: 'Komodo Chicken', 
@@ -93,7 +94,8 @@ export const fireNationIngredients: Ingredient[] = [
         description: 'The defining ingredient of the nation\'s cuisine, used to bring intense heat and flavor.',
         nation: 'fire-nation',
         location: 'Generic',
-        synergies: { 'Komodo Rhino': 10, 'Komodo Chicken': 7 }
+        synergies: { 'Komodo Rhino': 10, 'Komodo Chicken': 7 },
+        loreSnippet: 'It is said that a true Firebender can tell the quality of the chili by the intensity of their inner heat.'
     },
     { 
         name: 'Ash Banana', 

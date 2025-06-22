@@ -1,7 +1,7 @@
-import { DishContext, Rarity, NamingRule, LoreEntry, DescriptionRule } from './types';
+import { DishContext, Rarity, NamingRule, DescriptionRule } from './types';
 
 // The master list of all possible weighting properties.
-type Weighting = NamingRule['weighting'] | LoreEntry['weighting'] | DescriptionRule['weighting'];
+type Weighting = NamingRule['weighting'] | DescriptionRule['weighting'];
 const RARITY_SCORE: Record<Rarity, number> = { 'Common': 1, 'Uncommon': 2, 'Rare': 3, 'Legendary': 4 };
 
 /**

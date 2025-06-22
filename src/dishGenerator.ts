@@ -1,6 +1,6 @@
 // src/dishGenerator.ts
 
-import { Dish, DishType, Ingredient, Nation, CookingStyle, DishContext, FusionData, IngredientCategory } from './types';
+import { Dish, DishType, Ingredient, Nation, CookingStyle, DishContext, FusionData, IngredientCategory, DishTheme } from './types';
 import { airNomadData, airNomadCookingStyles } from './airNomadData';
 import { airNomadIngredients } from './airNomadIngredients';
 import { waterTribeData, waterTribeCookingStyles } from './waterTribeData';
@@ -156,13 +156,14 @@ export class DishGenerator {
         
         const name = this.textGenerator.generateName(context);
         const description = this.textGenerator.generateDescription(context);
-        const lore = this.textGenerator.generateLore(context);
+        // --- NEW: Generate the rationale ---
+        const rationale = this.textGenerator.generateRationale(context);
 
         const emojiPool = this.fusionData.dishEmojis[dishType] || [];
         const emoji = emojiPool.length > 0 ? getRandom(emojiPool) : '❓';
 
         return {
-            name, description, lore, emoji,
+            name, description, emoji, rationale,
             nations: this.fusionData.selectedNations,
             dishType,
             ingredients: context.allIngredients,
@@ -189,8 +190,11 @@ export class DishGenerator {
             throw new Error(`Could not select enough suitable ingredients.`);
         }
 
+        // --- NEW: INTELLIGENT THEME SELECTION ---
+        const theme = this.selectIntelligentTheme(allIngredients, cookingStyle, dishType);
+
         return {
-            theme: getRandom(['Humble & Meditative', 'Ceremonial & Celebratory', 'Invigorating & Playful', 'Ancient & Traditional']),
+            theme,
             primaryIngredient: allIngredients[0],
             secondaryIngredient: allIngredients.length > 1 ? allIngredients[1] : allIngredients[0],
             cookingStyle,
@@ -198,6 +202,72 @@ export class DishGenerator {
             fusionData: this.fusionData,
             dishType,
         };
+    }
+
+    /**
+     * Intelligently selects a theme based on ingredients, cooking style, and dish type
+     * This creates a more cohesive and logical dish generation system
+     */
+    private selectIntelligentTheme(allIngredients: Ingredient[], cookingStyle: CookingStyle, dishType: DishType): DishTheme {
+        const primaryIngredient = allIngredients[0];
+        
+        // --- INGREDIENT ANALYSIS ---
+        const hasPungent = allIngredients.some(i => i.flavorProfile === 'pungent');
+        const hasRare = allIngredients.some(i => i.rarity === 'Rare' || i.rarity === 'Legendary');
+        const hasMultipleNations = this.fusionData.selectedNations.length > 1;
+        const isAirNomadDish = primaryIngredient.nation === 'air-nomads';
+        const isFireNationDish = primaryIngredient.nation === 'fire-nation';
+        const isWaterTribeDish = primaryIngredient.nation === 'water-tribe';
+        const isEarthKingdomDish = primaryIngredient.nation === 'earth-kingdom';
+
+        // --- COOKING STYLE ANALYSIS ---
+        const isHighHeatStyle = ['Grilling', 'Roasting', 'Wok-frying'].includes(cookingStyle.name);
+        const isSlowStyle = ['Stewing', 'Braising', 'Simmering', 'Congee Making'].includes(cookingStyle.name);
+        const isMinimalStyle = ['Minimalist Assembly', 'Steaming'].includes(cookingStyle.name);
+        const isArtisanalStyle = ['Dumpling Making', 'Piemaking', 'Baking'].includes(cookingStyle.name);
+
+        // --- DISH TYPE ANALYSIS ---
+        const isDessert = dishType === 'dessert';
+        const isSnack = dishType === 'snack';
+        const isMainCourse = dishType === 'main-course';
+        const isSoupStew = dishType === 'soup-stew';
+
+        // --- THEME SELECTION LOGIC ---
+        
+        // 1. Ceremonial & Celebratory - for special occasions and rare ingredients
+        if (hasRare || isDessert || isArtisanalStyle) {
+            return 'Ceremonial & Celebratory';
+        }
+
+        // 2. Invigorating & Playful - for energetic, spicy, or high-heat dishes
+        if (hasPungent || isHighHeatStyle || isFireNationDish || isSnack) {
+            return 'Invigorating & Playful';
+        }
+
+        // 3. Humble & Meditative - for simple, traditional, or Air Nomad dishes
+        if (isMinimalStyle || isAirNomadDish || isSlowStyle || isSoupStew) {
+            return 'Humble & Meditative';
+        }
+
+        // 4. Ancient & Traditional - for Earth Kingdom dishes or fusion dishes
+        if (isEarthKingdomDish || hasMultipleNations) {
+            return 'Ancient & Traditional';
+        }
+
+        // 5. Additional nation-specific logic
+        if (isWaterTribeDish && isMainCourse) {
+            return 'Humble & Meditative'; // Water Tribe main courses are often hearty and comforting
+        }
+
+        // 6. Fallback based on cooking style
+        if (isSlowStyle) {
+            return 'Humble & Meditative';
+        } else if (isHighHeatStyle) {
+            return 'Invigorating & Playful';
+        }
+
+        // 7. Default fallback
+        return 'Ancient & Traditional';
     }
 
     private selectIngredients(dishType: DishType, cookingStyle: CookingStyle): Ingredient[] {
