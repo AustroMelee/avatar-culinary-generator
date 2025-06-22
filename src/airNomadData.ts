@@ -1,6 +1,6 @@
 // src/airNomadData.ts
 
-import { NationData, CookingStyle } from './types';
+import { CookingStyle, NationData } from './types';
 
 export const airNomadCookingStyles: CookingStyle[] = [
     { name: 'Baking', dishSubtype: 'Bake', description: 'The monks are skilled bakers, creating everything from fruit pies to fluffy buns in their stone ovens, often using airbending to ensure even cooking.' },
@@ -9,15 +9,23 @@ export const airNomadCookingStyles: CookingStyle[] = [
     { name: 'Simmering', dishSubtype: 'Curry', description: 'A slow, gentle cooking in liquid to meld flavors, perfect for creating rich curries and broths.'},
     { name: 'Piemaking', dishSubtype: 'Pie', description: 'A beloved pastime, creating savory or sweet pies with flaky, air-puffed crusts.'},
     { name: 'Minimalist Assembly', dishSubtype: 'Salad', description: 'A philosophy of using very little cooking, allowing the pure, inherent taste of the raw ingredients to be the focus of the meal.' },
+    { name: 'Juicing', dishSubtype: 'Juice', description: 'A simple process of extracting the vibrant, raw essence of fruits and some vegetables into a refreshing drink.' },
 ];
 
 export const airNomadData: NationData = {
   nation: 'air-nomads',
-  dishEmojis: ['🍲', '🥗', '🥧', '🥠', '🥟', '🍜', '🧋', '🍮', '🫕', '🫔'],
-  
+  dishEmojis: {
+    'main-course': ['🍲', '🧆', '🥘'],
+    'side-dish': ['🍚', '🥣'],
+    'snack': ['🥠', '🥟'],
+    'dessert': ['🥧', '🍮', '🥮'],
+    'soup-stew': ['🥣', '🍲'],
+    'salad': ['🥗', '🥬'],
+    'beverage': ['🧋', '🍵', '🥤'],
+  },
   nameParts: {
     prefixes: ['Soaring', 'Whispering', 'Monk Gyatso\'s', 'Meditative', 'Peaceful', 'Sky Temple', 'Four Winds', 'Silent'],
     middles: ['Wind', 'Cloud', 'Spirit', 'Lotus', 'Mountain', 'Sunrise', 'Treetop', 'Pilgrim\'s'],
-    suffixes: ['Surprise', 'Delight', 'Special'],
+    suffixes: ['Surprise', 'Delight', 'Special', 'Medley', 'Festival'],
   },
 };

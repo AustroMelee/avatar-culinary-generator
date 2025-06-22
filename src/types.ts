@@ -58,5 +58,5 @@ export interface NationData {
     middles: string[];
     suffixes: string[];
   };
-  dishEmojis: string[];
+  dishEmojis: Record<DishType, string[]>;
 }

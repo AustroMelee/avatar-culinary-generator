@@ -23,36 +23,36 @@ export class TextGenerator {
         const middle = pick(nameParts.middles);
         const suffix = pick(nameParts.suffixes);
         const { dishSubtype } = context.cookingStyle;
-        const { primaryIngredient, secondaryIngredient } = context;
+        const { primaryIngredient } = context;
 
-        // NEW: Let's clean up ingredient names for use in titles (e.g., "Lentils of the Four Winds" -> "Lentil")
         const getCleanIngredientName = (ing: Ingredient) => {
             if (ing.name.includes('Lentils')) return 'Lentil';
             if (ing.name.includes('Mung Beans')) return 'Mung Bean';
-            return ing.name.split(' ')[0]; // "Moon Peach" -> "Moon", "Potato" -> "Potato"
+            if (ing.name.includes('Nuts')) return 'Nut';
+            return ing.name.split(' ')[0];
         };
         
         const primaryName = getCleanIngredientName(primaryIngredient);
 
         const rand = Math.random();
 
-        // --- NEW & IMPROVED PATTERNS ---
-
-        // Pattern 1 (High Priority): [Prefix] [Ingredient] [Dish Subtype] -> "Meditative Lentil Curry"
-        if (rand < 0.4) {
-            return `${prefix} ${primaryName} ${dishSubtype}`;
-        } 
-        // Pattern 2: [Middle] [Ingredient] [Suffix] -> "Sunrise Apple Delight"
-        else if (rand < 0.7) {
-            return `${middle} ${primaryName} ${suffix}`;
+        // --- FINAL, POLISHED PATTERNS ---
+        
+        // Always use the subtype if it's specific and descriptive (Curry, Pie, Juice, Salad)
+        if (['Curry', 'Pie', 'Juice', 'Salad', 'Stir-fry'].includes(dishSubtype)) {
+             if (rand < 0.6) return `${prefix} ${primaryName} ${dishSubtype}`; // "Meditative Lentil Curry"
+             return `${middle} ${primaryName} ${dishSubtype}`; // "Cloud Apple Juice"
         }
-        // Pattern 3: [Prefix] [Middle] [Dish Subtype] -> "Sky Temple Wind Pie" (the old classic)
-        else if (rand < 0.9) {
-            return `${prefix} ${middle} ${dishSubtype}`;
+
+        // Generic patterns for Bake, Steam, etc.
+        if (rand < 0.4) {
+            return `${prefix} ${primaryName} ${suffix}`; // "Soaring Potato Delight"
         } 
-        // Pattern 4 (Fallback): [Middle] [Suffix] -> "Treetop Surprise"
+        else if (rand < 0.7) {
+            return `${middle} ${primaryName} Medley`; // "Sunrise Tofu Medley"
+        }
         else {
-            return `${middle} ${suffix}`;
+            return `${prefix} ${middle} Special`; // "Sky Temple Wind Special"
         }
     }
 

@@ -4,34 +4,36 @@ import { DishContext, SentenceFragment, FragmentTag, Ingredient } from './types'
 
 const pick = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-// UPGRADED Adjective helper
+// --- FINAL, UPGRADED Adjective Helper ---
 const getAdjective = (ingredient: Ingredient, context: DishContext): string => {
-    const { cookingStyle, primaryIngredient } = context;
-    const isSweet = primaryIngredient.flavorProfile === 'sweet';
+    const { cookingStyle } = context;
+    const { category, flavorProfile } = ingredient;
+    const isSweet = flavorProfile === 'sweet';
 
-    // Cooking Style-based adjectives
+    // Handle by Cooking Style first
     if (cookingStyle.name === 'Baking' || cookingStyle.name === 'Piemaking') {
+        if (category === 'protein') return pick(['hearty', 'savory-baked', 'tender']);
+        if (category === 'vegetable') return pick(['golden-baked', 'roasted', 'tender']);
         if (isSweet) return pick(['sweetly baked', 'warm', 'caramelized', 'delicate']);
-        return pick(['hearty', 'golden-baked', 'savory', 'flaky']);
+        return pick(['hearty', 'flaky', 'savory']); // Flaky is now a fallback, great for pastry
     }
     if (cookingStyle.name === 'Steaming') {
         if (isSweet) return pick(['gently steamed', 'lightly sweet', 'infused']);
         return pick(['delicate', 'tender-steamed', 'aromatic']);
     }
     if (cookingStyle.name === 'Light Sauté') {
-        if (isSweet) return pick(['lightly caramelized', 'vibrant', 'crisp-sweet']);
         return pick(['crisp-tender', 'lightly sautéed', 'vibrant']);
     }
     if (cookingStyle.name === 'Simmering') {
         if (isSweet) return pick(['gently simmered', 'fruit-infused', 'syrupy']);
         return pick(['slow-simmered', 'rich', 'hearty', 'savory']);
     }
-    if (cookingStyle.name === 'Minimalist Assembly') {
-        if (isSweet) return pick(['fresh', 'juicy', 'naturally sweet']);
+    if (cookingStyle.name === 'Minimalist Assembly' || cookingStyle.name === 'Juicing') {
+        if (isSweet) return pick(['fresh', 'juicy', 'naturally sweet', 'vibrant']);
         return pick(['crisp', 'vibrant', 'garden-fresh', 'zesty']);
     }
 
-    // Fallback based on flavor profile
+    // Generic Fallback
     return isSweet ? pick(['sweet', 'delightful']) : pick(['savory', 'hearty']);
 };
 
@@ -44,7 +46,7 @@ const descriptionFragments: SentenceFragment[] = [
     },
     { 
         tag: 'ingredient_centric', 
-        text: (ctx) => `The experience begins with ${ctx.primaryIngredient.name.toLowerCase()}, perfectly complemented by the essence of ${ctx.secondaryIngredient.name.toLowerCase()}` 
+        text: (ctx) => `The experience begins with ${ctx.primaryIngredient.name.toLowerCase()}${ctx.secondaryIngredient ? `, perfectly complemented by the essence of ${ctx.secondaryIngredient.name.toLowerCase()}` : ', a simple and pure flavor experience'}` 
     },
     { 
         tag: 'style_centric', 
@@ -52,7 +54,7 @@ const descriptionFragments: SentenceFragment[] = [
     },
     { 
         tag: 'style_centric', 
-        text: (ctx) => `Through the art of ${ctx.cookingStyle.name.toLowerCase()}, the ${getAdjective(ctx.primaryIngredient, ctx)} ${ctx.primaryIngredient.name.toLowerCase()} and ${getAdjective(ctx.secondaryIngredient, ctx)} ${ctx.secondaryIngredient.name.toLowerCase()} meld into a single, delightful experience`
+        text: (ctx) => `Through the art of ${ctx.cookingStyle.name.toLowerCase()}, the ingredients meld into a single, delightful experience${ctx.secondaryIngredient ? `, led by the ${getAdjective(ctx.primaryIngredient, ctx)} ${ctx.primaryIngredient.name.toLowerCase()}` : ''}`
     },
     { 
         tag: 'theme_centric', 
