@@ -358,11 +358,8 @@ body[data-theme='dark'] .theme-icon:hover {
 }
 
 .option:hover {
-  background: var(--theme-bg-secondary);
-  filter: brightness(160%);
-  color: var(--theme-accent);
-  font-weight: 600;
-  transform: translateX(5px);
+  background-color: var(--theme-bg-secondary);
+  color: var(--theme-text-accent);
 }
 
 .option.selected {
