@@ -3,6 +3,8 @@
 import { Dish, DishType, Ingredient, Nation, CookingStyle, DishContext, DishTheme, IngredientCategory, NationData } from './types';
 import { airNomadData, airNomadCookingStyles } from './airNomadData';
 import { airNomadIngredients } from './airNomadIngredients';
+import { waterTribeData, waterTribeCookingStyles } from './waterTribeData';
+import { waterTribeIngredients } from './waterTribeIngredients';
 import { TextGenerator } from './textGenerator';
 
 // A type for our recipe skeletons
@@ -13,10 +15,52 @@ const RECIPE_BLUEPRINTS: Record<DishType, RecipeSkeleton> = {
     'main-course': { protein: 1, vegetable: 2, base: 1, flavoring: 1 },
     'side-dish': { vegetable: 2, flavoring: 1 },
     'snack': { protein: 1, vegetable: 1 },
-    'dessert': { fruit: 2, base: 1, flavoring: 1 },
+    'dessert': { fruit: 2, flavoring: 1, garnish: 1 },
     'soup-stew': { protein: 1, vegetable: 2, base: 1, flavoring: 1 },
-    'salad': { vegetable: 3, protein: 1, garnish: 1 },
-    'beverage': { fruit: 2, flavoring: 1 },
+    'salad': { vegetable: 2, garnish: 1, protein: 1 },
+    'beverage': { fruit: 1, flavoring: 1 },
+};
+
+// *** NATION-AWARE ARCHITECTURE ***
+// This master map holds the specific culinary rules for each nation.
+const NATION_CULINARY_MAP: Record<Nation, Record<DishType, string[]>> = {
+    'air-nomads': {
+        'main-course': ['Baking', 'Steaming', 'Light Sauté', 'Simmering', 'Piemaking'],
+        'side-dish': ['Steaming', 'Light Sauté', 'Simmering', 'Baking'],
+        'snack': ['Minimalist Assembly', 'Baking', 'Light Sauté'],
+        'dessert': ['Baking', 'Piemaking', 'Minimalist Assembly'],
+        'soup-stew': ['Simmering'],
+        'salad': ['Minimalist Assembly'],
+        'beverage': ['Juicing'],
+    },
+    'water-tribe': {
+        'main-course': ['Stewing', 'Grilling', 'Poaching', 'Boiling'],
+        'side-dish': ['Boiling', 'Poaching'],
+        'snack': ['Curing', 'Grilling'],
+        'dessert': ['Freezing'],
+        'soup-stew': ['Stewing'],
+        'salad': ['Minimalist Assembly'], // For seaweed salads
+        'beverage': ['Brewing'],
+    },
+    // Future nations will be added here
+    'earth-kingdom': {
+        'main-course': [],
+        'side-dish': [],
+        'snack': [],
+        'dessert': [],
+        'soup-stew': [],
+        'salad': [],
+        'beverage': [],
+    }, 
+    'fire-nation': {
+        'main-course': [],
+        'side-dish': [],
+        'snack': [],
+        'dessert': [],
+        'soup-stew': [],
+        'salad': [],
+        'beverage': [],
+    },
 };
 
 // *** THE CORE ARCHITECTURAL FIX ***
@@ -60,9 +104,23 @@ export class DishGenerator {
 
     constructor(nation: Nation) {
         this.textGenerator = new TextGenerator();
-        this.nationData = airNomadData;
-        this.ingredients = airNomadIngredients;
-        this.cookingStyles = airNomadCookingStyles;
+        switch (nation) {
+            case 'air-nomads':
+                this.nationData = airNomadData;
+                this.ingredients = airNomadIngredients;
+                this.cookingStyles = airNomadCookingStyles;
+                break;
+            case 'water-tribe':
+                this.nationData = waterTribeData;
+                this.ingredients = waterTribeIngredients;
+                this.cookingStyles = waterTribeCookingStyles;
+                break;
+            default:
+                console.warn(`Data for nation "${nation}" not found, defaulting to Air Nomads.`);
+                this.nationData = airNomadData;
+                this.ingredients = airNomadIngredients;
+                this.cookingStyles = airNomadCookingStyles;
+        }
     }
 
     public generateDish(dishType: DishType): Dish {
@@ -87,23 +145,20 @@ export class DishGenerator {
     
     // --- REWRITTEN createLinkedContext ---
     private createLinkedContext(dishType: DishType): DishContext {
-        // 1. Get the list of valid style names for the given dish type.
-        const validStyleNames = DISH_STYLE_MAP[dishType];
+        // 1. Get the list of valid style names from the NATION-AWARE map.
+        const validStyleNames = NATION_CULINARY_MAP[this.nationData.nation][dishType];
         if (!validStyleNames || validStyleNames.length === 0) {
-            throw new Error(`No valid cooking styles defined for dish type: ${dishType}`);
+            throw new Error(`No valid cooking styles defined for dish type '${dishType}' in nation '${this.nationData.nation}'`);
         }
 
-        // 2. Filter the master list of cooking styles to get the valid ones.
         const validStyles = this.cookingStyles.filter(style => validStyleNames.includes(style.name));
-        
-        // 3. Pick a random style from the *valid* list.
         const cookingStyle = getRandom(validStyles);
-        
-        // 4. Select ingredients that are compatible with this valid style.
         const allIngredients = this.selectIngredients(dishType, cookingStyle);
         
-        // Ensure we have enough ingredients to proceed.
-        if (allIngredients.length < 2) {
+        if (allIngredients.length === 0) {
+            throw new Error(`Could not find any ingredients for ${dishType} with style ${cookingStyle.name}.`);
+        }
+        if (allIngredients.length < 2 && dishType !== 'snack' && dishType !== 'beverage') {
             throw new Error(`Could not select enough suitable ingredients for dish type: ${dishType} with style ${cookingStyle.name}.`);
         }
 
@@ -112,7 +167,7 @@ export class DishGenerator {
         return {
             theme: getRandom(themes),
             primaryIngredient: allIngredients[0],
-            secondaryIngredient: allIngredients[1],
+            secondaryIngredient: allIngredients.length > 1 ? allIngredients[1] : allIngredients[0],
             cookingStyle,
             allIngredients,
             nationData: this.nationData,
@@ -131,10 +186,7 @@ export class DishGenerator {
         if (isSweetDish) {
             ingredientPool = ingredientPool.filter(i => i.flavorProfile === 'sweet');
         } else {
-            ingredientPool = ingredientPool.filter(i => ['savory', 'neutral', 'pungent', 'umami'].includes(i.flavorProfile));
-            if (dishType === 'soup-stew') {
-                ingredientPool = ingredientPool.filter(i => i.name.includes('Broth') || i.category !== 'base');
-            }
+            ingredientPool = ingredientPool.filter(i => i.flavorProfile !== 'sweet');
         }
         
         let selectedIngredients: Ingredient[] = [];

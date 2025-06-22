@@ -142,11 +142,11 @@ body {
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 40px;
-  height: 40px;
-  background: var(--theme-gradient-button);
-  color: white;
-  border: none;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(45deg, #0d1b2a, #2a4b6b);
+  color: #f0e68c;
+  border: 2px solid #e0e0e0;
   border-radius: 50%;
   font-size: 1.2rem;
   cursor: pointer;
@@ -161,16 +161,17 @@ body {
 .theme-icon:hover {
   transform: translateY(-2px) scale(1.1);
   box-shadow: var(--theme-shadow-heavy);
+  background: linear-gradient(45deg, #1c2e42, #3b5c7e);
 }
 
 /* Updated theme icon styling to work with data-theme attribute */
 body[data-theme='dark'] .theme-icon {
-  background: linear-gradient(45deg, #000000, #1a1a2e);
+  background: linear-gradient(45deg, #87CEEB, #1E90FF);
   color: #FFD54F;
 }
 
 body[data-theme='dark'] .theme-icon:hover {
-  background: linear-gradient(45deg, #1a1a2e, #2d2d5a);
+  background: linear-gradient(45deg, #97d7ee, #2e9aff);
 }
 
 .nation-controls {
@@ -236,18 +237,18 @@ body[data-theme='dark'] .theme-icon:hover {
   margin: 0 2rem;
 }
 
-.custom-nation-selector,
-.custom-dish-type-selector {
+/* Replace the two separate selectors with one unified selector */
+.custom-select {
   position: relative;
   display: inline-block;
-  width: 260px;
+  width: 250px; /* Enforce a fixed width on both dropdowns */
 }
 
 .selected-option {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 0 20px; /* Use padding for horizontal spacing only */
   background: var(--theme-bg-secondary);
   border: 3px solid var(--theme-primary);
   border-radius: 12px;
@@ -258,7 +259,7 @@ body[data-theme='dark'] .theme-icon:hover {
   transition: all 0.3s ease;
   user-select: none;
   box-shadow: var(--theme-shadow-medium);
-  min-height: 56px;
+  height: 60px; /* Enforce a fixed height */
 }
 
 .selected-option:hover {
@@ -270,8 +271,8 @@ body[data-theme='dark'] .theme-icon:hover {
 
 .selected-option-content {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: center; /* This is the key change */
+  gap: 12px; /* Slightly increased gap for better spacing */
 }
 
 .nation-icon {
@@ -284,6 +285,9 @@ body[data-theme='dark'] .theme-icon:hover {
 .dish-type-icon {
   font-size: 30px;
   line-height: 1;
+  width: 36px; /* Give the span a width to match the img */
+  text-align: center; /* Center the emoji inside the span */
+  flex-shrink: 0;
 }
 
 .dropdown-arrow {
@@ -308,7 +312,7 @@ body[data-theme='dark'] .theme-icon:hover {
   transform: rotate(180deg);
 }
 
-.dropdown-options {
+.custom-select .dropdown-options {
   position: absolute;
   top: calc(100% - 3px);
   left: 0;
@@ -323,18 +327,14 @@ body[data-theme='dark'] .theme-icon:hover {
   transform: translateY(-10px);
   transition: all 0.3s ease;
   z-index: 2000;
-  max-height: 300px;
-  overflow-y: hidden;
+  max-height: 600px; /* Make the dropdown menu longer by default */
+  overflow-y: visible; /* Remove the vertical scrollbar */
 }
 
 .dropdown-options.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-}
-
-.custom-dish-type-selector .dropdown-options {
-  max-height: 400px;
 }
 
 .option {

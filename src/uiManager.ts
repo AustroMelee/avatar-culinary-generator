@@ -36,9 +36,7 @@ export class UIManager {
     this.setupCustomSelect(this.nationSelector, this.handleNationChange.bind(this));
     this.setupCustomSelect(this.dishTypeSelector, this.handleDishTypeChange.bind(this));
     
-    // Set initial UI state from ThemeManager
     this.updateThemeUI(); 
-    this.dishContainer.innerHTML = `<div class="dish-display empty">Select your options and click 'Generate' to create a dish!</div>`;
   }
 
   /**
@@ -51,6 +49,14 @@ export class UIManager {
     this.themeToggleButton.addEventListener('click', () => {
         ThemeManager.toggleLightDark();
         this.updateThemeUI();
+    });
+
+    // Add ONE global click listener to close all dropdowns when clicking outside
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.custom-nation-selector, .custom-dish-type-selector').forEach(el => {
+            el.querySelector('.selected-option')?.classList.remove('open');
+            el.querySelector('.dropdown-options')?.classList.remove('show');
+        });
     });
   }
 
@@ -185,68 +191,49 @@ export class UIManager {
     this.dishContainer.innerHTML = errorHTML;
   }
 
-  /**
-   * Generic setup for custom select dropdowns based on the provided HTML structure.
-   */
+  // --- REWRITTEN AND SIMPLIFIED DROPDOWN LOGIC ---
   private static setupCustomSelect(container: HTMLDivElement, onChange: (value: string) => void): void {
     const selectedOption = container.querySelector('.selected-option') as HTMLDivElement;
     const dropdownOptions = container.querySelector('.dropdown-options') as HTMLDivElement;
+    const selectedContent = selectedOption.querySelector('.selected-option-content') as HTMLDivElement;
     const options = Array.from(dropdownOptions.querySelectorAll('.option')) as HTMLDivElement[];
 
-    if (!selectedOption || !dropdownOptions) return;
+    if (!selectedOption || !dropdownOptions || !selectedContent) return;
 
+    // Handles OPENING the dropdown
     selectedOption.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const wasOpen = container.classList.contains('active');
-
-        // First, close all dropdowns on the page unconditionally.
-        document.querySelectorAll('.custom-nation-selector, .custom-dish-type-selector').forEach(el => {
-            el.classList.remove('active');
-            el.querySelector('.selected-option')?.classList.remove('open');
-            el.querySelector('.dropdown-options')?.classList.remove('show');
+        e.stopPropagation(); // Stop this click from reaching the document and closing the dropdown immediately
+        const isOpen = dropdownOptions.classList.contains('show');
+        
+        // First, close all other dropdowns
+        document.querySelectorAll('.dropdown-options.show').forEach(el => {
+            if (el !== dropdownOptions) {
+                el.classList.remove('show');
+                el.previousElementSibling?.classList.remove('open');
+            }
         });
 
-        // If the one we clicked was NOT open, open it now.
-        if (!wasOpen) {
-            container.classList.add('active');
-            selectedOption.classList.add('open');
-            dropdownOptions.classList.add('show');
-        }
+        // Then, toggle the current one
+        selectedOption.classList.toggle('open');
+        dropdownOptions.classList.toggle('show');
     });
 
+    // Handles SELECTING an option
     options.forEach(option => {
         option.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const value = option.dataset.value!;
-            if (value === container.dataset.value) { // No change, just close
-                container.classList.remove('active');
-                selectedOption.classList.remove('open');
-                dropdownOptions.classList.remove('show');
-                return;
-            };
+            e.stopPropagation(); // Crucial: Stop the click from bubbling up further
+            const newValue = option.dataset.value!;
 
-            container.dataset.value = value;
-
-            // Update the displayed content in the "selected" area
-            const selectedContent = selectedOption.querySelector('.selected-option-content')!;
-            selectedContent.innerHTML = option.innerHTML;
+            // Update display and state only if the value has changed
+            if (container.dataset.value !== newValue) {
+                selectedContent.innerHTML = option.innerHTML;
+                container.dataset.value = newValue;
+                onChange(newValue);
+            }
 
             // Close the dropdown
-            container.classList.remove('active');
             selectedOption.classList.remove('open');
             dropdownOptions.classList.remove('show');
-            
-            // Trigger the onChange callback with the new value
-            onChange(value);
-        });
-    });
-
-    // Add a global click listener to close dropdowns when clicking outside
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.custom-nation-selector, .custom-dish-type-selector').forEach(el => {
-            el.classList.remove('active');
-            el.querySelector('.selected-option')?.classList.remove('open');
-            el.querySelector('.dropdown-options')?.classList.remove('show');
         });
     });
   }
