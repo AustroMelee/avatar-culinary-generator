@@ -8,41 +8,49 @@ export const fireNationCookingStyles: CookingStyle[] = [
     { 
         name: 'Grilling', 
         dishSubtype: 'Grill', 
+        form: 'skewer',
         description: 'Cooking over precisely controlled hot coals, searing meats and vegetables to perfection with a signature smoky flavor.' 
     },
     { 
         name: 'Roasting', 
         dishSubtype: 'Roast', 
+        form: 'roast',
         description: 'Using the intense, dry heat of a volcanic-stone oven to cook large cuts of meat or whole komodo chickens.' 
     },
     { 
         name: 'Wok-frying', 
         dishSubtype: 'Wok-fry', 
+        form: 'plated',
         description: 'A high-speed, high-heat method that uses minimal oil to create intensely flavorful and spicy dishes.' 
     },
     { 
         name: 'Steaming', 
         dishSubtype: 'Steam', 
+        form: 'plated',
         description: 'A disciplined technique using steam to gently cook delicate fish and dumplings, often infused with spices.' 
     },
     { 
         name: 'Simmering', 
         dishSubtype: 'Simmer', 
+        form: 'stew',
         description: 'Slowly cooking ingredients in a spiced broth or sauce, allowing flavors to meld and deepen over time.' 
     },
     { 
         name: 'Baking', 
         dishSubtype: 'Bake', 
+        form: 'handheld',
         description: 'Creating perfectly uniform fire cakes, tarts, and buns in meticulously heated ovens.' 
     },
     { 
         name: 'Minimalist Assembly', 
         dishSubtype: 'Salad', 
+        form: 'salad',
         description: 'A rare but potent dish, typically featuring sliced fire chilies and other bold ingredients served raw to test one\'s mettle.' 
     },
     { 
         name: 'Brewing', 
         dishSubtype: 'Brew', 
+        form: 'beverage',
         description: 'Creating powerful, often spicy, teas and tonics intended to invigorate the body and spirit before firebending.' 
     },
 ];

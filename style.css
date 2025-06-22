@@ -144,7 +144,7 @@ body {
   right: 20px;
   width: 44px;
   height: 44px;
-  background: linear-gradient(45deg, #0d1b2a, #2a4b6b);
+  background: linear-gradient(135deg, #0d1b2a 0%, #2a4b6b 100%);
   color: #f0e68c;
   border: 2px solid #e0e0e0;
   border-radius: 50%;
@@ -166,24 +166,24 @@ body {
 
 /* Updated theme icon styling to work with data-theme attribute */
 body[data-theme='dark'] .theme-icon {
-  background: linear-gradient(45deg, #87CEEB, #1E90FF);
+  background: linear-gradient(135deg, #87CEEB 0%, #1E90FF 100%);
   color: #FFD54F;
 }
 
 body[data-theme='dark'] .theme-icon:hover {
-  background: linear-gradient(45deg, #97d7ee, #2e9aff);
+  background: linear-gradient(135deg, #97d7ee 0%, #2e9aff 100%);
 }
 
 .nation-controls {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 1rem;
   align-items: center;
   margin: 0.75rem 0;
   padding: 1rem 2rem;
   background: var(--theme-bg-card);
   border-radius: 12px;
-  border: 1px solid var(--theme-border-primary);
+  border: none !important;
   backdrop-filter: blur(10px);
   max-width: 1000px;
   margin-left: auto;
@@ -276,8 +276,8 @@ body[data-theme='dark'] .theme-icon:hover {
 }
 
 .nation-icon {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -1501,4 +1501,471 @@ body.screenshot-mode .dish-display .ingredients {
   font-size: 0.85em;
   font-style: italic;
   margin-left: 4px;
+}
+
+/* --- ADD THESE NEW STYLES FOR THE CHECKLIST --- */
+
+#nation-checklist-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Individual checkbox label styling */
+.nation-checkbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  min-width: 60px;
+}
+
+/* Hide the default checkbox */
+.nation-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.nation-checkbox .nation-icon {
+  width: 64px !important;
+  height: 64px !important;
+  transition: all 0.2s ease;
+  filter: grayscale(80%); /* Make unselected icons gray */
+  opacity: 0.7;
+}
+
+.nation-checkbox .nation-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--theme-text-secondary);
+  transition: all 0.2s ease;
+}
+
+/* Style for when a checkbox is CHECKED */
+.nation-checkbox input[type="checkbox"]:checked + .nation-icon {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.nation-checkbox input[type="checkbox"]:checked ~ .nation-name {
+  color: var(--theme-primary);
+  font-weight: 700;
+}
+
+/* Hover effect */
+.nation-checkbox:hover .nation-icon {
+  opacity: 1;
+}
+
+/* Style for disabled checkbox to prevent unselecting the last one */
+.nation-checkbox input[type="checkbox"]:disabled + .nation-icon {
+  cursor: not-allowed;
+  filter: drop-shadow(0 0 3px var(--theme-accent));
+}
+
+/* Nation tag styling for dish display */
+.dish-nation-tag {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--theme-text-secondary);
+  background: var(--theme-bg-overlay);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--theme-border-primary);
+  white-space: nowrap;
+  margin-left: 0.5rem;
+}
+
+.dish-title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.dish-name-flavor-text {
+  text-align: center;
+  font-style: italic;
+  color: var(--theme-text-secondary);
+  margin: -0.5rem 0 1rem 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  background: var(--theme-bg-overlay);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--theme-accent);
+}
+
+/* Responsive adjustments for the checklist */
+@media (max-width: 768px) {
+  #nation-checklist-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .nation-checkbox {
+    flex-direction: row;
+    min-width: auto;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .nation-checkbox .nation-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .nation-checkbox .nation-name {
+    font-size: 0.7rem;
+  }
+}
+
+/* --- ADD THESE NEW STYLES FOR UI/UX POLISH --- */
+
+/* 1. The Loading Screen Overlay */
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#loading-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+/* The new bowl and ingredient container */
+#bowl-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* Align bowl to the bottom */
+  /* Ensure the bowl stays centered regardless of ingredient positioning */
+  flex-shrink: 0;
+  /* Isolate this container from any layout interference */
+  isolation: isolate;
+  /* Ensure consistent positioning */
+  margin: 0 auto;
+  /* Create a stacking context to prevent interference */
+  z-index: 0;
+}
+
+#bowl-emoji {
+  font-size: 8rem; /* A big, inviting bowl */
+  line-height: 1;
+  /* Ensure the bowl emoji itself doesn't get affected by other elements */
+  position: relative;
+  z-index: 1;
+  /* Prevent any layout shifts */
+  flex-shrink: 0;
+  flex-grow: 0;
+  /* Ensure the bowl stays exactly where it should be */
+  transform: none !important;
+  /* Prevent any text wrapping or layout changes */
+  white-space: nowrap;
+  overflow: visible;
+}
+
+#falling-ingredients {
+  position: absolute;
+  top: -50px; /* Start ingredients above the visible area */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Ensure ingredients don't affect the layout */
+  pointer-events: none;
+  z-index: 0;
+  /* Prevent any layout interference */
+  contain: layout style paint;
+}
+
+/* Individual falling ingredient styling */
+.falling-ingredient {
+  position: absolute;
+  font-size: 3rem;
+  opacity: 0;
+  animation: fallAndShrink 1.5s ease-in-out forwards;
+  /* Ensure ingredients don't affect layout */
+  pointer-events: none;
+  /* Prevent any layout interference */
+  contain: layout style paint;
+  /* Ensure proper stacking */
+  z-index: 0;
+}
+
+/* Keyframes for the animation */
+@keyframes fallAndShrink {
+  0% {
+    transform: translateY(-50px) scale(1.2);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(100px) scale(1); /* Fall towards the bowl */
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(130px) scale(0); /* Shrink into the bowl */
+    opacity: 0;
+  }
+}
+
+.loading-quote {
+  font-family: 'Seagull', sans-serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--theme-accent);
+  margin-top: 1.5rem;
+  height: 2em; /* Reserve space to prevent layout shift */
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 2. Generational Animation for Dish Card */
+.dish-display .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger the animation for each element */
+.dish-display .dish-title-container { animation-delay: 0s; }
+.dish-display .dish-name-flavor-text { animation-delay: 0.1s; }
+.dish-display .dish-section { animation-delay: 0.2s; }
+.dish-display .dish-section:nth-child(2) { animation-delay: 0.3s; }
+.dish-display .dish-details .dish-section { animation-delay: 0.4s; }
+.dish-display .dish-details .dish-section:nth-child(2) { animation-delay: 0.5s; }
+
+/* Animate ingredient list items one by one */
+.dish-display .ingredient-item {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+.dish-display .ingredients-list .ingredient-item:nth-child(1) { animation-delay: 0.5s; }
+.dish-display .ingredients-list .ingredient-item:nth-child(2) { animation-delay: 0.6s; }
+.dish-display .ingredients-list .ingredient-item:nth-child(3) { animation-delay: 0.7s; }
+.dish-display .ingredients-list .ingredient-item:nth-child(4) { animation-delay: 0.8s; }
+.dish-display .ingredients-list .ingredient-item:nth-child(5) { animation-delay: 0.9s; }
+.dish-display .ingredients-list .ingredient-item:nth-child(6) { animation-delay: 1.0s; }
+.dish-display .ingredients-list .ingredient-item:nth-child(7) { animation-delay: 1.1s; }
+.dish-display .ingredients-list .ingredient-item:nth-child(8) { animation-delay: 1.2s; }
+
+/* --- ADD THESE STYLES FOR THE NEW PARCHMENT LAYOUT --- */
+
+/* Main card adjustments */
+.dish-display.parchment-layout {
+  padding: 2rem;
+  border: 2px solid var(--theme-primary);
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.2);
+}
+
+/* Header and Title Styling */
+.dish-display.parchment-layout .dish-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.dish-display.parchment-layout .dish-header h2 {
+  margin: 0;
+  color: var(--theme-text-primary);
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-shadow: 0 0 5px var(--theme-primary);
+}
+
+.dish-display.parchment-layout .dish-header .dish-emoji {
+  font-size: 2.5rem;
+}
+
+.dish-display.parchment-layout .nation-tag {
+  background: rgba(0,0,0,0.3);
+  color: var(--theme-text-secondary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--theme-border-primary);
+}
+
+.dish-display.parchment-layout .title-divider {
+  border: none;
+  height: 2px;
+  width: 80%;
+  margin: 0 auto 2rem auto;
+  background: linear-gradient(to right, transparent, var(--theme-primary), transparent);
+  opacity: 0.8;
+}
+
+/* 2x2 Grid Layout for Main Content */
+.dish-display.parchment-layout .dish-main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 2rem 3rem;
+}
+
+.dish-display.parchment-layout .content-section h3 {
+  color: var(--theme-primary);
+  margin: 0 0 1rem 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.dish-display.parchment-layout .content-section p {
+  color: var(--theme-text-primary);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Styling for the decorative "callout" box effect */
+.dish-display.parchment-layout .callout-box {
+  position: relative;
+  padding-left: 1.5rem;
+  border-left: 4px solid var(--theme-primary);
+  border-image: linear-gradient(to bottom, var(--theme-primary) 20%, transparent 100%) 1;
+}
+
+.dish-display.parchment-layout .lore-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--theme-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* New, subdued ingredient and rarity styling */
+.dish-display.parchment-layout .ingredients-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dish-display.parchment-layout .ingredient-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dish-display.parchment-layout .ingredient-item .ingredient-emoji {
+  filter: saturate(0.8);
+  opacity: 0.9;
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+}
+
+.dish-display.parchment-layout .ingredient-item .ingredient-name {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--theme-text-primary);
+}
+
+.dish-display.parchment-layout .ingredient-separator {
+    color: var(--theme-text-secondary);
+    margin: 0 0.5rem;
+}
+
+.dish-display.parchment-layout .rarity-pill {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--theme-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+/* Remove bright colors from rarity pills */
+.dish-display.parchment-layout .rarity-pill.rarity-uncommon,
+.dish-display.parchment-layout .rarity-pill.rarity-rare,
+.dish-display.parchment-layout .rarity-pill.rarity-legendary {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--theme-text-secondary);
+  text-shadow: none;
+}
+
+/* Make the legendary pill slightly more prominent */
+.dish-display.parchment-layout .rarity-pill.rarity-legendary {
+    color: var(--theme-primary);
+    border-color: var(--theme-primary);
+}
+
+/* --- Nation Pills Styling --- */
+.nation-pills-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+  padding: 0 1rem;
+}
+
+.nation-pill {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.nation-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.nation-pill--air-nomads {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.nation-pill--water-tribe {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.nation-pill--earth-kingdom {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.nation-pill--fire-nation {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
 } 

@@ -17,42 +17,29 @@
         
         <main class="app-main">
             <div class="nation-controls">
-                <div class="nation-symbols-left">
-                    <img src="/assets/air_nation.png" alt="Air Nomads" class="decorative-symbol">
-                    <img src="/assets/air_nation.png" alt="Air Nomads" class="decorative-symbol">
+                
+                <!-- NEW CHECKLIST UI -->
+                <div id="nation-checklist-container">
+                    <label class="nation-checkbox">
+                        <input type="checkbox" name="nation" value="air-nomads" checked>
+                        <img src="/assets/air_nation.png" alt="Air Nomads" class="nation-icon">
+                    </label>
+                    <label class="nation-checkbox">
+                        <input type="checkbox" name="nation" value="water-tribe">
+                        <img src="/assets/water_nation.png" alt="Water Tribe" class="nation-icon">
+                    </label>
+                    <label class="nation-checkbox">
+                        <input type="checkbox" name="nation" value="earth-kingdom">
+                        <img src="/assets/earth_nation.png" alt="Earth Kingdom" class="nation-icon">
+                    </label>
+                    <label class="nation-checkbox">
+                        <input type="checkbox" name="nation" value="fire-nation">
+                        <img src="/assets/fire_nation.png" alt="Fire Nation" class="nation-icon">
+                    </label>
                 </div>
                 
                 <div class="custom-select-container">
-                    <div id="nation-selector" class="custom-nation-selector custom-select" data-value="air-nomads">
-                        <div class="selected-option">
-                            <div class="selected-option-content">
-                                <img src="/assets/air_nation.png" alt="Air Nomads" class="nation-icon">
-                                <span>Air Nomads</span>
-                            </div>
-                            <div class="dropdown-arrow"></div>
-                        </div>
-                        <div class="dropdown-options">
-                            <div class="option" data-value="air-nomads">
-                                <img src="/assets/air_nation.png" alt="Air Nomads" class="nation-icon">
-                                <span>Air Nomads</span>
-                            </div>
-                            <div class="option" data-value="water-tribe">
-                                <img src="/assets/water_nation.png" alt="Water Tribe" class="nation-icon">
-                                <span>Water Tribe</span>
-                            </div>
-                            <div class="option" data-value="earth-kingdom">
-                                <img src="/assets/earth_nation.png" alt="Earth Kingdom" class="nation-icon">
-                                <span>Earth Kingdom</span>
-                            </div>
-                            <div class="option" data-value="fire-nation">
-                                <img src="/assets/fire_nation.png" alt="Fire Nation" class="nation-icon">
-                                <span>Fire Nation</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="custom-select-container">
+                    <!-- The Dish Type dropdown remains, but we add the shared class for sizing -->
                     <div id="dish-type-selector" class="custom-dish-type-selector custom-select" data-value="main-course">
                         <div class="selected-option">
                             <div class="selected-option-content">
@@ -62,56 +49,35 @@
                             <div class="dropdown-arrow"></div>
                         </div>
                         <div class="dropdown-options">
-                            <div class="option" data-value="main-course">
-                                <span class="dish-type-icon">🥘</span>
-                                <span>MAIN COURSE</span>
-                            </div>
-                            <div class="option" data-value="side-dish">
-                                <span class="dish-type-icon">🍚</span>
-                                <span>SIDE DISH</span>
-                            </div>
-                            <div class="option" data-value="snack">
-                                <span class="dish-type-icon">🥜</span>
-                                <span>SNACK</span>
-                            </div>
-                            <div class="option" data-value="dessert">
-                                <span class="dish-type-icon">🍓</span>
-                                <span>DESSERT</span>
-                            </div>
-                            <div class="option" data-value="soup-stew">
-                                <span class="dish-type-icon">🍲</span>
-                                <span>SOUP/STEW</span>
-                            </div>
-                            <div class="option" data-value="salad">
-                                <span class="dish-type-icon">🥬</span>
-                                <span>SALAD</span>
-                            </div>
-                            <div class="option" data-value="beverage">
-                                <span class="dish-type-icon">🍵</span>
-                                <span>BEVERAGE</span>
-                            </div>
+                            <div class="option" data-value="main-course"><span class="dish-type-icon">🥘</span><span>MAIN COURSE</span></div>
+                            <div class="option" data-value="side-dish"><span class="dish-type-icon">🍚</span><span>SIDE DISH</span></div>
+                            <div class="option" data-value="snack"><span class="dish-type-icon">🍢</span><span>SNACK</span></div>
+                            <div class="option" data-value="dessert"><span class="dish-type-icon">🍰</span><span>DESSERT</span></div>
+                            <div class="option" data-value="soup-stew"><span class="dish-type-icon">🍲</span><span>SOUP/STEW</span></div>
+                            <div class="option" data-value="salad"><span class="dish-type-icon">🥗</span><span>SALAD</span></div>
+                            <div class="option" data-value="beverage"><span class="dish-type-icon">🍵</span><span>BEVERAGE</span></div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="nation-symbols-right">
-                    <img src="/assets/air_nation.png" alt="Air Nomads" class="decorative-symbol">
-                    <img src="/assets/air_nation.png" alt="Air Nomads" class="decorative-symbol">
-                </div>
             </div>
             
-            <button id="generate-button" class="generator-button">
-                Generate
-                <span class="ingredient-emoji-1">🥕</span>
-                <span class="ingredient-emoji-2">🍄</span>
-                <span class="ingredient-emoji-3">🌿</span>
-                <span class="ingredient-emoji-4">🥜</span>
-                <span class="ingredient-emoji-5">🫐</span>
-                <span class="ingredient-emoji-6">🍯</span>
-            </button>
-            
+            <button id="generate-button" class="generator-button">Generate</button>
             <div id="dish-container"></div>
         </main>
+    </div>
+
+    <!-- NEW, MORE COMPLEX LOADING OVERLAY STRUCTURE -->
+    <div id="loading-overlay">
+        <div class="loading-content">
+            <div id="bowl-container">
+                <div id="falling-ingredients">
+                    <!-- Ingredients will be added here by JavaScript -->
+                </div>
+                <div id="bowl-emoji">🥣</div>
+            </div>
+            <p id="loading-quote" class="loading-quote">The spirits are cooking...</p>
+        </div>
     </div>
 
     <script type="module" src="/src/main.ts"></script>

@@ -14,7 +14,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['roast', 'braise', 'stir-fry'], 
-        description: 'A rich, fatty cut of meat, often slow-braised until it is meltingly tender.' 
+        description: 'A rich, fatty cut of meat, often slow-braised until it is meltingly tender.',
+        nation: 'earth-kingdom',
+        location: 'Ba Sing Se',
+        synergies: { 'Bok Choy': 10, 'Soy Sauce': 8 }
     },
     { 
         name: 'Chicken', 
@@ -24,7 +27,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['roast', 'braise', 'stir-fry', 'congee'], 
-        description: 'A versatile meat found on farms across the kingdom, used in countless dishes.' 
+        description: 'A versatile meat found on farms across the kingdom, used in countless dishes.',
+        nation: 'earth-kingdom',
+        location: 'Generic',
+        synergies: { 'Scallions': 6 }
     },
     { 
         name: 'Ground Meat', 
@@ -34,7 +40,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['dumpling', 'stir-fry'], 
-        description: 'A mixture of seasoned ground meats, perfect for filling dumplings and bao.' 
+        description: 'A mixture of seasoned ground meats, perfect for filling dumplings and bao.',
+        nation: 'earth-kingdom',
+        location: 'Generic',
+        synergies: { 'Scallions': 5, 'Dumpling Wrappers': 8 }
     },
     { 
         name: 'River Fish', 
@@ -44,7 +53,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['braise', 'stir-fry', 'steam'], 
-        description: 'Freshwater fish from the kingdom\'s many rivers, often braised with ginger and soy.' 
+        description: 'Freshwater fish from the kingdom\'s many rivers, often braised with ginger and soy.',
+        nation: 'earth-kingdom',
+        location: 'Generic',
+        synergies: { 'Soy Sauce': 8, 'Scallions': 6 }
     },
     { 
         name: 'Kyoshi Elephant Koi', 
@@ -54,7 +66,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'umami', 
         isPlural: false, 
         suitability: ['roast', 'braise', 'steam'], 
-        description: 'A massive, revered fish from Kyoshi Island, its seared flesh is a gourmet delicacy.' 
+        description: 'A massive, revered fish from Kyoshi Island, its seared flesh is a gourmet delicacy.',
+        nation: 'earth-kingdom',
+        location: 'Kyoshi Island'
     },
     { 
         name: 'Duck', 
@@ -64,7 +78,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['roast', 'braise'], 
-        description: 'Often roasted whole until the skin is crisp, a celebratory dish in Ba Sing Se.'
+        description: 'Often roasted whole until the skin is crisp, a celebratory dish in Ba Sing Se.',
+        nation: 'earth-kingdom',
+        location: 'Ba Sing Se',
+        synergies: { 'Scallions': 7 }
     },
     { 
         name: 'Platypus Bear Egg', 
@@ -74,7 +91,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['congee', 'stir-fry'], 
-        description: 'An enormous egg with a rich yolk, large enough to be a meal in itself.'
+        description: 'An enormous egg with a rich yolk, large enough to be a meal in itself.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Tofu', 
@@ -84,7 +103,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'neutral', 
         isPlural: false, 
         suitability: ['stir-fry', 'braise', 'dumpling', 'congee'], 
-        description: 'Made from soybeans, a versatile protein that absorbs the flavor of the sauces it\'s cooked in.' 
+        description: 'Made from soybeans, a versatile protein that absorbs the flavor of the sauces it\'s cooked in.',
+        nation: 'earth-kingdom',
+        location: 'Generic',
+        synergies: { 'Bok Choy': 6, 'Soy Sauce': 5 }
     },
 
     // --- VEGETABLES ---
@@ -96,7 +118,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['stir-fry', 'braise', 'dumpling', 'steam'], 
-        description: 'A crisp, leafy green with a mild, sweet flavor, a staple in stir-fries.' 
+        description: 'A crisp, leafy green with a mild, sweet flavor, a staple in stir-fries.',
+        nation: 'earth-kingdom',
+        location: 'Ba Sing Se',
+        synergies: { 'Pork Belly': 10, 'Tofu': 6 }
     },
     { 
         name: 'Taro Root', 
@@ -106,7 +131,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'neutral', 
         isPlural: false, 
         suitability: ['roast', 'braise', 'congee', 'bake'], 
-        description: 'A starchy root vegetable, providing a hearty and satisfying element to any meal.' 
+        description: 'A starchy root vegetable, providing a hearty and satisfying element to any meal.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Bamboo Shoots', 
@@ -116,7 +143,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'neutral', 
         isPlural: true, 
         suitability: ['stir-fry', 'braise', 'dumpling'], 
-        description: 'Young, tender shoots with a crisp texture and delicate flavor.' 
+        description: 'Young, tender shoots with a crisp texture and delicate flavor.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Scallions', 
@@ -126,7 +155,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'pungent', 
         isPlural: true, 
         suitability: ['stir-fry', 'dumpling', 'congee', 'garnish'], 
-        description: 'A key aromatic, adding a sharp, fresh onion flavor to everything it touches.' 
+        description: 'A key aromatic, adding a sharp, fresh onion flavor to everything it touches.',
+        nation: 'earth-kingdom',
+        location: 'Generic',
+        synergies: { 'Chicken': 6, 'Duck': 7, 'River Fish': 6, 'Ground Meat': 5 }
     },
     { 
         name: 'Jicama', 
@@ -136,7 +168,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'sweet', 
         isPlural: false, 
         suitability: ['stir-fry', 'salad'], 
-        description: 'A crunchy, juicy root vegetable that is often eaten raw or lightly cooked.' 
+        description: 'A crunchy, juicy root vegetable that is often eaten raw or lightly cooked.',
+        nation: 'earth-kingdom',
+        location: 'Si Wong Desert'
     },
     { 
         name: 'Pickled Cabbage', 
@@ -146,7 +180,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['pickle', 'garnish', 'side-dish'], 
-        description: 'Cabbage preserved in a tangy brine, a staple side dish providing a sharp contrast to rich meats.'
+        description: 'Cabbage preserved in a tangy brine, a staple side dish providing a sharp contrast to rich meats.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Cabbage', 
@@ -156,7 +192,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['stir-fry', 'dumpling', 'congee'], 
-        description: 'The humble and resilient staple of the common folk, used in everything from soups to buns.' 
+        description: 'The humble and resilient staple of the common folk, used in everything from soups to buns.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Lotus Root', 
@@ -166,7 +204,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'neutral', 
         isPlural: false, 
         suitability: ['stir-fry', 'salad', 'braise'], 
-        description: 'A beautiful, crunchy root with a lacy pattern, symbolizing purity.' 
+        description: 'A beautiful, crunchy root with a lacy pattern, symbolizing purity.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Kale', 
@@ -176,7 +216,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['stir-fry', 'salad', 'bake'], 
-        description: 'A sturdy green, famously used in the modern, gourmet cuisine of Zaofu.' 
+        description: 'A sturdy green, famously used in the modern, gourmet cuisine of Zaofu.',
+        nation: 'earth-kingdom',
+        location: 'Zaofu'
     },
     
     // --- BASE ---
@@ -188,7 +230,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'neutral', 
         isPlural: false, 
         suitability: ['stir-fry', 'braise', 'congee', 'side-dish', 'steam'], 
-        description: 'The foundational grain of the Earth Kingdom, served with nearly every meal.' 
+        description: 'The foundational grain of the Earth Kingdom, served with nearly every meal.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Dumpling Wrappers', 
@@ -198,7 +242,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'neutral', 
         isPlural: true, 
         suitability: ['dumpling'], 
-        description: 'Thin sheets of dough, ready to be filled with savory mixtures and cooked.' 
+        description: 'Thin sheets of dough, ready to be filled with savory mixtures and cooked.',
+        nation: 'earth-kingdom',
+        location: 'Generic',
+        synergies: { 'Ground Meat': 8 }
     },
     { 
         name: 'Rich Meat Broth', 
@@ -208,7 +255,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'savory', 
         isPlural: false, 
         suitability: ['braise', 'congee'], 
-        description: 'A deep, flavorful broth made from simmering bones and aromatics for hours.' 
+        description: 'A deep, flavorful broth made from simmering bones and aromatics for hours.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Egg Noodles', 
@@ -218,7 +267,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'neutral', 
         isPlural: true, 
         suitability: ['stir-fry', 'braise'], 
-        description: 'Hearty, chewy noodles enriched with egg, perfect for soaking up savory sauces.' 
+        description: 'Hearty, chewy noodles enriched with egg, perfect for soaking up savory sauces.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Flour', 
@@ -228,8 +279,18 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'neutral', 
         isPlural: false, 
         suitability: ['bake', 'dumpling'], 
-        description: 'A basic necessity for making breads, buns, and pastries.' 
+        description: 'A basic necessity for making breads, buns, and pastries.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
+    { name: 'Light Vegetable Broth', emoji: '🥣', rarity: 'Common', category: 'base', flavorProfile: 'savory', isPlural: false, suitability: ['braise', 'congee'], description: 'A clear, savory broth made from vegetables, used as a base for soups and stews.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Sticky Rice', emoji: '🍚', rarity: 'Common', category: 'base', flavorProfile: 'neutral', isPlural: true, suitability: ['congee', 'side-dish'], description: 'Short-grain rice that becomes sticky when cooked, popular in the Lower Ring.', nation: 'earth-kingdom', location: 'Ba Sing Se' },
+    { name: 'Egg Custard', emoji: '🍮', rarity: 'Common', category: 'dairy', flavorProfile: 'sweet', isPlural: false, suitability: ['dessert'], description: 'A sweet, creamy dessert made from eggs and milk.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Lotus Seeds', emoji: '🌰', rarity: 'Rare', category: 'garnish', flavorProfile: 'sweet', isPlural: true, suitability: ['dessert', 'garnish'], description: 'Seeds from the lotus flower, used as a garnish or snack.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Five-Spice Powder', emoji: '🧂', rarity: 'Rare', category: 'flavoring', flavorProfile: 'pungent', isPlural: false, suitability: ['braise', 'roast', 'dumpling'], description: 'A blend of spices used to season meats and dumplings.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Fermented Bean Paste', emoji: '🫘', rarity: 'Common', category: 'flavoring', flavorProfile: 'umami', isPlural: false, suitability: ['braise', 'stir-fry'], description: 'A salty, umami paste used to add depth to sauces and stews.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Chili Oil', emoji: '🌶️', rarity: 'Uncommon', category: 'flavoring', flavorProfile: 'pungent', isPlural: false, suitability: ['dumpling', 'stir-fry'], description: 'Spicy oil used as a condiment or for cooking.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Pickled Mustard Greens', emoji: '🥬', rarity: 'Uncommon', category: 'garnish', flavorProfile: 'savory', isPlural: true, suitability: ['garnish', 'side-dish'], description: 'Tangy, salty greens used as a garnish or side.', nation: 'earth-kingdom', location: 'Generic' },
 
     // --- FRUIT & DESSERT ---
     { 
@@ -240,7 +301,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'sweet', 
         isPlural: false, 
         suitability: ['dumpling', 'bake'], 
-        description: 'A sweet, rich paste made from adzuki beans, used as a filling in many desserts.' 
+        description: 'A sweet, rich paste made from adzuki beans, used as a filling in many desserts.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Moon Peach', 
@@ -250,7 +313,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'sweet', 
         isPlural: false, 
         suitability: ['bake', 'dessert'], 
-        description: 'A legendary fruit from the hills of the Lower Ring, used in special occasion cakes.' 
+        description: 'A legendary fruit from the hills of the Lower Ring, used in special occasion cakes.',
+        nation: 'earth-kingdom',
+        location: 'Ba Sing Se'
     },
     { 
         name: 'Lychee', 
@@ -260,7 +325,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'sweet', 
         isPlural: false, 
         suitability: ['dessert', 'beverage', 'bake'], 
-        description: 'A sweet, floral fruit used in fine desserts and the crust of egg tarts.' 
+        description: 'A sweet, floral fruit used in fine desserts and the crust of egg tarts.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Egg Custard', 
@@ -270,7 +337,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'sweet', 
         isPlural: false, 
         suitability: ['bake'], 
-        description: 'A sweet, creamy custard that forms the filling of the famous Ba Sing Se egg tarts.' 
+        description: 'A sweet, creamy custard that forms the filling of the famous Ba Sing Se egg tarts.',
+        nation: 'earth-kingdom',
+        location: 'Ba Sing Se'
     },
     
     // --- FLAVORING & GARNISH ---
@@ -282,7 +351,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'pungent', 
         isPlural: false, 
         suitability: ['braise', 'congee', 'beverage'], 
-        description: 'A prized root known for its restorative properties and strong, earthy flavor.' 
+        description: 'A prized root known for its restorative properties and strong, earthy flavor.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Soy Sauce', 
@@ -292,7 +363,10 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'umami', 
         isPlural: false, 
         suitability: ['stir-fry', 'braise', 'dumpling'], 
-        description: 'The essential savory seasoning of the Earth Kingdom, brewed from fermented soybeans.' 
+        description: 'The essential savory seasoning of the Earth Kingdom, brewed from fermented soybeans.',
+        nation: 'earth-kingdom',
+        location: 'Generic',
+        synergies: { 'Pork Belly': 8, 'River Fish': 8, 'Tofu': 5 }
     },
     { 
         name: 'Ginger', 
@@ -302,7 +376,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'pungent', 
         isPlural: false, 
         suitability: ['stir-fry', 'braise', 'congee', 'beverage'], 
-        description: 'A sharp, spicy root used to add warmth and complexity to nearly any dish.' 
+        description: 'A sharp, spicy root used to add warmth and complexity to nearly any dish.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Honey', 
@@ -312,7 +388,9 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'sweet', 
         isPlural: false, 
         suitability: ['bake', 'dessert', 'beverage'], 
-        description: 'A natural sweetener from the kingdom\'s wildflower meadows, used to sweeten cakes and teas.' 
+        description: 'A natural sweetener from the kingdom\'s wildflower meadows, used to sweeten cakes and teas.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
     { 
         name: 'Jennamite', 
@@ -322,6 +400,20 @@ export const earthKingdomIngredients: Ingredient[] = [
         flavorProfile: 'sweet', 
         isPlural: false, 
         suitability: ['dessert', 'garnish'], 
-        description: 'A fast-growing rock candy from the caves of Omashu. A dangerous but delicious garnish.' 
+        description: 'A fast-growing rock candy from the caves of Omashu. A dangerous but delicious garnish.',
+        nation: 'earth-kingdom',
+        location: 'Generic'
     },
+
+    // --- NEW BEVERAGE & SALAD INGREDIENTS ---
+    { name: 'Ginseng Tea', emoji: '🫖', rarity: 'Common', category: 'flavoring', flavorProfile: 'pungent', isPlural: false, suitability: ['beverage'], description: 'A common, invigorating tea brewed from ginseng root, enjoyed by scholars and laborers alike.', nation: 'earth-kingdom', location: 'Ba Sing Se' },
+    { name: 'Lychee Juice', emoji: '🧃', rarity: 'Uncommon', category: 'flavoring', flavorProfile: 'sweet', isPlural: false, suitability: ['beverage'], description: 'A sweet, aromatic juice pressed from fresh lychees, often served chilled.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Mixed Greens', emoji: '🥗', rarity: 'Common', category: 'vegetable', flavorProfile: 'neutral', isPlural: true, suitability: ['salad'], description: 'A base of various fresh, crisp lettuces and greens from the fertile farmlands.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Cucumber', emoji: '🥒', rarity: 'Common', category: 'vegetable', flavorProfile: 'neutral', isPlural: false, suitability: ['salad', 'garnish'], description: 'A crunchy, hydrating vegetable, often sliced thin and added to salads for a refreshing bite.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Radish', emoji: '🔴', rarity: 'Common', category: 'vegetable', flavorProfile: 'pungent', isPlural: false, suitability: ['salad', 'pickle', 'garnish'], description: 'A crisp, peppery root vegetable that adds a sharp flavor and vibrant color to salads.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Rice Vinegar', emoji: '🍶', rarity: 'Common', category: 'flavoring', flavorProfile: 'savory', isPlural: false, suitability: ['salad', 'pickle'], description: 'A mild, slightly sweet vinegar used to make dressings for salads and pickling brines.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Peanuts', emoji: '🥜', rarity: 'Common', category: 'protein', flavorProfile: 'savory', isPlural: true, suitability: ['salad', 'garnish', 'stir-fry'], description: 'Roasted and often crushed, peanuts add a savory crunch to salads and noodle dishes.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Plum Wine', emoji: '🍷', rarity: 'Uncommon', category: 'flavoring', flavorProfile: 'sweet', isPlural: false, suitability: ['beverage', 'braise'], description: 'A sweet, fragrant wine made from fermented plums, served as a drink or used in cooking.', nation: 'earth-kingdom', location: 'Generic' },
+    { name: 'Bean Sprout Salad', emoji: '🌱', rarity: 'Common', category: 'vegetable', flavorProfile: 'neutral', isPlural: false, suitability: ['salad', 'side-dish'], description: 'A simple salad of blanched bean sprouts dressed with a light, savory sauce.', nation: 'earth-kingdom', location: 'Ba Sing Se' },
+    { name: 'Water Chestnuts', emoji: '🌰', rarity: 'Common', category: 'vegetable', flavorProfile: 'sweet', isPlural: true, suitability: ['salad', 'stir-fry', 'dumpling'], description: 'Aquatic vegetables that remain crisp even after cooking, adding a crunchy texture to salads.', nation: 'earth-kingdom', location: 'Generic' }
 ]; 

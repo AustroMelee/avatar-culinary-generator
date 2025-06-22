@@ -1,81 +1,86 @@
 // src/textGenerator.ts
 
-import { Grammar } from './grammar';
-import { DishContext, NationData, Ingredient } from './types';
+import { LoreEngine } from './loreEngine';
+import { FusionNameEngine } from './fusionNameEngine';
+import { DescriptionEngine } from './descriptionEngine';
+import { DishContext, Ingredient, Nation } from './types';
+
+const nationAdjectives: Record<Nation, string> = {
+    'air-nomads': 'Soaring',
+    'water-tribe': 'Tidal',
+    'earth-kingdom': 'Earthen',
+    'fire-nation': 'Blazing'
+};
 
 // Helper to get a random element from an array
 const pick = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
 export class TextGenerator {
-    private grammar: Grammar;
+    private loreEngine: LoreEngine;
+    private nameEngine: FusionNameEngine;
+    private descriptionEngine: DescriptionEngine;
 
     constructor() {
-        this.grammar = new Grammar();
+        this.loreEngine = new LoreEngine();
+        this.nameEngine = new FusionNameEngine();
+        this.descriptionEngine = new DescriptionEngine();
     }
 
     /**
      * Generates a dynamic name for the dish using the nation's name parts.
      * This requires nationData to be present in the context.
      */
-    public generateName(context: DishContext): string {
-        const { nameParts } = context.nationData;
+    public generateName(context: DishContext): { title: string; flavorText: string } {
+        const { selectedNations } = context.fusionData;
+
+        // If it's a fusion dish, use the new engine.
+        if (selectedNations.length > 1) {
+            const result = this.nameEngine.getName(context);
+            return { title: result.title, flavorText: result.flavorText };
+        }
+        
+        // --- UPGRADED SINGLE-NATION NAME LOGIC ---
+        const { nameParts } = context.fusionData;
+        const { primaryIngredient, cookingStyle, theme } = context;
+
         const prefix = pick(nameParts.prefixes);
         const middle = pick(nameParts.middles);
-        const suffix = pick(nameParts.suffixes);
-        const { dishSubtype } = context.cookingStyle;
-        const { primaryIngredient } = context;
-
-        const getCleanIngredientName = (ing: Ingredient) => {
-            if (ing.name.includes('Lentils')) return 'Lentil';
-            if (ing.name.includes('Mung Beans')) return 'Mung Bean';
-            if (ing.name.includes('Nuts')) return 'Nut';
-            return ing.name.split(' ')[0];
-        };
+        const primaryName = primaryIngredient.name.split(' ')[0];
         
-        const primaryName = getCleanIngredientName(primaryIngredient);
+        // Contextual Suffixes based on theme
+        let suffix = '';
+        switch (theme) {
+            case 'Ceremonial & Celebratory':
+                suffix = pick(['Feast', 'Festival', 'Bounty']);
+                break;
+            case 'Humble & Meditative':
+                suffix = pick(['Special', 'Surprise', 'Medley']);
+                break;
+            case 'Ancient & Traditional':
+                suffix = cookingStyle.dishSubtype;
+                break;
+            default: // Invigorating & Playful
+                suffix = pick(['Delight', 'Surprise']);
+                break;
+        }
 
-        const rand = Math.random();
-
-        // --- FINAL, POLISHED PATTERNS ---
+        const title = `${prefix} ${primaryName} ${suffix}`;
         
-        // Always use the subtype if it's specific and descriptive (Curry, Pie, Juice, Salad)
-        if (['Curry', 'Pie', 'Juice', 'Salad', 'Stir-fry'].includes(dishSubtype)) {
-             if (rand < 0.6) return `${prefix} ${primaryName} ${dishSubtype}`; // "Meditative Lentil Curry"
-             return `${middle} ${primaryName} ${dishSubtype}`; // "Cloud Apple Juice"
-        }
-
-        // Generic patterns for Bake, Steam, etc.
-        if (rand < 0.4) {
-            return `${prefix} ${primaryName} ${suffix}`; // "Soaring Potato Delight"
-        } 
-        else if (rand < 0.7) {
-            return `${middle} ${primaryName} Medley`; // "Sunrise Tofu Medley"
-        }
-        else {
-            return `${prefix} ${middle} Special`; // "Sky Temple Wind Special"
-        }
+        return { title, flavorText: '' }; // Single-nation dishes have no flavor text
     }
 
     /**
-     * Generates a multi-sentence description, ensuring variety.
+     * Generates a description using the new DescriptionEngine.
      */
     public generateDescription(context: DishContext): string {
-        // Use the new, more powerful grammar builder
-        let usedTags: string[] = [];
-        
-        const { sentence: firstSentence, usedTag: firstTag } = this.grammar.buildDescriptionSentence(context, usedTags);
-        usedTags.push(firstTag);
-        
-        const { sentence: secondSentence } = this.grammar.buildDescriptionSentence(context, usedTags);
-
-        return `${firstSentence} ${secondSentence}`;
+        // Delegate description generation to the new engine
+        return this.descriptionEngine.getDescription(context);
     }
 
     /**
      * Generates a lore sentence for the dish.
      */
-    public generateLore(context: DishContext): string {
-        // Use the new lore builder
-        return this.grammar.buildLoreSentence(context);
+    public generateLore(context: DishContext): { title: string; text: string } {
+        return this.loreEngine.getLore(context);
     }
 }
