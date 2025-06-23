@@ -1610,8 +1610,8 @@ body.screenshot-mode .dish-display .ingredients {
 /* Responsive adjustments for the checklist */
 @media (max-width: 768px) {
   #nation-checklist-container {
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.25rem;
   }
   
   .nation-checkbox {
@@ -1624,8 +1624,8 @@ body.screenshot-mode .dish-display .ingredients {
 
 @media (max-width: 480px) {
   .nation-checkbox .nation-icon {
-    width: 32px;
-    height: 32px;
+    width: 48px; /* Making icons a bit smaller */
+    height: 48px;
   }
   
   .nation-checkbox .nation-name {
@@ -2051,4 +2051,89 @@ body.screenshot-mode .dish-display .ingredients {
     font-size: 0.95rem;
     line-height: 1.4;
     opacity: 0.8;
+}
+
+/* --- MOBILE FORMATTING FIXES --- */
+
+@media (max-width: 768px) {
+
+  /* FIX: Make the main header title smaller and prevent it from overflowing. */
+  .app-header h1 {
+    font-size: 1.4rem;
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* FIX: Allow the nation icons to wrap onto multiple lines if they don't fit. */
+  #nation-checklist-container {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  /* FIX: Make the Dish Type dropdown take up the full width on mobile. */
+  .custom-select {
+    width: 100%;
+    max-width: 300px; /* Optional: looks better on tablets */
+  }
+
+  /* FIX: Make the main "Generate" button smaller and flexible. */
+  .generator-button {
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    min-width: unset; /* Remove the fixed minimum width */
+    width: 90%;
+    max-width: 350px;
+  }
+
+  /* FIX: Make the dish title smaller on mobile. */
+  .dish-display h2 {
+    font-size: 1.75rem;
+  }
+
+  /* FIX: Stack the two-column "parchment" layout into a single column. */
+  .dish-display.parchment-layout .dish-main-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* FIX: Make the titles inside the parchment layout smaller. */
+  .dish-display.parchment-layout .dish-header h2 {
+    font-size: 2rem;
+  }
+
+  .dish-display.parchment-layout .content-section h3 {
+    font-size: 1.5rem;
+  }
+
+  /* FIX: Reduce padding on the parchment card for more space. */
+  .dish-display.parchment-layout {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* More aggressive fixes for very small screens */
+@media (max-width: 480px) {
+  .app {
+    padding: 0.5rem;
+  }
+
+  .nation-controls {
+    padding: 1rem 0.5rem;
+  }
+
+  .nation-checkbox .nation-icon {
+    width: 48px; /* Making icons a bit smaller */
+    height: 48px;
+  }
+
+  #nation-checklist-container {
+    gap: 0; /* Remove gap to fit more icons */
+  }
+
+  .generator-button {
+    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+  }
 } 
